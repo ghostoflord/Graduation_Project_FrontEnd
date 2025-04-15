@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import App from './App.tsx'
 import LoginPage from './pages/admin/login/login.page.tsx';
+import { ConfigProvider } from 'antd';
+import { AppProvider } from './components/context/app.context.tsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,6 +21,12 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+
+    <AppProvider>
+      <ConfigProvider >
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </AppProvider>
+
+  </StrictMode>,
 );
