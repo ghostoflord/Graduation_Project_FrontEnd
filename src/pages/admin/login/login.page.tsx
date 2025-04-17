@@ -86,7 +86,7 @@ const LoginPage = () => {
                                     justifyContent: "space-between",
                                     alignItems: "center"
                                 }}>
-                                    <Button type="primary" htmlType="submit">
+                                    <Button type="primary" htmlType="submit" loading={isSubmit}>
                                         Đăng Nhập
                                     </Button>
                                     <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>

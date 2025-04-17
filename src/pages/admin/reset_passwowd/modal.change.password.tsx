@@ -8,9 +8,10 @@ const ModalChangePassword = (props: any) => {
     const [current, setCurrent] = useState(0);
     const [form] = Form.useForm();
     const [userEmail, setUserEmail] = useState("");
-
+    const [isSubmit, setIsSubmit] = useState(false);
     const onFinishStep0 = async (values: any) => {
         const { email } = values;
+
         const res = await sendRequest<IBackendRes<any>>({
             url: `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/forgot-password`,
             method: "POST",
@@ -18,6 +19,7 @@ const ModalChangePassword = (props: any) => {
         });
 
         if (res?.data) {
+            setIsSubmit(true);
             setUserEmail(res.data.email);
             setCurrent(1);
         } else {
@@ -25,11 +27,13 @@ const ModalChangePassword = (props: any) => {
                 message: "Lỗi API",
                 description: res?.message || "Không thể gửi email xác nhận."
             });
+            setIsSubmit(false);
         }
     };
 
     const onFinishStep1 = async (values: any) => {
         const { token, newPassword, confirmPassword } = values;
+
         if (newPassword !== confirmPassword) {
             notification.error({
                 message: "Lỗi nhập liệu",
@@ -44,14 +48,20 @@ const ModalChangePassword = (props: any) => {
             body: { token, newPassword, confirmPassword, email: userEmail }
         });
 
-        if (res?.data) {
+        if (res?.statusCode === 200) {
+            notification.success({
+                message: "Thay đổi mật khẩu thành công",
+                description: "Vui lòng về trang đăng nhập đẻ đăng nhập lại"
+            });
             setCurrent(2);
+            console.log("Đã chuyển sang bước 2");
         } else {
             notification.error({
                 message: "Lỗi API",
                 description: res?.message || "Không thể đổi mật khẩu."
             });
         }
+
     };
 
     const resetModal = () => {
@@ -91,7 +101,7 @@ const ModalChangePassword = (props: any) => {
                         <Form.Item name="email" rules={[{ required: true, message: "Vui lòng nhập email!" }]}>
                             <Input placeholder="Email" />
                         </Form.Item>
-                        <Button type="primary" htmlType="submit">Tiếp tục</Button>
+                        <Button type="primary" htmlType="submit" loading={isSubmit}>Tiếp tục</Button>
                     </Form>
                 </>
             )}
@@ -111,7 +121,7 @@ const ModalChangePassword = (props: any) => {
                         <Form.Item name="confirmPassword" rules={[{ required: true, message: "Xác nhận mật khẩu!" }]}>
                             <Input.Password placeholder="Xác nhận mật khẩu" />
                         </Form.Item>
-                        <Button type="primary" htmlType="submit">Xác nhận</Button>
+                        <Button type="primary" htmlType="submit" >Xác nhận</Button>
                     </Form>
                 </>
             )}
