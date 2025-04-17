@@ -5,6 +5,7 @@ import { useState } from 'react';
 import type { FormProps } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
 import { loginAPI } from '@/services/api';
+import ModalChangePassword from '../reset_passwowd/modal.change.password';
 
 type FieldType = {
     username: string;
@@ -15,7 +16,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
     const { setIsAuthenticated, setUser } = useCurrentApp();
-
+    const [changePassword, setChangePassword] = useState(false);
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { username, password } = values;
         setIsSubmit(true);
@@ -47,7 +48,7 @@ const LoginPage = () => {
         }
     };
 
-    return (
+    return (<>
         <div className="login-page">
             <main className="main">
                 <div className="container">
@@ -80,9 +81,17 @@ const LoginPage = () => {
                             </Form.Item>
 
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" loading={isSubmit}>
-                                    Đăng nhập
-                                </Button>
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center"
+                                }}>
+                                    <Button type="primary" htmlType="submit">
+                                        Đăng Nhập
+                                    </Button>
+                                    <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>
+                                </div>
+
                             </Form.Item>
 
                             <Divider>Or</Divider>
@@ -97,6 +106,11 @@ const LoginPage = () => {
                 </div>
             </main>
         </div>
+        <ModalChangePassword
+            isModalOpen={changePassword}
+            setIsModalOpen={setChangePassword}
+        />
+    </>
     );
 };
 
