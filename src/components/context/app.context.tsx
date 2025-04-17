@@ -1,8 +1,7 @@
 
 import { fetchAccountAPI } from "@/services/api";
 import { createContext, useContext, useEffect, useState } from "react";
-import PacmanLoader from "react-spinners/PacmanLoader";
-
+import { PropagateLoader } from "react-spinners";
 
 interface IAppContext {
     isAuthenticated: boolean;
@@ -62,7 +61,7 @@ export const AppProvider = (props: TProps) => {
                     left: "50%",
                     transform: "translate(-50%, -50%)"
                 }}>
-                    <PacmanLoader
+                    <PropagateLoader
                         size={30}
                         color="#36d6b4"
                     />

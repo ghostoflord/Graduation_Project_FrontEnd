@@ -1,5 +1,5 @@
 
-const App = () => {
+const LayoutPage = () => {
 
   return (
     <>
@@ -10,4 +10,4 @@ const App = () => {
   )
 }
 
-export default App
+export default LayoutPage

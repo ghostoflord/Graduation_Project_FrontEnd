@@ -17,3 +17,8 @@ export const fetchAccountAPI = () => {
         }
     })
 }
+
+export const registerAPI = (name: string, email: string, password: string, address: string, age: string) => {
+    const urlBackend = "/api/v1/auth/register";
+    return axios.post<IBackendRes<IRegister>>(urlBackend, { name, email, password, address, age })
+}
