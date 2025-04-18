@@ -1,13 +1,13 @@
 import TableUser from "@/components/admin/product/product.table";
 
-const TablePage = () => {
+const UserPage = () => {
     return (
         <>
             <div>
-                test thu
+                <TableUser />
             </div>
         </>
 
     )
 }
-export default TablePage;
+export default UserPage;

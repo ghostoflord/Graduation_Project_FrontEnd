@@ -5,14 +5,14 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import LoginPage from '@/pages/admin/login/login.page.tsx';
+import LoginPage from '@/pages/client/auth/login/login.page';
 import { App, ConfigProvider } from 'antd';
 import { AppProvider } from '@/components/context/app.context.tsx';
-import RegisterPage from '@/pages/admin/register/register.tsx';
+import RegisterPage from '@/pages/client/auth/register/register';
 import LayoutPage from '@/layout.tsx';
-import AdminPage from '@/pages/admin/layout/admin.tsx';
-import UserPage from '@/pages/admin/layout/user.tsx';
-import ProductPage from '@/pages/admin/layout/product.tsx';
+import AdminLayout from './pages/admin/admin';
+import UserPage from './pages/user';
+
 
 const router = createBrowserRouter([
   {
@@ -22,17 +22,17 @@ const router = createBrowserRouter([
 
   {
     path: "/admin",
-    element: <AdminPage />,
+    element: <AdminLayout />,
     // errorElement: <ErrorPage />,
     children: [
       {
         path: "user",
         element: <UserPage />,
       },
-      {
-        path: "product",
-        element: <ProductPage />,
-      },
+      // {
+      //   path: "product",
+      //   element: <ProductPage />,
+      // },
     ],
   },
   {

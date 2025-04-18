@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { FormProps } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
 import { loginAPI } from '@/services/api';
-import ModalChangePassword from '../reset_passwowd/modal.change.password';
+import ModalChangePassword from '../../../../components/client/account/modal.change.password';
 
 type FieldType = {
     username: string;
