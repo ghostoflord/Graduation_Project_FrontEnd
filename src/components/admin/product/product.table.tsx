@@ -1,8 +1,8 @@
-const TableUser = () => {
+const TableProduct = () => {
     return (
         <>
-            table user
+            table product
         </>
     );
 }
-export default TableUser;
+export default TableProduct;

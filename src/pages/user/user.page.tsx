@@ -1,4 +1,4 @@
-import TableUser from "@/components/admin/product/product.table";
+import TableUser from "@/components/admin/users/user.table";
 
 const UserPage = () => {
     return (
