@@ -5,7 +5,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Tag } from 'antd';
 import { useRef, useState } from 'react';
-
+import { CSVLink } from "react-csv";
 type TSearch = {
     name: string;
     email: string;
@@ -31,6 +31,7 @@ const TableUser = () => {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
+            hidden: true,
         },
         {
             title: ' Name',
@@ -42,7 +43,30 @@ const TableUser = () => {
             copyable: true
         },
         {
-            title: 'Activate (Debug)',
+            title: ' Address',
+            dataIndex: 'address',
+        },
+        {
+            title: ' Age',
+            dataIndex: 'age',
+        },
+        {
+            title: ' Gender',
+            dataIndex: 'gender',
+        },
+        {
+            title: ' Avatar',
+            dataIndex: 'avatar ',
+        },
+        {
+            title: 'Update At',
+            dataIndex: 'updateAt',
+            valueType: 'date',
+            sorter: true,
+            hideInSearch: true
+        },
+        {
+            title: 'Activate',
             dataIndex: 'activate',
             render: (value) => (
                 <Tag color={value ? 'green' : 'red'}>
@@ -51,21 +75,11 @@ const TableUser = () => {
             ),
         },
         {
-            title: ' Address',
-            dataIndex: 'address',
-        },
-        {
             title: 'Created At',
             dataIndex: 'createdAt',
             valueType: 'date',
             sorter: true,
             hideInSearch: true
-        },
-        {
-            title: 'Created At',
-            dataIndex: 'createdAtRange',
-            valueType: 'dateRange',
-            hideInTable: true,
         },
 
         {
@@ -106,19 +120,29 @@ const TableUser = () => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
-                    let query = "";
-                    if (params) {
-                        query += `current=${params.current}&pageSize=${params.pageSize}`
-                        if (params.email) {
-                            query += `&email=/${params.email}/i`
-                        }
-                        if (params.name) {
-                            query += `&name=/${params.name}/i`
-                        }
+                    // let query = "";
+                    // if (params) {
+                    //     query += `current=${params.current}&pageSize=${params.pageSize}`
+                    //     if (params.email) {
+                    //         query += `&email=/${params.email}/i`
+                    //     }
+                    //     if (params.name) {
+                    //         query += `&name=/${params.name}/i`
+                    //     }
 
-                    }
+                    //     const createDateRange = dateRangeValidate(params.createdAtRange);
+                    //     if (createDateRange) {
+                    //         query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
+                    //     }
+                    // }
 
                     //default
+
+                    // if (sort && sort.createdAt) {
+                    //     query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`
+                    // } else query += `&sort=-createdAt`;
+
+
                     const res = await getUsersAPI(query);
                     if (res.data) {
                         setMeta(res.data.meta);
@@ -142,6 +166,42 @@ const TableUser = () => {
                         showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
                     }
                 }
+
+                headerTitle="Table user"
+                toolBarRender={() => [
+                    <CSVLink
+                        data={currentDataTable}
+                        filename='export-user.csv'
+                    >
+                        <Button
+                            icon={<ExportOutlined />}
+                            type="primary"
+                        >
+                            Export
+                        </Button>
+                    </CSVLink>
+                    ,
+
+                    <Button
+                        icon={<CloudUploadOutlined />}
+                        type="primary"
+                    // onClick={() => setOpenModalImport(true)}
+                    >
+                        Import
+                    </Button>,
+
+                    <Button
+                        key="button"
+                        icon={<PlusOutlined />}
+                        onClick={() => {
+                            // setOpenModalCreate(true);
+                        }}
+                        type="primary"
+                    >
+                        Add new
+                    </Button>
+
+                ]}
             />
         </>
     );
