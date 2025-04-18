@@ -60,15 +60,20 @@ declare global {
     }
 
     interface IUserTable {
-        _id: string;
-        fullName: string;
+        id: string;
+        name: string;
         email: string;
+        address: string;
+        age: string;
         phone: string;
         role: string;
         avatar: string;
-        isActive: boolean;
+        active: number;
         createdAt: Date;
         updatedAt: Date;
+        gender: string;
+        firstName: string;
+        lastName: string;
     }
 
     interface IResponseImport {

@@ -1,6 +1,8 @@
 import axios from 'services/axios.customize';
 import queryString from 'query-string';
 
+
+//auth
 export const loginAPI = (username: string, password: string) => {
     const urlBackend = "/api/v1/auth/login";
     return axios.post<IBackendRes<ILogin>>(urlBackend, { username, password }, {
@@ -63,4 +65,10 @@ export const sendRequest = async <T>(props: IRequest) => { //type
         }
     });
 };
+
+//user
+export const getUsersAPI = (query: string) => {
+    const urlBackend = `/api/v1/users?${query}`;
+    return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend)
+}
 
