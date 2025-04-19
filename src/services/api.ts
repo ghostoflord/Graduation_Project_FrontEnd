@@ -72,3 +72,23 @@ export const getUsersAPI = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend)
 }
 
+export const createUserAPI = (
+    name: string,
+    email: string,
+    password: string,
+    gender: string,
+    avatar: string,
+    address: string,
+    age: string
+) => {
+    return axios.post("/api/v1/users", {
+        name,
+        email,
+        password,
+        gender,
+        avatarBase64: avatar, // truyền đúng key backend mong đợi
+        address,
+        age
+    });
+};
+

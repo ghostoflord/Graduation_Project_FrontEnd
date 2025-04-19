@@ -6,6 +6,7 @@ import { ProTable } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import { CSVLink } from "react-csv";
+import CreateUser from './create.user';
 type TSearch = {
     name: string;
     email: string;
@@ -21,6 +22,9 @@ const TableUser = () => {
     });
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
     const { message, notification } = App.useApp();
+
+    //create user
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
     const columns: ProColumns<IUserTable>[] = [
         {
             dataIndex: 'index',
@@ -55,8 +59,20 @@ const TableUser = () => {
             dataIndex: 'gender',
         },
         {
-            title: ' Avatar',
-            dataIndex: 'avatar ',
+            title: 'Avatar',
+            dataIndex: 'avatar',
+            render: (dom, entity, index, action, schema) => {
+                const avatar = entity.avatar; // lấy giá trị avatar từ entity
+                return avatar ? (
+                    <img
+                        src={avatar}
+                        alt="User Avatar"
+                        style={{ width: 50, height: 50, borderRadius: '50%' }}
+                    />
+                ) : (
+                    <span>No avatar</span> // trường hợp không có avatar
+                );
+            },
         },
         {
             title: 'Update At',
@@ -113,6 +129,10 @@ const TableUser = () => {
 
     ];
 
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
+
     return (
         <>
             <ProTable<IUserTable, TSearch>
@@ -120,21 +140,21 @@ const TableUser = () => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
-                    // let query = "";
-                    // if (params) {
-                    //     query += `current=${params.current}&pageSize=${params.pageSize}`
-                    //     if (params.email) {
-                    //         query += `&email=/${params.email}/i`
-                    //     }
-                    //     if (params.name) {
-                    //         query += `&name=/${params.name}/i`
-                    //     }
+                    let query = "";
+                    if (params) {
+                        query += `current=${params.current}&pageSize=${params.pageSize}`
+                        if (params.email) {
+                            query += `&email=/${params.email}/i`
+                        }
+                        if (params.name) {
+                            query += `&name=/${params.name}/i`
+                        }
 
-                    //     const createDateRange = dateRangeValidate(params.createdAtRange);
-                    //     if (createDateRange) {
-                    //         query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
-                    //     }
-                    // }
+                        // const createDateRange = dateRangeValidate(params.createdAtRange);
+                        // if (createDateRange) {
+                        //     query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
+                        // }
+                    }
 
                     //default
 
@@ -194,7 +214,7 @@ const TableUser = () => {
                         key="button"
                         icon={<PlusOutlined />}
                         onClick={() => {
-                            // setOpenModalCreate(true);
+                            setOpenModalCreate(true);
                         }}
                         type="primary"
                     >
@@ -202,6 +222,12 @@ const TableUser = () => {
                     </Button>
 
                 ]}
+            />
+
+            <CreateUser
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
             />
         </>
     );
