@@ -1,5 +1,5 @@
 
-import { getUsersAPI } from '@/services/api';
+import { deleteUserAPI, getUsersAPI } from '@/services/api';
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
@@ -33,9 +33,35 @@ const TableUser = () => {
     const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
 
     //update user
-
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
+
+    //delete user
+    const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
+    const handleDeleteUser = async (id: string) => {
+        setIsDeleteUser(true);
+        try {
+            const res = await deleteUserAPI(id);
+
+            // Kiểm tra status code hoặc flag success từ API
+            if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
+                message.success(res.message || 'Xóa user thành công');
+                refreshTable();
+            } else {
+                notification.error({
+                    message: res.error || 'Đã có lỗi xảy ra',
+                    description: res.message || 'Không thể xóa user'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi hệ thống',
+                description: 'Đã có lỗi xảy ra khi xóa user'
+            });
+        } finally {
+            setIsDeleteUser(false);
+        }
+    };
     const columns: ProColumns<IUserTable>[] = [
         {
             dataIndex: 'index',
@@ -136,8 +162,10 @@ const TableUser = () => {
                             placement="leftTop"
                             title={"Xác nhận xóa user"}
                             description={"Bạn có chắc chắn muốn xóa user này ?"}
+                            onConfirm={() => handleDeleteUser(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
+                            okButtonProps={{ loading: isDeleteUser }}
                         >
                             <span style={{ cursor: "pointer", marginLeft: 20 }}>
                                 <DeleteTwoTone

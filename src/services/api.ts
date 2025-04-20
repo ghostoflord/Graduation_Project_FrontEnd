@@ -82,6 +82,10 @@ export const updateUserAPI = (id: string, firstName: string, lastName: string, n
         { id, firstName, lastName, name, address, gender, age })
 }
 
+export const deleteUserAPI = (id: string) => {
+    const urlBackend = `/api/v1/users/${id}`;
+    return axios.delete<IBackendRes<IRegister>>(urlBackend)
+}
 
 export const uploadFileAPI = (file: any, folder: string) => {
     const bodyFormData = new FormData();
