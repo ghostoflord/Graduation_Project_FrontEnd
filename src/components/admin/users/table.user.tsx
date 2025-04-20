@@ -7,6 +7,7 @@ import { App, Button, Popconfirm, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import { CSVLink } from "react-csv";
 import CreateUser from './create.user';
+import DetailUser from './detail.user';
 type TSearch = {
     name: string;
     email: string;
@@ -25,6 +26,10 @@ const TableUser = () => {
 
     //create user
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+
+    //detail user
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
     const columns: ProColumns<IUserTable>[] = [
         {
             dataIndex: 'index',
@@ -35,7 +40,16 @@ const TableUser = () => {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
-            hidden: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(entity);
+                            setOpenViewDetail(true);
+                        }}
+                        href='#'>{entity.id}</a>
+                )
+            },
         },
         {
             title: ' Name',
@@ -228,6 +242,13 @@ const TableUser = () => {
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
+            />
+
+            <DetailUser
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
             />
         </>
     );

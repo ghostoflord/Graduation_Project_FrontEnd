@@ -92,3 +92,20 @@ export const createUserAPI = (
     });
 };
 
+
+export const uploadFileAPI = (file: any, folder: string) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append('fileImg', file);
+    return axios<IBackendRes<{
+        fileName: string
+    }>>({
+        method: 'post',
+        url: '/api/v1/files',
+        data: bodyFormData,
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "upload-type": folder
+        },
+    });
+}
+

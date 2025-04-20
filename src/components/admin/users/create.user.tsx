@@ -7,11 +7,14 @@ import {
     Modal,
     Select,
     Upload,
-    Button
+    Button,
+    Image
 } from 'antd';
-import type { FormProps } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { createUserAPI } from '@/services/api';
+import type { FormProps } from 'antd';
+import { createUserAPI, uploadFileAPI } from '@/services/api';
+import type { RcFile, UploadFile } from 'antd/es/upload';
+import type { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
 
 interface IProps {
     openModalCreate: boolean;
@@ -26,36 +29,83 @@ type FieldType = {
     gender: string;
     address: string;
     age: string;
+    avatar: UploadFile[];  // Chứa thông tin avatar
 };
 
 const CreateUser = (props: IProps) => {
     const { openModalCreate, setOpenModalCreate, refreshTable } = props;
-    const [isSubmit, setIsSubmit] = useState<boolean>(false);
-    const { message, notification } = App.useApp();
     const [form] = Form.useForm();
-    const [avatarBase64, setAvatarBase64] = useState<string>("");
+    const [isSubmit, setIsSubmit] = useState(false);
+    const { message, notification } = App.useApp();
+    const [avatarFile, setAvatarFile] = useState<UploadFile | null>(null);
+    const [previewImage, setPreviewImage] = useState<string>("");
 
-    // Convert ảnh sang base64
-    const getBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
+    const normFile = (e: any) => {
+        return Array.isArray(e) ? e : e?.fileList;
+    };
+
+    const getBase64 = (file: RcFile): Promise<string> =>
+        new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
+            reader.onerror = reject;
         });
+
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview && file.originFileObj) {
+            file.preview = await getBase64(file.originFileObj as RcFile);
+        }
+        setPreviewImage(file.preview as string);
+    };
+
+    const handleUploadAvatar = async (options: RcCustomRequestOptions) => {
+        const { file, onSuccess, onError } = options;
+
+        try {
+            // Upload avatar image to backend and get file name
+            const res = await uploadFileAPI(file as File, "avatars");
+
+            if (res && res.data) {
+                const uploadedUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${res.data.fileName}`;
+                const uploadedFile: UploadFile = {
+                    uid: (file as RcFile).uid,
+                    name: res.data.fileName,
+                    status: 'done',
+                    url: uploadedUrl,
+                    thumbUrl: uploadedUrl,
+                    originFileObj: file as RcFile
+                };
+
+                setAvatarFile(uploadedFile);
+                await handlePreview(uploadedFile);
+
+                setTimeout(() => {
+                    onSuccess?.("ok", uploadedFile as any);
+                }, 100);
+            } else {
+                onError?.(new Error(res?.message || "Upload failed"));
+            }
+        } catch (err: any) {
+            onError?.(err);
+        }
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        const { name, password, email, gender, address, age } = values;
         setIsSubmit(true);
+        const { name, email, password, gender, address, age } = values;
+
+        // Chuyển avatar sang dạng base64
+        const avatarBase64 = avatarFile ? await getBase64(avatarFile.originFileObj as RcFile) : '';
 
         try {
+            // Gọi API để tạo người dùng mới
             const res = await createUserAPI(
                 name,
                 email,
                 password,
                 gender,
-                avatarBase64,
+                avatarBase64,  // Gửi base64 của avatar
                 address,
                 age
             );
@@ -63,7 +113,8 @@ const CreateUser = (props: IProps) => {
             if (res && res.data) {
                 message.success('Tạo mới user thành công');
                 form.resetFields();
-                setAvatarBase64("");
+                setAvatarFile(null);
+                setPreviewImage("");
                 setOpenModalCreate(false);
                 refreshTable();
             } else {
@@ -90,7 +141,8 @@ const CreateUser = (props: IProps) => {
             onCancel={() => {
                 setOpenModalCreate(false);
                 form.resetFields();
-                setAvatarBase64("");
+                setAvatarFile(null);
+                setPreviewImage("");
             }}
             okText="Tạo mới"
             cancelText="Hủy"
@@ -99,51 +151,43 @@ const CreateUser = (props: IProps) => {
             <Divider />
             <Form
                 form={form}
-                name="create-user"
                 layout="vertical"
+                name="create-user"
                 onFinish={onFinish}
                 autoComplete="off"
             >
                 <Form.Item<FieldType>
                     label="User Name"
                     name="name"
-                    rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }]}
-                >
+                    rules={[{ required: true, message: 'Vui lòng nhập tên người dùng!' }]}>
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Password"
                     name="password"
-                    rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
-                >
+                    rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}>
                     <Input.Password />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Email"
                     name="email"
-                    rules={[
-                        { required: true, message: 'Vui lòng nhập email!' },
-                        { type: 'email', message: 'Email không đúng định dạng!' }
-                    ]}
-                >
+                    rules={[{ required: true, message: 'Vui lòng nhập email!' }, { type: 'email', message: 'Email không đúng định dạng!' }]}>
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Địa chỉ"
                     name="address"
-                    rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
-                >
+                    rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}>
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Giới tính"
                     name="gender"
-                    rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}
-                >
+                    rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}>
                     <Select placeholder="Chọn giới tính">
                         <Select.Option value="MALE">Nam</Select.Option>
                         <Select.Option value="FEMALE">Nữ</Select.Option>
@@ -154,34 +198,39 @@ const CreateUser = (props: IProps) => {
                 <Form.Item<FieldType>
                     label="Tuổi"
                     name="age"
-                    rules={[{ required: true, message: 'Vui lòng nhập tuổi!' }]}
-                >
+                    rules={[{ required: true, message: 'Vui lòng nhập tuổi!' }]}>
                     <Input type="number" />
                 </Form.Item>
 
-                <Form.Item label="Avatar">
+                <Form.Item
+                    label="Avatar"
+                    name="avatar"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    rules={[{ required: true, message: "Vui lòng chọn ảnh đại diện!" }]}>
                     <Upload
-                        beforeUpload={() => false} // ngăn upload auto
+                        listType="picture"
                         maxCount={1}
-                        accept="image/*"
-                        onChange={async (info) => {
-                            const file = info.file.originFileObj;
-                            if (file) {
-                                const base64 = await getBase64(file);
-                                setAvatarBase64(base64);
-                            }
+                        customRequest={handleUploadAvatar}
+                        fileList={avatarFile ? [avatarFile] : []}
+                        onRemove={() => {
+                            setAvatarFile(null);
+                            setPreviewImage("");
                         }}
-                    >
+                        onPreview={handlePreview}
+                        accept="image/*">
                         <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
                     </Upload>
-                    {avatarBase64 && (
-                        <img
-                            src={avatarBase64}
-                            alt="avatar preview"
-                            style={{ width: 100, marginTop: 10, borderRadius: 4 }}
-                        />
-                    )}
                 </Form.Item>
+
+                {previewImage && (
+                    <Image
+                        width={100}
+                        src={previewImage}
+                        style={{ marginTop: 10, borderRadius: 4 }}
+                        preview={false}
+                    />
+                )}
             </Form>
         </Modal>
     );
