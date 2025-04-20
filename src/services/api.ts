@@ -72,25 +72,15 @@ export const getUsersAPI = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend)
 }
 
-export const createUserAPI = (
-    name: string,
-    email: string,
-    password: string,
-    gender: string,
-    avatar: string,
-    address: string,
-    age: string
-) => {
-    return axios.post("/api/v1/users", {
-        name,
-        email,
-        password,
-        gender,
-        avatarBase64: avatar, // truyền đúng key backend mong đợi
-        address,
-        age
-    });
+export const createUserAPI = (name: string, email: string, password: string, gender: string, avatar: string, address: string, age: string) => {
+    return axios.post("/api/v1/users", { name, email, password, gender, avatarBase64: avatar, address, age });
 };
+
+export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string) => {
+    const urlBackend = "/api/v1/users";
+    return axios.put<IBackendRes<IRegister>>(urlBackend,
+        { id, firstName, lastName, name, address, gender, age })
+}
 
 
 export const uploadFileAPI = (file: any, folder: string) => {

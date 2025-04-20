@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import { CSVLink } from "react-csv";
 import CreateUser from './create.user';
 import DetailUser from './detail.user';
+import UpdateUser from './update.user';
 type TSearch = {
     name: string;
     email: string;
@@ -30,6 +31,11 @@ const TableUser = () => {
     //detail user
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
+
+    //update user
+
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
     const columns: ProColumns<IUserTable>[] = [
         {
             dataIndex: 'index',
@@ -121,6 +127,10 @@ const TableUser = () => {
                         <EditTwoTone
                             twoToneColor="#f57800"
                             style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
+                            }}
                         />
                         <Popconfirm
                             placement="leftTop"
@@ -249,6 +259,14 @@ const TableUser = () => {
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
+            />
+
+            <UpdateUser
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
             />
         </>
     );
