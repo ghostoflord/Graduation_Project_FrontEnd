@@ -5,15 +5,13 @@ import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-d
 import { CSVLink } from 'react-csv';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { getProductsAPI } from '@/services/api';
+import { deleteProductAPI, getProductsAPI } from '@/services/api';
 type TSearch = {
     name: string;
-    author: string;
+    productCode: string;
     createdAt: string;
-    createdAtRange: string;
     updatedAt: string;
-    updatedAtRange: string;
-    price: number;
+    price: string;
 }
 const TableProduct = () => {
 
@@ -35,28 +33,38 @@ const TableProduct = () => {
     // const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     // const [dataUpdate, setDataUpdate] = useState<IProductTable | null>(null);
 
-    // const [isDeleteBook, setIsDeleteBook] = useState<boolean>(false);
+    const [isDeleteProduct, setIsDeleteProduct] = useState<boolean>(false);
     const { message, notification } = App.useApp();
 
 
-    // const handleDeleteBook = async (_id: string) => {
-    //     setIsDeleteBook(true)
-    //     const res = await deleteBookAPI(_id);
-    //     if (res && res.data) {
-    //         message.success('Xóa book thành công');
-    //         refreshTable();
-    //     } else {
-    //         notification.error({
-    //             message: 'Đã có lỗi xảy ra',
-    //             description: res.message
-    //         })
-    //     }
-    //     setIsDeleteBook(false)
-    // }
+    const handleDeleteProduct = async (id: string) => {
+        setIsDeleteProduct(true)
+        try {
+            const res = await deleteProductAPI(id);
 
-    // const refreshTable = () => {
-    //     actionRef.current?.reload();
-    // }
+            // Kiểm tra status code hoặc flag success từ API
+            if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
+                message.success(res.message || 'Xóa user thành công');
+                refreshTable();
+            } else {
+                notification.error({
+                    message: res.error || 'Đã có lỗi xảy ra',
+                    description: res.message || 'Không thể xóa user'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi hệ thống',
+                description: 'Đã có lỗi xảy ra khi xóa user'
+            });
+        } finally {
+            setIsDeleteProduct(false);
+        }
+    }
+
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
 
     const columns: ProColumns<IProductTable>[] = [
         {
@@ -82,7 +90,7 @@ const TableProduct = () => {
             // shortDescription: string;
         },
         {
-            title: 'Tên sách',
+            title: 'Tên Sản Phẩm',
             dataIndex: 'name',
             sorter: true
         },
@@ -92,12 +100,12 @@ const TableProduct = () => {
             hideInSearch: true,
         },
         {
-            title: 'MÃ Sản Phẩm',
+            title: 'Mã Sản Phẩm',
             dataIndex: 'productCode',
             sorter: true,
         },
         {
-            title: 'Giá tiền',
+            title: 'Giá Tiền',
             dataIndex: 'price',
             hideInSearch: true,
             sorter: true,
@@ -137,10 +145,10 @@ const TableProduct = () => {
                             placement="leftTop"
                             title={"Xác nhận xóa book"}
                             description={"Bạn có chắc chắn muốn xóa book này ?"}
-                            // onConfirm={() => handleDeleteBook(entity._id)}
+                            onConfirm={() => handleDeleteProduct(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
-                        // okButtonProps={{ loading: isDeleteBook }}
+                            okButtonProps={{ loading: isDeleteProduct }}
                         >
                             <span style={{ cursor: "pointer" }}>
                                 <DeleteTwoTone twoToneColor="#ff4d4f" />
@@ -168,15 +176,9 @@ const TableProduct = () => {
                         if (params.name) {
                             query += `&name=/${params.name}/i`
                         }
-                        // if (params.author) {
-                        //     query += `&author=/${params.author}/i`
-                        // }
-
-                        // const createDateRange = dateRangeValidate(params.createdAtRange);
-                        // if (createDateRange) {
-                        //     query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
-                        // }
-
+                        if (params.price) {
+                            query += `&price=/${params.price}/i`
+                        }
                     }
 
 
@@ -247,12 +249,14 @@ const TableProduct = () => {
                 ]}
             />
 
-            {/* < DetailBook
+            {/* < DetailProduct
                 openViewDetail={openViewDetail}
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
-            />
+            /> */}
+
+            {/* 
 
             <CreateBook
                 openModalCreate={openModalCreate}
