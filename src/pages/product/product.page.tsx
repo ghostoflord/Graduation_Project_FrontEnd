@@ -1,4 +1,4 @@
-import TableProduct from "@/components/admin/product/product.table";
+import TableProduct from "@/components/admin/product/table.product";
 
 const ProductPage = () => {
     return (

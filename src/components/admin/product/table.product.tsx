@@ -6,6 +6,7 @@ import { CSVLink } from 'react-csv';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { deleteProductAPI, getProductsAPI } from '@/services/api';
+import CreateProduct from './create.product';
 type TSearch = {
     name: string;
     productCode: string;
@@ -26,7 +27,7 @@ const TableProduct = () => {
     // const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     // const [dataViewDetail, setDataViewDetail] = useState<IProductTable | null>(null);
 
-    // const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const [currentDataTable, setCurrentDataTable] = useState<IProductTable[]>([]);
 
@@ -136,7 +137,7 @@ const TableProduct = () => {
                         <EditTwoTone
                             twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 10px" }}
                         // onClick={() => {
-                        //     setOpenModalUpdate(true);
+                        //     setOpenModalUpdate(true);    
                         //     setDataUpdate(entity);
                         // }}
                         />
@@ -239,14 +240,21 @@ const TableProduct = () => {
                     <Button
                         key="button"
                         icon={<PlusOutlined />}
-                        // onClick={() => {
-                        //     setOpenModalCreate(true);
-                        // }}
+                        onClick={() => {
+                            setOpenModalCreate(true);
+                        }}
                         type="primary"
                     >
                         Add new
                     </Button>
                 ]}
+            />
+
+
+            <CreateProduct
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
             />
 
             {/* < DetailProduct
@@ -258,11 +266,6 @@ const TableProduct = () => {
 
             {/* 
 
-            <CreateBook
-                openModalCreate={openModalCreate}
-                setOpenModalCreate={setOpenModalCreate}
-                refreshTable={refreshTable}
-            />
 
             <UpdateBook
                 openModalUpdate={openModalUpdate}
