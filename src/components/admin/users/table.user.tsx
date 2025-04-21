@@ -208,7 +208,7 @@ const TableUser = () => {
                         // }
                     }
 
-                    //default
+                    // default
 
                     // if (sort && sort.createdAt) {
                     //     query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`

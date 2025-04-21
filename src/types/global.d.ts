@@ -82,16 +82,16 @@ declare global {
         detail: any;
     }
 
-    interface IBookTable {
-        _id: string;
-        thumbnail: string;
-        slider: string[];
-        mainText: string;
-        author: string;
+    interface IProductTable {
+        id: string;
+        image: string;
+        name: string;
         price: number;
         sold: number;
         quantity: number;
-        category: string;
+        detailDescription: string;
+        productCode: string;
+        shortDescription: string;
         createdAt: Date;
         updatedAt: Date;
     }

@@ -89,7 +89,8 @@ export const deleteUserAPI = (id: string) => {
 
 export const uploadFileAPI = (file: any, folder: string) => {
     const bodyFormData = new FormData();
-    bodyFormData.append('fileImg', file);
+    bodyFormData.append('file', file);
+    bodyFormData.append('folder', folder);
     return axios<IBackendRes<{
         fileName: string
     }>>({
@@ -98,8 +99,13 @@ export const uploadFileAPI = (file: any, folder: string) => {
         data: bodyFormData,
         headers: {
             "Content-Type": "multipart/form-data",
-            "upload-type": folder
         },
     });
+}
+
+//product
+export const getProductsAPI = (query: string) => {
+    const urlBackend = `/api/v1/products?${query}`;
+    return axios.get<IBackendRes<IModelPaginate<IProductTable>>>(urlBackend)
 }
 
