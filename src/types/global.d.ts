@@ -91,6 +91,8 @@ declare global {
         quantity: number;
         detailDescription: string;
         productCode: string;
+        guarantee: string;
+        factory: string;
         shortDescription: string;
         createdAt: Date;
         updatedAt: Date;

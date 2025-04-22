@@ -7,6 +7,8 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { deleteProductAPI, getProductsAPI } from '@/services/api';
 import CreateProduct from './create.product';
+import UpdateProduct from './update.product';
+import DetailProduct from './detail.product';
 type TSearch = {
     name: string;
     productCode: string;
@@ -24,15 +26,15 @@ const TableProduct = () => {
         total: 0
     });
 
-    // const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
-    // const [dataViewDetail, setDataViewDetail] = useState<IProductTable | null>(null);
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IProductTable | null>(null);
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const [currentDataTable, setCurrentDataTable] = useState<IProductTable[]>([]);
 
-    // const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
-    // const [dataUpdate, setDataUpdate] = useState<IProductTable | null>(null);
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IProductTable | null>(null);
 
     const [isDeleteProduct, setIsDeleteProduct] = useState<boolean>(false);
     const { message, notification } = App.useApp();
@@ -42,7 +44,6 @@ const TableProduct = () => {
         setIsDeleteProduct(true)
         try {
             const res = await deleteProductAPI(id);
-
             // Kiểm tra status code hoặc flag success từ API
             if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
                 message.success(res.message || 'Xóa user thành công');
@@ -72,23 +73,14 @@ const TableProduct = () => {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
-            // render(dom, entity, index, action, schema) {
-            //     return (
-            //         <a href='#' onClick={() => {
-            //             setDataViewDetail(entity);
-            //             setOpenViewDetail(true);
-            //         }}>{entity._id}</a>
-            //     )
-            // },
-            // id: string;
-            // image: string;
-            // name: string;
-            // price: number;
-            // sold: number;
-            // quantity: number;
-            // detailDescription: string;
-            // productCode: string;
-            // shortDescription: string;
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a href='#' onClick={() => {
+                        setDataViewDetail(entity);
+                        setOpenViewDetail(true);
+                    }}>{entity.id}</a>
+                )
+            },
         },
         {
             title: 'Tên Sản Phẩm',
@@ -120,13 +112,13 @@ const TableProduct = () => {
                 )
             }
         },
-        // {
-        //     title: 'Ngày cập nhật',
-        //     dataIndex: 'updatedAt',
-        //     sorter: true,
-        //     valueType: 'date',
-        //     hideInSearch: true
-        // },
+        {
+            title: 'Ngày cập nhật',
+            dataIndex: 'updatedAt',
+            sorter: true,
+            valueType: 'date',
+            hideInSearch: true
+        },
 
         {
             title: 'Action',
@@ -136,10 +128,10 @@ const TableProduct = () => {
                     <>
                         <EditTwoTone
                             twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 10px" }}
-                        // onClick={() => {
-                        //     setOpenModalUpdate(true);    
-                        //     setDataUpdate(entity);
-                        // }}
+                            onClick={() => {
+                                setOpenModalUpdate(true);
+                                setDataUpdate(entity);
+                            }}
                         />
 
                         <Popconfirm
@@ -256,24 +248,22 @@ const TableProduct = () => {
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
             />
-
-            {/* < DetailProduct
-                openViewDetail={openViewDetail}
-                setOpenViewDetail={setOpenViewDetail}
-                dataViewDetail={dataViewDetail}
-                setDataViewDetail={setDataViewDetail}
-            /> */}
-
-            {/* 
-
-
-            <UpdateBook
+            <UpdateProduct
                 openModalUpdate={openModalUpdate}
                 setOpenModalUpdate={setOpenModalUpdate}
                 refreshTable={refreshTable}
                 dataUpdate={dataUpdate}
                 setDataUpdate={setDataUpdate}
-            /> */}
+            />
+
+            < DetailProduct
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
+
+
         </>
     )
 }

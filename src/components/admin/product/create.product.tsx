@@ -25,7 +25,6 @@ interface IProps {
 
 type FieldType = {
     name: string;
-    email: string;
     productCode: string;
     detailDescription: string;
     guarantee: string;
@@ -98,17 +97,17 @@ const CreateProduct = (props: IProps) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
-        const { name, productCode, detailDescription, guarantee, image  , factory, price, sold, quantity, shortDescription } = values;
+        const { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription } = values;
 
         // Chuyển avatar sang dạng base64
         const imageBase64 = imageFile ? await getBase64(imageFile.originFileObj as RcFile) : '';
 
         try {
             // Gọi API để tạo người dùng mới
-            const res = await createProductAPI(name, productCode, detailDescription, guarantee, imageimageBase64, factory, price, sold, quantity, shortDescription);
+            const res = await createProductAPI(name, productCode, detailDescription, guarantee, imageBase64, factory, price, sold, quantity, shortDescription);
 
             if (res && res.data) {
-                message.success('Tạo mới user thành công');
+                message.success('Tạo mới product thành công');
                 form.resetFields();
                 setImageFile(null);
                 setPreviewImage("");
@@ -132,7 +131,7 @@ const CreateProduct = (props: IProps) => {
 
     return (
         <Modal
-            title="Thêm mới người dùng"
+            title="Thêm mới sản phẩm"
             open={openModalCreate}
             onOk={() => form.submit()}
             onCancel={() => {

@@ -113,6 +113,12 @@ export const createProductAPI = (name: string, productCode: string, detailDescri
     return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, imageBase64: image, factory, price, sold, quantity, shortDescription });
 };
 
+export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string) => {
+    const urlBackend = "/api/v1/users";
+    return axios.put<IBackendRes<IRegister>>(urlBackend,
+        { id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription })
+}
+
 export const deleteProductAPI = (id: string) => {
     const urlBackend = `/api/v1/products/${id}`;
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
