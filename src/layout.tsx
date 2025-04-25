@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import Footer from "./pages/home/footer/home.footer"
 import Header from "./pages/home/header/home.header"
 import NewsletterForm from "./pages/home/newlistform/home.newlistform";
@@ -16,9 +17,11 @@ const LayoutPage = () => {
       <div>
         <Header />
         <Slider slides={slides} />
-        test homee page
-        <NewsletterForm />
+        <Outlet />
+
         <Footer />
+
+
       </div>
     </>
   )

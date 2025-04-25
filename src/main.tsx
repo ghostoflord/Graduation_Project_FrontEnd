@@ -16,12 +16,19 @@ import ProductPage from '@/pages/product/product.page';
 import OrderPage from '@/pages/order/order.page';
 import ErrorPage from '@/pages/error/error.page';
 import { AppProvider } from '@/components/context/app.context';
+import CoreValues from './pages/home/corevalues/CoreValues';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LayoutPage />,
     errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "gia-tri-cot-loi",
+        element: <CoreValues />
+      }
+    ]
   },
   {
     path: "/admin",

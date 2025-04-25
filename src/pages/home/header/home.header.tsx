@@ -1,8 +1,30 @@
 
-import React from "react";
+import { PhoneOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import "./home.header.scss";
+import { NavLink } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
 
 const Header = () => {
+
+    const [showSubMenu, setShowSubMenu] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    // Đóng menu khi click ra ngoài
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowSubMenu(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const toggleSubMenu = () => {
+        setShowSubMenu(!showSubMenu);
+    };
     return (
         <div className="laptopnew-header">
             <div className="top-bar">
@@ -15,29 +37,65 @@ const Header = () => {
                 </div>
 
                 <div className="contact">
-                    <span>Gọi mua hàng</span>
+                    <span>
+                        <PhoneOutlined style={{ marginRight: 6 }} />
+                        Gọi mua hàng
+                    </span>
                     <strong>1900.8946</strong>
                 </div>
 
                 <div className="actions">
-                    <button>Đăng nhập / Đăng ký</button>
+                    <NavLink to="/login" className="login-btn">
+                        <UserOutlined style={{ marginRight: 6 }} />
+                        Đăng nhập / Đăng ký
+                    </NavLink>
                     <button className="cart-btn">
-                        <span>Giỏ hàng</span>
+                        <ShoppingCartOutlined />
+                        <span className="cart-text">Giỏ hàng</span>
                     </button>
                 </div>
             </div>
 
             <div className="menu-bar">
                 <ul>
-                    <li>Danh mục sản phẩm</li>
-                    <li>Trang chủ</li>
-                    <li>Giới thiệu</li>
-                    <li>Chính sách bán hàng</li>
-                    <li>Tin tức</li>
-                    <li>Tuyển dụng</li>
-                    <li>Nhượng quyền</li>
-                    <li>Liên hệ</li>
-                    <li>Tra cứu bảo hành</li>
+                    <NavLink to="/">Trang chủ</NavLink>
+                    <div
+                        className="navbar-item-with-sub"
+                        ref={menuRef}
+                        onClick={toggleSubMenu}
+                    >
+                        <NavLink
+                            to="/gioithieu" // Hoặc đường dẫn thực tế nếu có
+                            className="navlink"
+                            onClick={(e) => {
+                                e.preventDefault(); // Ngăn chuyển trang nếu to="#"
+                                toggleSubMenu();
+                            }}
+                        >
+                            Giới thiệu ▼
+                        </NavLink>
+
+                        {showSubMenu && (
+                            <div className="submenu">
+                                <NavLink to="/laptopnew" onClick={() => setShowSubMenu(false)}>
+                                    Giới thiệu LaptopNew
+                                </NavLink>
+                                <NavLink to="/tam-nhin-su-menh" onClick={() => setShowSubMenu(false)}>
+                                    Tầm nhìn & Sứ mệnh
+                                </NavLink>
+                                <NavLink to="/gia-tri-cot-loi" onClick={() => setShowSubMenu(false)}>
+                                    Giá trị cốt lõi
+                                </NavLink>
+                            </div>
+                        )}
+                    </div>
+
+                    <NavLink to="/chinh-sach">Chính sách bán hàng</NavLink>
+                    <NavLink to="/tin-tuc">Tin tức</NavLink>
+                    <NavLink to="/tuyen-dung">Tuyển dụng</NavLink>
+                    <NavLink to="/nhuong-quyen">Nhượng quyền</NavLink>
+                    <NavLink to="/lien-he">Liên hệ</NavLink>
+                    <NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink>
                 </ul>
             </div>
 
