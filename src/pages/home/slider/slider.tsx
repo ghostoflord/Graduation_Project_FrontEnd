@@ -33,22 +33,23 @@ const Slider: React.FC = () => {
 
     return (
         <div className="slider">
-            <div className="slider-inner"
-                style={{
-                    transform: `translateX(-${currentIndex * 100}%)`,
-                }}
+            <div
+                className="slider-inner"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }} // <<< mỗi lần click trượt đúng 100%
             >
                 {slides.map((slide) => (
-                    <div key={slide.id} className="slide">
+                    <div key={slide.id} className="slide"> {/* Bọc thêm div.slide */}
                         <img src={slide.image} alt={slide.alt} />
                     </div>
                 ))}
             </div>
+
             <div className="nav-buttons">
                 <button onClick={goToPrev}>‹</button>
                 <button onClick={goToNext}>›</button>
             </div>
         </div>
+
     );
 };
 
