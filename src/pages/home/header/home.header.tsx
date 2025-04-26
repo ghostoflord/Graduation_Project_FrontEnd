@@ -108,10 +108,6 @@ const Header = () => {
 
             <div className="banner">
                 <img src={banner} alt="MSI RTX 50 Banner" /> {/* 👈 sửa src tại đây */}
-                <div className="banner-overlay">
-                    <h2>CHÍNH THỨC MỞ BÁN</h2>
-                    <p>Laptop MSI mới nhất với RTX™ 50 Series</p>
-                </div>
             </div>
         </div>
     );
