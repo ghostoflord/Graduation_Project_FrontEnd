@@ -400,4 +400,27 @@
       display: flex;
     }
   }
+
+  .news-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+
+    .news-link {
+      color: #0046c0;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        color: #ff5722;
+        text-decoration: underline;
+      }
+    }
+
+    span {
+      color: #aaa;
+    }
+  }
+
 }

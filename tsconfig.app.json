@@ -33,6 +33,9 @@
       "utils/*": [
         "./src/utils/*"
       ],
+      "assets/*": [
+        "./src/assets/*"
+      ],
     },
     /* Bundler mode */
     "moduleResolution": "bundler",

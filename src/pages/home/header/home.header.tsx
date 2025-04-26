@@ -1,14 +1,13 @@
-
 import { PhoneOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import "./home.header.scss";
 import { NavLink } from "react-router-dom";
 import { useEffect, useRef, useState } from 'react';
+import logo from '@/assets/logo.jpg';
 
 const Header = () => {
-
     const [showSubMenu, setShowSubMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
-    // Đóng menu khi click ra ngoài
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -25,15 +24,23 @@ const Header = () => {
     const toggleSubMenu = () => {
         setShowSubMenu(!showSubMenu);
     };
+
     return (
         <div className="laptopnew-header">
             <div className="top-bar">
                 <div className="logo">
-                    <img src="/logo.png" alt="LaptopNew Logo" />
+                    <img src={logo} alt="LaptopNew Logo" />
                 </div>
 
                 <div className="search-box">
                     <input type="text" placeholder="Từ khoá..." />
+                </div>
+
+                {/* Tin khuyến mãi + Tin tức công nghệ */}
+                <div className="news-links">
+                    <NavLink to="/tin-khuyen-mai" className="news-link">Tin khuyến mãi</NavLink>
+                    <span>|</span>
+                    <NavLink to="/tin-tuc-cong-nghe" className="news-link">Tin tức công nghệ</NavLink>
                 </div>
 
                 <div className="contact">
@@ -65,10 +72,10 @@ const Header = () => {
                         onClick={toggleSubMenu}
                     >
                         <NavLink
-                            to="/gioithieu" // Hoặc đường dẫn thực tế nếu có
+                            to="/gioithieu"
                             className="navlink"
                             onClick={(e) => {
-                                e.preventDefault(); // Ngăn chuyển trang nếu to="#"
+                                e.preventDefault();
                                 toggleSubMenu();
                             }}
                         >
