@@ -3,7 +3,7 @@ import "./home.header.scss";
 import { NavLink } from "react-router-dom";
 import { useEffect, useRef, useState } from 'react';
 import logo from '@/assets/logo.jpg';
-
+import banner from '@/assets/banner.png';
 const Header = () => {
     const [showSubMenu, setShowSubMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -107,7 +107,7 @@ const Header = () => {
             </div>
 
             <div className="banner">
-                <img src="/banner-msi.jpg" alt="MSI RTX 50 Banner" />
+                <img src={banner} alt="MSI RTX 50 Banner" /> {/* 👈 sửa src tại đây */}
                 <div className="banner-overlay">
                     <h2>CHÍNH THỨC MỞ BÁN</h2>
                     <p>Laptop MSI mới nhất với RTX™ 50 Series</p>
