@@ -86,9 +86,9 @@ declare global {
         id: string;
         image: string;
         name: string;
-        price: number;
+        price: string;
         sold: number;
-        quantity: number;
+        quantity: string;
         detailDescription: string;
         productCode: string;
         guarantee: string;

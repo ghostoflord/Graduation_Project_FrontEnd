@@ -24,6 +24,7 @@ const router = createBrowserRouter([
     element: <LayoutPage />,
     errorElement: <ErrorPage />,
     children: [
+      
       {
         path: "gia-tri-cot-loi",
         element: <CoreValues />
