@@ -16,9 +16,9 @@ import ProductPage from '@/pages/product/product.page';
 import OrderPage from '@/pages/order/order.page';
 import ErrorPage from '@/pages/error/error.page';
 import { AppProvider } from '@/components/context/app.context';
-import CoreValues from './pages/home/corevalues/CoreValues';
+import CoreValues from './pages/home/header/introducedropdown/corevalues/core.vales';
 import HomePage from './pages/home/home/homepage';
-import AboutCompany from './pages/home/header/aboutcompany/aboutcompany';
+import AboutCompany from './pages/home/header/introducedropdown/aboutcompany/aboutcompany';
 
 const router = createBrowserRouter([
   {
