@@ -1,21 +1,17 @@
 import { Outlet } from "react-router-dom";
-import Footer from "./pages/home/footer/home.footer"
-import Header from "./pages/home/header/home.header"
-import Slider from "./pages/home/slider/slider"
-import ProductList from "./pages/home/product/product.list.home";
+import Footer from "./pages/home/footer/home.footer";
+import Header from "./pages/home/header/home.header";
 
 const LayoutPage = () => {
   return (
     <>
-      <div>
-        <Header />
-        <Slider />
-        <ProductList />
+      <Header />
+      <main style={{ minHeight: "calc(100vh - 200px)" }}>
         <Outlet />
-        <Footer />
-      </div>
+      </main>
+      <Footer />
     </>
-  )
-}
+  );
+};
 
-export default LayoutPage
+export default LayoutPage;
