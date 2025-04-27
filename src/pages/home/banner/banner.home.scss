@@ -1,22 +1,22 @@
-// src/components/Banner/banner.scss
 .banner {
     position: relative;
     width: 100%;
-    height: 260px; // Giảm từ 320px xuống còn 260px cho gọn hơn
+    height: 400px; // Tăng chiều cao cho đẹp như Laptopnew
     overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 
     img {
         width: 100%;
         height: 100%;
-        object-fit: contain; // giữ nguyên contain
+        object-fit: cover; // 👈 Sửa lại thành cover
         object-position: center;
     }
 
     @media (max-width: 992px) {
-        height: 220px;
+        height: 280px;
     }
 
     @media (max-width: 576px) {
-        height: 180px;
+        height: 200px;
     }
 }
