@@ -106,9 +106,6 @@ const Header = () => {
                 </ul>
             </div>
 
-            <div className="banner">
-                <img src={banner} alt="MSI RTX 50 Banner" /> {/* 👈 sửa src tại đây */}
-            </div>
         </div>
     );
 };
