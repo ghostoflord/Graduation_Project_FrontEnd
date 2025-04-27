@@ -41,7 +41,7 @@ declare global {
     }
 
     interface IRegister {
-        _id: string;
+        id: string;
         email: string;
         fullName: string;
     }
@@ -99,9 +99,10 @@ declare global {
     }
 
     interface ICart {
-        _id: string;
         quantity: number;
-        detail: IBookTable;
+        price: number;
+        sum: number;
+        userId: number;
     }
 
     interface IHistory {

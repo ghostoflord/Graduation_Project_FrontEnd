@@ -129,3 +129,7 @@ export const deleteProductAPI = (id: string) => {
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
+export const getCart = (userId: string) => {
+    const urlBackend = `/api/v1/carts/users/${userId}`;
+    return axios.get<IBackendRes<ICart>>(urlBackend);
+};

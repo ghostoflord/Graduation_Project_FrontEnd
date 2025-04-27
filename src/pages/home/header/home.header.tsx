@@ -1,12 +1,14 @@
-import { Badge, Button, Input, Avatar, Space, Dropdown } from 'antd';
+import { Badge, Button, Input, Avatar, Space, Dropdown, message } from 'antd';
 import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import './home.header.scss';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { MenuProps } from 'antd';
-import { message } from "antd";
+import { useEffect } from 'react';
+import { getCart } from '@/services/api';
+
 export default function Header() {
-    const { user, isAuthenticated, setIsAuthenticated, setUser } = useCurrentApp();
+    const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary, setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -27,6 +29,21 @@ export default function Header() {
             key: 'logout',
         }
     ];
+
+    useEffect(() => {
+        if (!user?.id) return;
+
+        (async () => {
+            try {
+                const res = await getCart(user.id);
+                if (res?.data) {
+                    setCartSummary(res.data); // đổi từ setCarts -> setCartSummary
+                }
+            } catch (error) {
+                console.error('Failed to fetch cart:', error);
+            }
+        })();
+    }, [user?.id, setCartSummary]);
 
     return (
         <div className="header-wrapper">
@@ -62,11 +79,15 @@ export default function Header() {
                                 <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
                                 <span>{user?.name}</span>
                             </Space>
-
                         </Dropdown>
                     )}
-                    <Badge count={4} size="small" offset={[-5, 5]}>
-                        <Button shape="circle" icon={<ShoppingCartOutlined />} className="cart-button" />
+                    <Badge count={cartSummary?.quantity || 0} size="small" offset={[-5, 5]}>
+                        <Button
+                            shape="circle"
+                            icon={<ShoppingCartOutlined />}
+                            className="cart-button"
+                            onClick={() => navigate('/cart')}
+                        />
                     </Badge>
                 </div>
             </div>
