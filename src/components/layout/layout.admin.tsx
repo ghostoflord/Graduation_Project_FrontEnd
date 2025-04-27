@@ -14,7 +14,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { useCurrentApp } from '../context/app.context';
 import type { MenuProps } from 'antd';
-// import { logoutAPI } from '@/services/api';
+import { logoutAPI } from '@/services/api';
 type MenuItem = Required<MenuProps>['items'][number];
 
 const { Content, Footer, Sider } = Layout;
@@ -22,12 +22,12 @@ const { Content, Footer, Sider } = Layout;
 
 const LayoutAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
-    // const [activeMenu, setActiveMenu] = useState('');
-    // const {
-    //     user, setUser, setIsAuthenticated, isAuthenticated,
-    //     setCarts
-    // } = useCurrentApp();
-
+    const [activeMenu, setActiveMenu] = useState('');
+    const {
+        user, setUser, setIsAuthenticated, isAuthenticated,
+        setCarts
+    } = useCurrentApp();
+    // const navigate = useNavigate();
     const location = useLocation();
 
     const items: MenuItem[] = [
@@ -63,22 +63,26 @@ const LayoutAdmin = () => {
     ];
 
 
-    // useEffect(() => {
-    //     const active: any = items.find(item => location.pathname === (item!.key as any)) ?? "/admin";
-    //     setActiveMenu(active.key)
-    // }, [location])
+    useEffect(() => {
+        const activeItem = items.find(item => location.pathname === (item!.key as any));
+        if (activeItem && activeItem.key) {
+            setActiveMenu(activeItem.key as string);
+        } else {
+            setActiveMenu('/admin');
+        }
+    }, [location])
 
-    // const handleLogout = async () => {
-    //     //todo
-    //     const res = await logoutAPI();
-    //     if (res.data) {
-    //         setUser(null);
-    //         setCarts([]);
-    //         setIsAuthenticated(false);
-    //         localStorage.removeItem("access_token");
-    //         localStorage.removeItem("carts")
-    //     }
-    // }
+    const handleLogout = async () => {
+        //todo
+        const res = await logoutAPI();
+        if (res.data) {
+            setUser(null);
+            setCarts([]);
+            setIsAuthenticated(false);
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("carts")
+        }
+    }
 
 
     const itemsDropdown = [
@@ -93,33 +97,33 @@ const LayoutAdmin = () => {
             label: <Link to={'/'}>Trang chủ</Link>,
             key: 'home',
         },
-        // {
-        //     label: <label
-        //         style={{ cursor: 'pointer' }}
-        //         onClick={() => handleLogout()}
-        //     >Đăng xuất</label>,
-        //     key: 'logout',
-        // },
+        {
+            label: <label
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleLogout()}
+            >Đăng xuất</label>,
+            key: 'logout',
+        },
 
     ];
 
-    // const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`;
 
-    // if (isAuthenticated === false) {
-    //     return (
-    //         <Outlet />
-    //     )
-    // }
+    if (isAuthenticated === false) {
+        return (
+            <Outlet />
+        )
+    }
 
-    // const isAdminRoute = location.pathname.includes("admin");
-    // if (isAuthenticated === true && isAdminRoute === true) {
-    //     const role = user?.role;
-    //     if (role === "USER") {
-    //         return (
-    //             <Outlet />
-    //         )
-    //     }
-    // }
+    const isAdminRoute = location.pathname.includes("admin");
+    if (isAuthenticated === true && isAdminRoute === true) {
+        const role = user?.role;
+        if (role === "USER") {
+            return (
+                <Outlet />
+            )
+        }
+    }
 
     return (
         <>
@@ -136,11 +140,11 @@ const LayoutAdmin = () => {
                         Admin
                     </div>
                     <Menu
-                        // defaultSelectedKeys={[activeMenu]}
-                        // selectedKeys={[activeMenu]}
-                        // mode="inline"
+                        defaultSelectedKeys={[activeMenu]}
+                        selectedKeys={[activeMenu]}
+                        mode="inline"
                         items={items}
-                    // onClick={(e) => setActiveMenu(e.key)}
+                        onClick={(e) => setActiveMenu(e.key)}
                     />
                 </Sider>
                 <Layout>
@@ -159,12 +163,12 @@ const LayoutAdmin = () => {
                                 onClick: () => setCollapsed(!collapsed),
                             })}
                         </span>
-                        {/* <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                             <Space style={{ cursor: "pointer" }}>
                                 <Avatar src={urlAvatar} />
                                 {user?.name}
                             </Space>
-                        </Dropdown> */}
+                        </Dropdown>
                     </div>
                     <Content style={{ padding: '15px' }}>
                         <Outlet />
