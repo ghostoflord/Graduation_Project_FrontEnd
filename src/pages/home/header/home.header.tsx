@@ -4,7 +4,7 @@ import './home.header.scss';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { MenuProps } from 'antd';
-
+import { message } from "antd";
 export default function Header() {
     const { user, isAuthenticated, setIsAuthenticated, setUser } = useCurrentApp();
     const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function Header() {
         setUser(null);
         setIsAuthenticated(false);
         localStorage.removeItem("access_token");
+        message.success("Đăng xuất thành công!");
         navigate('/login');
     };
 
@@ -61,6 +62,7 @@ export default function Header() {
                                 <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
                                 <span>{user?.name}</span>
                             </Space>
+
                         </Dropdown>
                     )}
                     <Badge count={4} size="small" offset={[-5, 5]}>

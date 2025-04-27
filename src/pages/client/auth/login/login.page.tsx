@@ -31,6 +31,7 @@ const LoginPage = () => {
                 setIsAuthenticated(true);
                 setUser(user);
                 localStorage.setItem('access_token', res.data.access_token);
+                localStorage.setItem('user', JSON.stringify(res.data.user));
 
                 message.success('Đăng nhập tài khoản thành công!');
 
