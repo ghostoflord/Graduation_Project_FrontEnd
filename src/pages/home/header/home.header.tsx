@@ -6,6 +6,7 @@ import { useCurrentApp } from '@/components/context/app.context';
 import type { MenuProps } from 'antd';
 import { useEffect } from 'react';
 import { getCart } from '@/services/api';
+import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 
 export default function Header() {
     const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary, setCartSummary } = useCurrentApp();
@@ -96,7 +97,9 @@ export default function Header() {
                 <ul>
                     <li><NavLink to="/danh-muc-san-pham">Danh mục sản phẩm</NavLink></li>
                     <li><NavLink to="/">Trang chủ</NavLink></li>
-                    <li><NavLink to="/gioi-thieu">Giới thiệu</NavLink></li>
+                    <li>
+                        <IntroduceDropDown /> {/* dùng component tách riêng */}
+                    </li>
                     <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
                     <li><NavLink to="/tin-tuc">Tin tức</NavLink></li>
                     <li><NavLink to="/tuyen-dung">Tuyển dụng</NavLink></li>

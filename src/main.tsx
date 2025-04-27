@@ -18,6 +18,7 @@ import ErrorPage from '@/pages/error/error.page';
 import { AppProvider } from '@/components/context/app.context';
 import CoreValues from './pages/home/corevalues/CoreValues';
 import HomePage from './pages/home/home/homepage';
+import AboutCompany from './pages/home/header/aboutcompany/aboutcompany';
 
 const router = createBrowserRouter([
   {
@@ -28,12 +29,17 @@ const router = createBrowserRouter([
       {
         path: "", element: <HomePage />
       },
+      // {
+      //   path: "gia-tri-cot-loi",
+      //   element: <CoreValues />
+      // },
       {
         path: "gia-tri-cot-loi",
         element: <CoreValues />
       },
       {
-        path: "gia-tri-cot-loi", element: <CoreValues />
+        path: "gioi-thieu",
+        element: <AboutCompany />
       },
       {
         path: "san-pham", element: <ProductPage />
