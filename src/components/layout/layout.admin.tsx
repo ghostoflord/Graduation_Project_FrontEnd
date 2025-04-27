@@ -10,15 +10,13 @@ import {
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, Avatar } from 'antd';
-import { Outlet, useLocation } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, Navigate, Link } from "react-router-dom";
 import { useCurrentApp } from '../context/app.context';
 import type { MenuProps } from 'antd';
 import { logoutAPI } from '@/services/api';
+import { message } from 'antd';
 type MenuItem = Required<MenuProps>['items'][number];
-
 const { Content, Footer, Sider } = Layout;
-
 
 const LayoutAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -27,7 +25,7 @@ const LayoutAdmin = () => {
         user, setUser, setIsAuthenticated, isAuthenticated,
         setCarts
     } = useCurrentApp();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
 
     const items: MenuItem[] = [
@@ -35,7 +33,6 @@ const LayoutAdmin = () => {
             label: <Link to='/admin'>Dashboard</Link>,
             key: '/admin',
             icon: <AppstoreOutlined />,
-
         },
         {
             label: <span>Manage Users</span>,
@@ -59,30 +56,32 @@ const LayoutAdmin = () => {
             key: '/admin/order',
             icon: <DollarCircleOutlined />
         },
-
     ];
 
-
     useEffect(() => {
-        const activeItem = items.find(item => location.pathname === (item!.key as any));
+        const activeItem = items.find(item => location.pathname === (item?.key as any));
         if (activeItem && activeItem.key) {
             setActiveMenu(activeItem.key as string);
         } else {
             setActiveMenu('/admin');
         }
-    }, [location])
+    }, [location]);
 
     const handleLogout = async () => {
-        //todo
-        const res = await logoutAPI();
-        if (res.data) {
+        try {
+            await logoutAPI();
+        } catch (error) {
+            console.error("Logout error", error);
+        } finally {
             setUser(null);
             setCarts([]);
             setIsAuthenticated(false);
             localStorage.removeItem("access_token");
-            localStorage.removeItem("carts")
+            localStorage.removeItem("carts");
+            message.success('Đăng xuất thành công!', 2); // Thêm dòng này
+            navigate('/login', { replace: true });
         }
-    }
+    };
 
 
     const itemsDropdown = [
@@ -104,81 +103,72 @@ const LayoutAdmin = () => {
             >Đăng xuất</label>,
             key: 'logout',
         },
-
     ];
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`;
 
+    // FIX Ở ĐÂY: chuyển <Outlet /> thành <Navigate />
     if (isAuthenticated === false) {
-        return (
-            <Outlet />
-        )
+        return <Navigate to="/login" replace />;
     }
 
     const isAdminRoute = location.pathname.includes("admin");
     if (isAuthenticated === true && isAdminRoute === true) {
         const role = user?.role;
         if (role === "USER") {
-            return (
-                <Outlet />
-            )
+            return <Navigate to="/" replace />;
         }
     }
 
     return (
-        <>
-            <Layout
-                style={{ minHeight: '100vh' }}
-                className="layout-admin"
+        <Layout style={{ minHeight: '100vh' }} className="layout-admin">
+            <Sider
+                theme='light'
+                collapsible
+                collapsed={collapsed}
+                onCollapse={(value) => setCollapsed(value)}
             >
-                <Sider
-                    theme='light'
-                    collapsible
-                    collapsed={collapsed}
-                    onCollapse={(value) => setCollapsed(value)}>
-                    <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
-                        Admin
-                    </div>
-                    <Menu
-                        defaultSelectedKeys={[activeMenu]}
-                        selectedKeys={[activeMenu]}
-                        mode="inline"
-                        items={items}
-                        onClick={(e) => setActiveMenu(e.key)}
-                    />
-                </Sider>
-                <Layout>
-                    <div className='admin-header' style={{
-                        height: "50px",
-                        borderBottom: "1px solid #ebebeb",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "0 15px",
-
-                    }}>
-                        <span>
-                            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                                className: 'trigger',
-                                onClick: () => setCollapsed(!collapsed),
-                            })}
-                        </span>
-                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                            <Space style={{ cursor: "pointer" }}>
-                                <Avatar src={urlAvatar} />
-                                {user?.name}
-                            </Space>
-                        </Dropdown>
-                    </div>
-                    <Content style={{ padding: '15px' }}>
-                        <Outlet />
-                    </Content>
-                    <Footer style={{ padding: 0, textAlign: "center" }}>
-                        LaptopShop &copy;Ghost - Made with <HeartTwoTone />
-                    </Footer>
-                </Layout>
+                <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
+                    Admin
+                </div>
+                <Menu
+                    defaultSelectedKeys={[activeMenu]}
+                    selectedKeys={[activeMenu]}
+                    mode="inline"
+                    items={items}
+                    onClick={(e) => setActiveMenu(e.key)}
+                />
+            </Sider>
+            <Layout>
+                <div className='admin-header' style={{
+                    height: "50px",
+                    borderBottom: "1px solid #ebebeb",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0 15px",
+                }}>
+                    <span>
+                        {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                            className: 'trigger',
+                            onClick: () => setCollapsed(!collapsed),
+                        })}
+                    </span>
+                    <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                        <Space style={{ cursor: "pointer" }}>
+                            <Avatar src={urlAvatar} />
+                            {user?.name}
+                        </Space>
+                    </Dropdown>
+                </div>
+                <Content style={{ padding: '15px' }}>
+                    <Outlet />
+                </Content>
+                <Footer style={{ padding: 0, textAlign: "center" }}>
+                    LaptopShop &copy;Ghost - Made with <HeartTwoTone />
+                </Footer>
             </Layout>
-        </>
+        </Layout>
     );
 };
 
