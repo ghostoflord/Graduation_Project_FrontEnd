@@ -1,113 +1,49 @@
-import { PhoneOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import "./home.header.scss";
-import { NavLink } from "react-router-dom";
-import { useEffect, useRef, useState } from 'react';
-import logo from '@/assets/logo.jpg';
-import banner from '@/assets/banner.png';
-const Header = () => {
-    const [showSubMenu, setShowSubMenu] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
+// Header.tsx
+import { Badge, Button, Input } from 'antd';
+import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import './home.header.scss';
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setShowSubMenu(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    const toggleSubMenu = () => {
-        setShowSubMenu(!showSubMenu);
-    };
-
-    return (
-        <div className="laptopnew-header">
-            <div className="top-bar">
-                <div className="logo">
-                    <img src={logo} alt="LaptopNew Logo" />
-                </div>
-
-                <div className="search-box">
-                    <input type="text" placeholder="Từ khoá..." />
-                </div>
-
-                {/* Tin khuyến mãi + Tin tức công nghệ */}
-                <div className="news-links">
-                    <NavLink to="/tin-khuyen-mai" className="news-link">Tin khuyến mãi</NavLink>
-                    <span>|</span>
-                    <NavLink to="/tin-tuc-cong-nghe" className="news-link">Tin tức công nghệ</NavLink>
-                </div>
-
-                <div className="contact">
-                    <span>
-                        <PhoneOutlined style={{ marginRight: 6 }} />
-                        Gọi mua hàng
-                    </span>
-                    <strong>1900.8946</strong>
-                </div>
-
-                <div className="actions">
-                    <NavLink to="/login" className="login-btn">
-                        <UserOutlined style={{ marginRight: 6 }} />
-                        Đăng nhập / Đăng ký
-                    </NavLink>
-                    <button className="cart-btn">
-                        <ShoppingCartOutlined />
-                        <span className="cart-text">Giỏ hàng</span>
-                    </button>
-                </div>
-            </div>
-
-            <div className="menu-bar">
-                <ul>
-                    <NavLink to="/">Trang chủ</NavLink>
-                    <div
-                        className="navbar-item-with-sub"
-                        ref={menuRef}
-                        onClick={toggleSubMenu}
-                    >
-                        <NavLink
-                            to="/gioithieu"
-                            className="navlink"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                toggleSubMenu();
-                            }}
-                        >
-                            Giới thiệu ▼
-                        </NavLink>
-
-                        {showSubMenu && (
-                            <div className="submenu">
-                                <NavLink to="/laptopnew" onClick={() => setShowSubMenu(false)}>
-                                    Giới thiệu LaptopNew
-                                </NavLink>
-                                <NavLink to="/tam-nhin-su-menh" onClick={() => setShowSubMenu(false)}>
-                                    Tầm nhìn & Sứ mệnh
-                                </NavLink>
-                                <NavLink to="/gia-tri-cot-loi" onClick={() => setShowSubMenu(false)}>
-                                    Giá trị cốt lõi
-                                </NavLink>
-                            </div>
-                        )}
-                    </div>
-
-                    <NavLink to="/chinh-sach">Chính sách bán hàng</NavLink>
-                    <NavLink to="/tin-tuc">Tin tức</NavLink>
-                    <NavLink to="/tuyen-dung">Tuyển dụng</NavLink>
-                    <NavLink to="/nhuong-quyen">Nhượng quyền</NavLink>
-                    <NavLink to="/lien-he">Liên hệ</NavLink>
-                    <NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink>
-                </ul>
-            </div>
-
+export default function Header() {
+  return (
+    <div className="header-wrapper">
+      <div className="header-top">
+        <div className="logo">
+          <img src="/logo.svg" alt="LaptopNew" />
         </div>
-    );
-};
+        <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
+        <div className="search-bar">
+          <Input.Search placeholder="Từ khóa..." allowClear />
+        </div>
+        <div className="news-links">
+          <a href="#">Tin khuyến mãi</a>
+          <span>|</span>
+          <a href="#">Tin tức công nghệ</a>
+        </div>
+        <div className="call-phone">
+          <div>Gọi mua hàng</div>
+          <div className="phone-number">1900.8946</div>
+        </div>
+        <div className="actions">
+          <Button className="login-button" icon={<UserOutlined />}>Đăng nhập / Đăng ký</Button>
+          <Badge count={4} size="small" offset={[-5, 5]}>
+            <Button shape="circle" icon={<ShoppingCartOutlined />} className="cart-button" />
+          </Badge>
+        </div>
+      </div>
 
-export default Header;
+      <div className="header-menu">
+        <ul>
+          <li><a href="#">Danh mục sản phẩm</a></li>
+          <li><a href="#">Trang chủ</a></li>
+          <li><a href="#">Giới thiệu</a></li>
+          <li><a href="#">Chính sách bán hàng</a></li>
+          <li><a href="#">Tin tức</a></li>
+          <li><a href="#">Tuyển dụng</a></li>
+          <li><a href="#">Nhượng quyền</a></li>
+          <li><a href="#">Liên hệ</a></li>
+          <li><a href="#">Tra cứu bảo hành</a></li>
+        </ul>
+      </div>
+    </div>
+  );
+}
