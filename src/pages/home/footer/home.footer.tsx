@@ -45,7 +45,7 @@ const Footer = () => {
             </div>
 
             <div className="footer-bottom">
-                <p>Bản quyền thuộc về LAPTOPNEW.vn</p>
+                <p>Bản quyền thuộc về LAPTOPNEW.vn © {new Date().getFullYear()}</p>
             </div>
         </footer>
     );

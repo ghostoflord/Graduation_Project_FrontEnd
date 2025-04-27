@@ -101,4 +101,41 @@
     }
   }
 
+
+  //responsive 
+  @media (max-width: 999px) {
+    .header-top {
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+
+      .store-button,
+      .news-links,
+      .call-phone,
+      .login-button {
+        display: none; // Ẩn các nút này trên mobile
+      }
+
+      .logo img {
+        height: 32px; // Logo nhỏ lại cho vừa mobile
+      }
+
+      .search-bar {
+        flex: 1;
+        max-width: 100%; // Search dài full
+      }
+
+      .actions {
+        .cart-button {
+          background: transparent;
+          color: #fff;
+        }
+      }
+    }
+
+    .header-menu {
+      display: none; // Ẩn luôn cái menu ngang dài ngoằng
+    }
+  }
+
 }
