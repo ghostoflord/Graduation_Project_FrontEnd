@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./core.values.scss"; // nhớ import SCSS
 type CoreValue = {
     title: string;
     content: string[];
@@ -64,14 +64,14 @@ const coreValues: CoreValue[] = [
 
 const CoreValues = () => {
     return (
-        <div className="px-4 md:px-16 py-8">
-            <h2 className="text-3xl font-bold text-center mb-8">GIÁ TRỊ CỐT LÕI</h2>
+        <div className="core-values-container">
+            <h2 className="title">GIÁ TRỊ CỐT LÕI</h2>
             {coreValues.map((value, index) => (
-                <div key={index} className="mb-6">
-                    <h3 className="text-xl font-semibold text-blue-600 mb-2">
+                <div key={index} className="core-value-item">
+                    <h3>
                         {index + 1} - {value.title}
                     </h3>
-                    <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    <ul>
                         {value.content.map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}

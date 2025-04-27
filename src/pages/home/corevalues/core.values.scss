@@ -1,0 +1,33 @@
+.core-values-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px; // padding nhỏ 2 bên cho mobile
+
+    .title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+    }
+
+    .core-value-item {
+        margin-bottom: 1.5rem;
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2563eb; // màu xanh
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            list-style: disc inside;
+            color: #374151;
+
+            li {
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
+}
