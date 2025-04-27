@@ -1,31 +1,34 @@
 .slider {
     position: relative;
     width: 100%;
-    height: 260px; // Chiều cao giống banner
+    height: 260px;
     overflow: hidden;
+    border-radius: 8px; // bo góc nhẹ như laptopnew
+    background: #fff;
 
     .slider-inner {
         display: flex;
-        transition: transform 0.5s ease;
+        transition: transform 0.5s ease-in-out;
         height: 100%;
     }
 
     .slide {
-        min-width: 100%; // <<< Mỗi slide chiếm đúng 100% khung
+        min-width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
 
         img {
-            width: 100%; // <<< Fit đúng chiều ngang slider
-            height: 100%; // <<< Fit đúng chiều cao slider
-            object-fit: contain; // <<< CHỈ thu nhỏ ảnh, không phóng to, giữ tỉ lệ đẹp
+            width: 100%;
+            height: 100%;
+            object-fit: contain; // <<< giữ nguyên tỉ lệ ảnh, không phóng to, không cắt
             object-position: center;
             user-select: none;
             pointer-events: none;
             display: block;
         }
+
     }
 
     .nav-buttons {
@@ -35,19 +38,45 @@
         display: flex;
         justify-content: space-between;
         transform: translateY(-50%);
-        padding: 0 10px;
+        padding: 0 15px;
 
         button {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             border: none;
             color: white;
             padding: 8px 12px;
+            font-size: 20px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
-            border-radius: 4px;
+            transition: background 0.3s;
 
             &:hover {
-                background: rgba(0, 0, 0, 0.7);
+                background: rgba(0, 0, 0, 0.6);
+            }
+        }
+    }
+
+    .dots {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+
+            &.active {
+                background: #fff;
+                width: 10px;
+                height: 10px;
             }
         }
     }

@@ -91,11 +91,14 @@
         font-weight: 500;
         font-size: 14px;
         text-decoration: none;
+        transition: color 0.3s ease; // thêm mượt hover
 
         &:hover {
-          text-decoration: underline;
+          color: #ffcc00; // Hover đổi màu vàng nhẹ
+          text-decoration: none; // Không underline khi hover
         }
       }
     }
   }
+
 }

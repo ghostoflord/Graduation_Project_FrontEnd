@@ -23,11 +23,12 @@ const Slider: React.FC = () => {
         setCurrentIndex((prev) => (prev + 1) % slides.length);
     };
 
-    const goToPrev = () =>
+    const goToPrev = () => {
         setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    };
 
     useEffect(() => {
-        const timer = setInterval(goToNext, 4000);
+        const timer = setInterval(goToNext, 5000); // tăng thành 5s giống laptopnew
         return () => clearInterval(timer);
     }, []);
 
@@ -35,21 +36,30 @@ const Slider: React.FC = () => {
         <div className="slider">
             <div
                 className="slider-inner"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }} // <<< mỗi lần click trượt đúng 100%
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
                 {slides.map((slide) => (
-                    <div key={slide.id} className="slide"> {/* Bọc thêm div.slide */}
+                    <div key={slide.id} className="slide">
                         <img src={slide.image} alt={slide.alt} />
                     </div>
                 ))}
             </div>
 
             <div className="nav-buttons">
-                <button onClick={goToPrev}>‹</button>
-                <button onClick={goToNext}>›</button>
+                <button onClick={goToPrev} className="prev-btn">‹</button>
+                <button onClick={goToNext} className="next-btn">›</button>
+            </div>
+
+            <div className="dots">
+                {slides.map((_, index) => (
+                    <span
+                        key={index}
+                        className={index === currentIndex ? "dot active" : "dot"}
+                        onClick={() => setCurrentIndex(index)}
+                    ></span>
+                ))}
             </div>
         </div>
-
     );
 };
 
