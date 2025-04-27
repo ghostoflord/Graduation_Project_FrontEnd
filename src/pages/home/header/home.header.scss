@@ -1,4 +1,3 @@
-// home.header.scss
 .header-wrapper {
   width: 100%;
   background: #0050C8;
@@ -72,6 +71,24 @@
         color: #0050C8;
         border: none;
       }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        .ant-avatar {
+          background-color: #fff;
+          color: #0050C8;
+        }
+
+        .user-name {
+          font-weight: 500;
+          font-size: 14px;
+          color: #fff;
+        }
+      }
     }
   }
 
@@ -91,18 +108,17 @@
         font-weight: 500;
         font-size: 14px;
         text-decoration: none;
-        transition: color 0.3s ease; // thêm mượt hover
+        transition: color 0.3s ease;
 
         &:hover {
-          color: #ffcc00; // Hover đổi màu vàng nhẹ
-          text-decoration: none; // Không underline khi hover
+          color: #ffcc00;
+          text-decoration: none;
         }
       }
     }
   }
 
-
-  //responsive 
+  // Responsive
   @media (max-width: 999px) {
     .header-top {
       flex-wrap: wrap;
@@ -113,16 +129,16 @@
       .news-links,
       .call-phone,
       .login-button {
-        display: none; // Ẩn các nút này trên mobile
+        display: none;
       }
 
       .logo img {
-        height: 32px; // Logo nhỏ lại cho vừa mobile
+        height: 32px;
       }
 
       .search-bar {
         flex: 1;
-        max-width: 100%; // Search dài full
+        max-width: 100%;
       }
 
       .actions {
@@ -134,8 +150,7 @@
     }
 
     .header-menu {
-      display: none; // Ẩn luôn cái menu ngang dài ngoằng
+      display: none;
     }
   }
-
 }

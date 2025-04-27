@@ -1,14 +1,39 @@
-// Header.tsx
-import { Badge, Button, Input } from 'antd';
+import { Badge, Button, Input, Avatar, Space, Dropdown } from 'antd';
 import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import './home.header.scss';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useCurrentApp } from '@/components/context/app.context';
+import type { MenuProps } from 'antd';
+
 export default function Header() {
+    const { user, isAuthenticated, setIsAuthenticated, setUser } = useCurrentApp();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        setUser(null);
+        setIsAuthenticated(false);
+        localStorage.removeItem("access_token");
+        navigate('/login');
+    };
+
+    const itemsDropdown: MenuProps['items'] = [
+        {
+            label: <Link to="/profile">Trang cá nhân</Link>,
+            key: 'profile',
+        },
+        {
+            label: <span onClick={handleLogout} style={{ cursor: "pointer" }}>Đăng xuất</span>,
+            key: 'logout',
+        }
+    ];
+
     return (
         <div className="header-wrapper">
             <div className="header-top">
                 <div className="logo">
-                    <img src="/logo.svg" alt="LaptopNew" />
+                    <Link to="/">
+                        <img src="/logo.svg" alt="LaptopNew" />
+                    </Link>
                 </div>
                 <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
                 <div className="search-bar">
@@ -24,7 +49,20 @@ export default function Header() {
                     <div className="phone-number">1900.8946</div>
                 </div>
                 <div className="actions">
-                    <Button className="login-button" icon={<UserOutlined />}>Đăng nhập / Đăng ký</Button>
+                    {!isAuthenticated ? (
+                        <Link to="/login">
+                            <Button className="login-button" icon={<UserOutlined />}>
+                                Đăng nhập / Đăng ký
+                            </Button>
+                        </Link>
+                    ) : (
+                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                            <Space style={{ cursor: "pointer" }}>
+                                <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
+                                <span>{user?.name}</span>
+                            </Space>
+                        </Dropdown>
+                    )}
                     <Badge count={4} size="small" offset={[-5, 5]}>
                         <Button shape="circle" icon={<ShoppingCartOutlined />} className="cart-button" />
                     </Badge>
