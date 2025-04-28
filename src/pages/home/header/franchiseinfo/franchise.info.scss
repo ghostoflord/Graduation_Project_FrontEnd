@@ -1,0 +1,67 @@
+.franchise-info-container {
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+    .title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 40px;
+        position: relative;
+
+        &::after {
+            content: "";
+            width: 60px;
+            height: 4px;
+            background-color: #007bff;
+            display: block;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+    }
+
+    .franchise-details {
+
+        p,
+        li {
+            font-size: 16px;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+
+            h3 {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: #2563eb;
+                margin-bottom: 1rem;
+
+                &:hover {
+                    color: #1d4ed8;
+                }
+            }
+
+            ul {
+                list-style: disc inside;
+            }
+        }
+
+        .contact {
+            margin-top: 2rem;
+
+            p {
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+
+            ul {
+                list-style: disc inside;
+            }
+        }
+    }
+}

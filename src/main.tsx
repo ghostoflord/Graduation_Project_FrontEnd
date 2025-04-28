@@ -21,6 +21,8 @@ import HomePage from './pages/home/home/homepage';
 import AboutCompany from './pages/home/header/introducedropdown/aboutcompany/aboutcompany';
 import VisionMission from './pages/home/header/introducedropdown/visionmission/vision.mission';
 import ContactInfo from './pages/home/header/contactinfo/contact.info';
+import FranchiseInfo from './pages/home/header/franchiseinfo/franchise.info';
+import RecruitmentInfo from './pages/home/header/recruitmentinfo/recruitment.info';
 
 const router = createBrowserRouter([
   {
@@ -49,9 +51,12 @@ const router = createBrowserRouter([
       {
         path: "lien-he", element: <ContactInfo />
       },
-      // {
-      //   path: "lien-he", element: <ContactInfo />
-      // },
+      {
+        path: "nhuong-quyen", element: <FranchiseInfo />
+      },
+      {
+        path: "tuyen-dung", element: <RecruitmentInfo />
+      },
     ]
   },
   {
