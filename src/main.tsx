@@ -17,12 +17,14 @@ import OrderPage from '@/pages/order/order.page';
 import ErrorPage from '@/pages/error/error.page';
 import { AppProvider } from '@/components/context/app.context';
 import CoreValues from './pages/home/header/introducedropdown/corevalues/core.vales';
-import HomePage from './pages/home/home/homepage';
+import HomePage from './pages/home/datainhome/homepage';
 import AboutCompany from './pages/home/header/introducedropdown/aboutcompany/aboutcompany';
 import VisionMission from './pages/home/header/introducedropdown/visionmission/vision.mission';
 import ContactInfo from './pages/home/header/contactinfo/contact.info';
 import FranchiseInfo from './pages/home/header/franchiseinfo/franchise.info';
 import RecruitmentInfo from './pages/home/header/recruitmentinfo/recruitment.info';
+import PageUnderConstruction from './pages/home/header/pageunderconstruction/page.under.construction';
+import SalesPolicy from './pages/home/header/salespolicy/sales.policy';
 
 const router = createBrowserRouter([
   {
@@ -46,16 +48,28 @@ const router = createBrowserRouter([
         element: <CoreValues />
       },
       {
-        path: "san-pham", element: <ProductPage />
+        path: "san-pham",
+        element: <ProductPage />
       },
       {
-        path: "lien-he", element: <ContactInfo />
+        path: "lien-he",
+        element: <ContactInfo />
       },
       {
-        path: "nhuong-quyen", element: <FranchiseInfo />
+        path: "nhuong-quyen",
+        element: <FranchiseInfo />
       },
       {
-        path: "tuyen-dung", element: <RecruitmentInfo />
+        path: "tuyen-dung",
+        element: <RecruitmentInfo />
+      },
+      {
+        path: "tin-tuc",
+        element: <PageUnderConstruction />
+      },
+      {
+        path: "chinh-sach-ban-hang",
+        element: <SalesPolicy />
       },
     ]
   },
