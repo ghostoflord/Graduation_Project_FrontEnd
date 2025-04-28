@@ -1,0 +1,50 @@
+.contact-info-container {
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+    .title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 40px;
+        position: relative;
+
+        &::after {
+            content: "";
+            width: 60px;
+            height: 4px;
+            background-color: #007bff;
+            display: block;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+    }
+
+    .contact-details {
+
+        p,
+        li {
+            font-size: 16px;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            list-style: disc inside;
+            margin-bottom: 1.5rem;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #1d4ed8;
+            }
+        }
+    }
+}

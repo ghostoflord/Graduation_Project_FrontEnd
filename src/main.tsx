@@ -20,6 +20,7 @@ import CoreValues from './pages/home/header/introducedropdown/corevalues/core.va
 import HomePage from './pages/home/home/homepage';
 import AboutCompany from './pages/home/header/introducedropdown/aboutcompany/aboutcompany';
 import VisionMission from './pages/home/header/introducedropdown/visionmission/vision.mission';
+import ContactInfo from './pages/home/header/contactinfo/contact.info';
 
 const router = createBrowserRouter([
   {
@@ -45,8 +46,11 @@ const router = createBrowserRouter([
       {
         path: "san-pham", element: <ProductPage />
       },
+      {
+        path: "lien-he", element: <ContactInfo />
+      },
       // {
-      //   path: "lien-he", element: <ContactPage />
+      //   path: "lien-he", element: <ContactInfo />
       // },
     ]
   },
