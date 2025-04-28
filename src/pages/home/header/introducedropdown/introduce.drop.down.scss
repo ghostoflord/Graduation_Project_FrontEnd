@@ -1,0 +1,18 @@
+.dropdown-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #2563eb; // màu xanh khi hover
+    }
+
+    svg {
+        margin-left: 5px;
+        font-size: 12px;
+    }
+}

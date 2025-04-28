@@ -1,4 +1,4 @@
-.about-company-container {
+.vision-mission-container {
     padding: 40px 20px;
     background-color: #f9f9f9;
     border-radius: 12px;
@@ -23,14 +23,19 @@
         }
     }
 
-    .about-section-item {
+    .vision-mission-item {
         margin-bottom: 1.5rem;
 
         h3 {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #2563eb; // màu xanh
+            color: #2563eb;
             margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #1d4ed8; // đổi màu xanh đậm hơn khi hover
+            }
         }
 
         ul {
@@ -39,12 +44,6 @@
 
             li {
                 margin-bottom: 0.5rem;
-                transition: color 0.3s ease; // thêm hiệu ứng mượt
-
-                &:hover {
-                    color: #2563eb; // đổi màu xanh khi hover
-                    cursor: pointer;
-                }
             }
         }
     }

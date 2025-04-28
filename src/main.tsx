@@ -19,6 +19,7 @@ import { AppProvider } from '@/components/context/app.context';
 import CoreValues from './pages/home/header/introducedropdown/corevalues/core.vales';
 import HomePage from './pages/home/home/homepage';
 import AboutCompany from './pages/home/header/introducedropdown/aboutcompany/aboutcompany';
+import VisionMission from './pages/home/header/introducedropdown/visionmission/vision.mission';
 
 const router = createBrowserRouter([
   {
@@ -29,17 +30,17 @@ const router = createBrowserRouter([
       {
         path: "", element: <HomePage />
       },
-      // {
-      //   path: "gia-tri-cot-loi",
-      //   element: <CoreValues />
-      // },
-      {
-        path: "gia-tri-cot-loi",
-        element: <CoreValues />
-      },
       {
         path: "gioi-thieu",
         element: <AboutCompany />
+      },
+      {
+        path: "tam-nhin-su-menh",
+        element: <VisionMission />
+      },
+      {
+        path: "gia-tri-cot-loi",
+        element: <CoreValues />
       },
       {
         path: "san-pham", element: <ProductPage />
