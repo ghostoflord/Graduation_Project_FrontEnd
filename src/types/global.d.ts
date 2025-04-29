@@ -94,6 +94,7 @@ declare global {
         guarantee: string;
         factory: string;
         shortDescription: string;
+        slug: string;
         createdAt: Date;
         updatedAt: Date;
     }

@@ -25,6 +25,7 @@ import FranchiseInfo from './pages/home/header/franchiseinfo/franchise.info';
 import RecruitmentInfo from './pages/home/header/recruitmentinfo/recruitment.info';
 import PageUnderConstruction from './pages/home/header/pageunderconstruction/page.under.construction';
 import SalesPolicy from './pages/home/header/salespolicy/sales.policy';
+import ProductDetail from './pages/home/product/product.detail';
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "", element: <HomePage />
+      },
+      {
+        path: "/product/:slug",
+        element: <ProductDetail />
       },
       {
         path: "gioi-thieu",
