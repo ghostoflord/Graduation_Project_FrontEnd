@@ -9,7 +9,7 @@ import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 
 export default function Header() {
-    const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary, setCartSummary } = useCurrentApp();
+    const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary = { sum: 0 }, setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -38,7 +38,7 @@ export default function Header() {
             try {
                 const res = await getCart(user.id);
                 if (res?.data) {
-                    setCartSummary(res.data); // đổi từ setCarts -> setCartSummary
+                    setCartSummary(res.data);
                 }
             } catch (error) {
                 console.error('Failed to fetch cart:', error);
@@ -82,14 +82,35 @@ export default function Header() {
                             </Space>
                         </Dropdown>
                     )}
-                    <Badge count={cartSummary?.quantity || 0} size="small" offset={[-5, 5]}>
+                    <div style={{ position: 'relative' }}>
                         <Button
                             shape="circle"
                             icon={<ShoppingCartOutlined />}
                             className="cart-button"
                             onClick={() => navigate('/cart')}
                         />
-                    </Badge>
+                        {cartSummary && Number(cartSummary.sum) > 0 && (
+                            // <span
+                            //     style={{
+                            //         position: 'absolute',
+                            //         top: -5,
+                            //         right: -5,
+                            //         backgroundColor: '#ff4d4f',
+                            //         color: 'white',
+                            //         borderRadius: '50%',
+                            //         padding: '0 6px',
+                            //         fontSize: '12px',
+                            //         fontWeight: 'bold',
+                            //         lineHeight: '20px',
+                            //         minWidth: 20,
+                            //         textAlign: 'center',
+                            //         zIndex: 1
+                            //     }}
+                            // >
+                            <span className="cart-badge">{cartSummary.sum}</span>
+                            // </span>
+                        )}
+                    </div>
                 </div>
             </div>
 

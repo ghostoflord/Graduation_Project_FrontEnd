@@ -11,6 +11,9 @@ interface IAppContext {
     setIsAppLoading: (v: boolean) => void;
     carts: ICart[];
     setCarts: (v: ICart[]) => void;
+
+    cartSummary: { sum: number } | null;
+    setCartSummary: (v: { sum: number } | null) => void;
 }
 
 const CurrentAppContext = createContext<IAppContext | null>(null);
@@ -24,6 +27,7 @@ export const AppProvider = (props: TProps) => {
     const [user, setUser] = useState<IUser | null>(null);
     const [isAppLoading, setIsAppLoading] = useState<boolean>(true);
     const [carts, setCarts] = useState<ICart[]>([]);
+    const [cartSummary, setCartSummary] = useState<{ sum: number }>({ sum: 0 });
 
     useEffect(() => {
         const fetchAccount = async () => {
@@ -76,6 +80,8 @@ export const AppProvider = (props: TProps) => {
                         setIsAppLoading,
                         carts,
                         setCarts,
+                        cartSummary,
+                        setCartSummary,
                     }}
                 >
                     {props.children}
