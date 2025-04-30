@@ -139,7 +139,29 @@ export const deleteProductAPI = (id: string) => {
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
+//cart
 export const getCart = (userId: string) => {
     const urlBackend = `/api/v1/carts/users/${userId}`;
     return axios.get<IBackendRes<ICart>>(urlBackend);
 };
+export const addToCartAPI = (data: {
+    quantity: number;
+    price: number;
+    productId: number;
+    userId: number;
+}) => {
+    return axios.post('/api/v1/carts/addproduct', data);
+};
+
+// export const addToCartAPI = (data: {
+//     quantity: number;
+//     price: number;
+//     productId: number;
+//     userId: number;
+// }) => {
+//     return axios.post('http://localhost:8080/api/v1/carts/add-product', data, {
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }
+//     });
+// };

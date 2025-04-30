@@ -106,6 +106,14 @@ declare global {
         userId: number;
     }
 
+
+    interface ICartItem {
+        quantity: number;
+        price: number;
+        productId: number;
+        userId: number;
+    }
+
     interface IHistory {
         _id: string;
         name: string;
