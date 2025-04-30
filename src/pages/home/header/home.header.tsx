@@ -87,7 +87,7 @@ export default function Header() {
                             shape="circle"
                             icon={<ShoppingCartOutlined />}
                             className="cart-button"
-                            onClick={() => navigate('/cart')}
+                            onClick={() => navigate('/gio-hang')}
                         />
                         {cartSummary && Number(cartSummary.sum) > 0 && (
                             // <span

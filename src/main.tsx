@@ -26,6 +26,7 @@ import RecruitmentInfo from './pages/home/header/recruitmentinfo/recruitment.inf
 import PageUnderConstruction from './pages/home/header/pageunderconstruction/page.under.construction';
 import SalesPolicy from './pages/home/header/salespolicy/sales.policy';
 import ProductDetail from './pages/home/product/product.detail';
+import CartPage from './pages/home/cart/cart.page';
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: "chinh-sach-ban-hang",
         element: <SalesPolicy />
+      },
+      {
+        path: "gio-hang",
+        element: <CartPage />
       },
     ]
   },
