@@ -1,6 +1,8 @@
 export { };
 
 declare global {
+
+    // Auth
     interface IBackendRes<T> {
         error?: string | string[];
         message: string | string[];
@@ -46,6 +48,11 @@ declare global {
         fullName: string;
     }
 
+    interface IFetchAccount {
+        user: IUser
+    }
+
+    // User
     interface IUser {
         email: string;
         phone: string;
@@ -53,10 +60,6 @@ declare global {
         role: string;
         avatar: string;
         id: string;
-    }
-
-    interface IFetchAccount {
-        user: IUser
     }
 
     interface IUserTable {
@@ -82,6 +85,7 @@ declare global {
         detail: any;
     }
 
+    // Product
     interface IProductTable {
         id: string;
         image: string;
@@ -99,13 +103,13 @@ declare global {
         updatedAt: Date;
     }
 
+    // cart
     interface ICart {
         quantity: number;
         price: number;
         sum: number;
         userId: number;
     }
-
 
     interface ICartItem {
         quantity: number;
@@ -114,6 +118,25 @@ declare global {
         userId: number;
     }
 
+    interface CartItem {
+        productId: number;
+        name: string;
+        price: number;
+        quantity: number;
+        image: string;
+        detailDescription: string;
+        shortDescription: string;
+    }
+
+    interface ICartSummary {
+        quantity: number;
+        price: number;
+        sum: number;
+        userId: number;
+        items: CartItem[];
+    }
+
+    // now not user
     interface IHistory {
         _id: string;
         name: string;

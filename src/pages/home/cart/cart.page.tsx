@@ -1,53 +1,52 @@
 import { Card, Button, InputNumber, List, Typography, Row, Col } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getCart } from '@/services/api';
+// Import hàm lấy dữ liệu giỏ hàng từ backend
 
 const { Title, Text } = Typography;
 
 interface CartItem {
-    id: number;
+    productId: number;
     name: string;
     price: number;
     quantity: number;
     image: string;
-    specs: string;
+    detailDescription: string;
+    shortDescription: string;
 }
 
-const initialItems: CartItem[] = [
-    {
-        id: 1,
-        name: 'Laptop MSI Thin 15 B13UCX 2080VN | CPU i5-13420H | RAM 16GB | SSD 512GB PCIe | VGA RTX 2050 4GB | 15.6 FHD IPS & 144Hz | Win11',
-        price: 67960000,
-        quantity: 4,
-        image: 'https://laptopnew.vn//media/product/250-30845-msi-thin-15.jpg',
-        specs: 'RAM 32GB + SSD 1TB'
-    },
-    {
-        id: 2,
-        name: 'Laptop MSI Modern 14 C12MO 660VN | CPU i5-1235U | RAM 16GB DDR4 | SSD 512GB PCIe | VGA Onboard | 14.0 FHD IPS | Win11',
-        price: 11290000,
-        quantity: 1,
-        image: 'https://laptopnew.vn//media/product/250-29394-msi-modern-14.jpg',
-        specs: ''
-    }
-];
-
 const CartPage = () => {
-    const [cartItems, setCartItems] = useState<CartItem[]>(initialItems);
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [totalQuantity, setTotalQuantity] = useState<number>(0);
+    const [totalPrice, setTotalPrice] = useState<number>(0);
 
-    const updateQuantity = (id: number, quantity: number) => {
-        setCartItems(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    // Fetch cart data from backend
+    useEffect(() => {
+        const userId = '1'; // Thay bằng userId thực tế
+        getCart(userId)
+            .then(res => {
+                const data = res.data;
+                setCartItems(data.items);
+                setTotalQuantity(data.quantity);
+                setTotalPrice(data.price);
+            })
+            .catch(err => {
+                console.error("Lỗi khi lấy giỏ hàng:", err);
+            });
+    }, []);
+
+    const updateQuantity = (productId: number, quantity: number) => {
+        setCartItems(prev => prev.map(item => item.productId === productId ? { ...item, quantity } : item));
     };
 
-    const removeItem = (id: number) => {
-        setCartItems(prev => prev.filter(item => item.id !== id));
+    const removeItem = (productId: number) => {
+        setCartItems(prev => prev.filter(item => item.productId !== productId));
     };
 
     const clearCart = () => {
         setCartItems([]);
     };
-
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     return (
         <div className="p-6 max-w-screen-lg mx-auto">
@@ -63,16 +62,16 @@ const CartPage = () => {
                             </Col>
                             <Col xs={24} sm={16}>
                                 <Text strong>{item.name}</Text>
-                                <div>{item.specs}</div>
+                                <div>{item.shortDescription}</div>
                             </Col>
                             <Col xs={24} sm={4} className="text-center">
                                 <InputNumber
                                     min={1}
                                     value={item.quantity}
-                                    onChange={(value) => updateQuantity(item.id, value || 1)}
+                                    onChange={(value) => updateQuantity(item.productId, value || 1)}
                                     className="mb-2"
                                 />
-                                <Button danger icon={<DeleteOutlined />} onClick={() => removeItem(item.id)}>
+                                <Button danger icon={<DeleteOutlined />} onClick={() => removeItem(item.productId)}>
                                     Xoá
                                 </Button>
                             </Col>

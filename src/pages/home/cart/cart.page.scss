@@ -1,21 +1,81 @@
+// .cart-container: Điều chỉnh container của giỏ hàng
 .cart-container {
     padding: 24px;
     max-width: 1200px;
     margin: auto;
     background-color: #fff;
+    border-radius: 8px; // Thêm góc bo tròn cho toàn bộ container
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Thêm bóng đổ cho đẹp mắt
 }
 
+// .cart-item: Cải tiến phần item của giỏ hàng
 .cart-item {
     margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 8px; // Bo góc cho mỗi item
+    background-color: #f9f9f9; // Màu nền sáng hơn cho item
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Bóng đổ nhẹ
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
+// .cart-item-image: Tùy chỉnh ảnh sản phẩm
 .cart-item-image {
-    width: 100%;
-    border-radius: 8px;
+    width: 120px; // Đặt kích thước cho ảnh sản phẩm
+    height: 120px;
+    object-fit: cover; // Đảm bảo ảnh không bị biến dạng
+    border-radius: 8px; // Bo góc ảnh
+    margin-right: 16px; // Khoảng cách giữa ảnh và thông tin sản phẩm
 }
 
+// .cart-summary: Điều chỉnh phần tóm tắt giỏ hàng
 .cart-summary {
     text-align: right;
     background-color: #fff9db;
     border: 1px solid #ffe58f;
+    padding: 16px;
+    border-radius: 8px; // Bo góc cho phần tóm tắt
+    margin-top: 24px;
+}
+
+// .cart-summary .total-price: Thêm phần hiển thị tổng giá
+.cart-summary .total-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+// .cart-actions: Điều chỉnh các nút hành động
+.cart-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+// .cart-actions button: Cải tiến nút thanh toán và xóa giỏ
+.cart-actions button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.cart-actions .checkout-btn {
+    background-color: #4CAF50; // Màu xanh lá cho nút thanh toán
+    color: white;
+}
+
+.cart-actions .checkout-btn:hover {
+    background-color: #45a049; // Màu xanh đậm hơn khi hover
+}
+
+.cart-actions .clear-btn {
+    background-color: #f44336; // Màu đỏ cho nút xóa
+    color: white;
+}
+
+.cart-actions .clear-btn:hover {
+    background-color: #e53935; // Màu đỏ đậm hơn khi hover
 }
