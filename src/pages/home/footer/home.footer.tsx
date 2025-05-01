@@ -1,12 +1,12 @@
 import "./home.footer.scss";
-
+import logo from '@/assets/logo.png';
 const Footer = () => {
     return (
         <footer className="laptopnew-footer">
             <div className="container">
                 <div className="footer-top">
                     <div className="footer-column about">
-                        <img src="/logo-laptopnew.png" alt="LaptopNew" className="logo" />
+                        <img src={logo} alt="LaptopNew" />
                         <div className="contact-info">
                             <p><strong>Trụ sở chính:</strong></p>
                             <p>- Showroom 1: 29 Tân Thành, P12, Q5, Tp.HCM</p>

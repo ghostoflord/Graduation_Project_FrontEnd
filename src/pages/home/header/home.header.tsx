@@ -7,7 +7,7 @@ import type { MenuProps } from 'antd';
 import { useEffect } from 'react';
 import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
-
+import logo from '@/assets/logo.png';
 export default function Header() {
     const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary = { sum: 0 }, setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ export default function Header() {
             <div className="header-top">
                 <div className="logo">
                     <Link to="/">
-                        <img src="/logo.svg" alt="LaptopNew" />
+                        <img src={logo} alt="LaptopNew" />
                     </Link>
                 </div>
                 <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>

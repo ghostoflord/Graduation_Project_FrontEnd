@@ -11,6 +11,13 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
     port: 3000, //5173
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:8080', // backend Spring Boot
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   }
+    // }
   },
   css: {
     preprocessorOptions: {
