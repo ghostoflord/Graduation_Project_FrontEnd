@@ -31,7 +31,7 @@ export default function Header() {
 
         if (isAdmin) {
             items.push({
-                label: <Link to="/admin">Quản trị hệ thống</Link>,
+                label: <Link to="/admin/dashboard">Quản trị hệ thống</Link>,
                 key: 'admin',
             });
         }

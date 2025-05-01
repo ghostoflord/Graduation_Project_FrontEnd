@@ -37,7 +37,7 @@ const LoginPage = () => {
 
                 // 👇 Điều hướng theo role
                 if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
-                    navigate('/admin');
+                    navigate('/admin/dashboard');
                 } else {
                     navigate('/');
                 }
