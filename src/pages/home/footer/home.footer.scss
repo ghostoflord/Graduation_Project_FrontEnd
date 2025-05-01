@@ -81,4 +81,42 @@
         font-size: 14px;
         background-color: #f0f0f0;
     }
+
+    //
+    .social-icons {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+
+        .social-icon {
+            font-size: 32px;
+            cursor: pointer;
+            transition: transform 0.2s;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+
+            &.fb {
+                color: #1877f2; // Facebook xanh
+            }
+
+            &.ig {
+                color: #e1306c; // Instagram hồng tím
+            }
+
+            &.yt {
+                color: #ff0000; // YouTube đỏ
+            }
+
+            &.tiktok {
+                color: #010101; // TikTok đen (có thể dùng màu gradient nếu muốn nâng cao)
+            }
+
+            &.lazada {
+                color: #f57224; // Lazada cam
+            }
+        }
+    }
+
 }

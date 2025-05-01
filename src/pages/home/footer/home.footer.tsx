@@ -1,5 +1,13 @@
+import {
+    FacebookOutlined,
+    YoutubeOutlined,
+    TikTokOutlined,
+    InstagramOutlined,
+    ShoppingCartOutlined,
+} from '@ant-design/icons';
 import "./home.footer.scss";
 import logo from '@/assets/logo.png';
+
 const Footer = () => {
     return (
         <footer className="laptopnew-footer">
@@ -32,14 +40,13 @@ const Footer = () => {
                     <div className="footer-column">
                         <h4>Kết nối với chúng tôi</h4>
                         <div className="social-icons">
-                            <img src="/icon-facebook.png" alt="Facebook" />
-                            <img src="/icon-instagram.png" alt="Instagram" />
-                            <img src="/icon-youtube.png" alt="YouTube" />
-                            <img src="/icon-tiktok.png" alt="TikTok" />
-                            <img src="/icon-lazada.png" alt="Lazada" />
+                            <FacebookOutlined className="social-icon fb" />
+                            <InstagramOutlined className="social-icon ig" />
+                            <YoutubeOutlined className="social-icon yt" />
+                            <TikTokOutlined className="social-icon tiktok" />
+                            <ShoppingCartOutlined className="social-icon lazada" />
                         </div>
                         <p>Phương thức thanh toán</p>
-                        {/* Thêm icon payment nếu cần */}
                     </div>
                 </div>
             </div>
