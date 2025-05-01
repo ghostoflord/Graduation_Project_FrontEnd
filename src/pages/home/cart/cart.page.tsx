@@ -2,7 +2,6 @@ import { Card, Button, InputNumber, List, Typography, Row, Col } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { getCart } from '@/services/api';
-// Import hàm lấy dữ liệu giỏ hàng từ backend
 
 const { Title, Text } = Typography;
 
@@ -16,28 +15,59 @@ interface CartItem {
     shortDescription: string;
 }
 
+// Hàm gộp các sản phẩm trùng nhau (cùng productId)
+const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
+    const map = new Map<number, CartItem>();
+    items.forEach(item => {
+        if (map.has(item.productId)) {
+            const existing = map.get(item.productId)!;
+            map.set(item.productId, {
+                ...existing,
+                quantity: existing.quantity + item.quantity
+            });
+        } else {
+            map.set(item.productId, { ...item });
+        }
+    });
+    return Array.from(map.values());
+};
+
 const CartPage = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
-    // Fetch cart data from backend
+    // Fetch cart data and merge duplicates
     useEffect(() => {
-        const userId = '1'; // Thay bằng userId thực tế
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const userId = user.id;
+
+        if (!userId) {
+            console.warn("Không tìm thấy userId");
+            return;
+        }
+
         getCart(userId)
             .then(res => {
-                const data = res.data;
-                setCartItems(data.items);
-                setTotalQuantity(data.quantity);
-                setTotalPrice(data.price);
+                const rawItems: CartItem[] = res.data.items;
+                const mergedItems = mergeDuplicateItems(rawItems);
+
+                setCartItems(mergedItems);
+                setTotalQuantity(mergedItems.reduce((sum, item) => sum + item.quantity, 0));
+                setTotalPrice(mergedItems.reduce((sum, item) => sum + item.price * item.quantity, 0));
             })
             .catch(err => {
                 console.error("Lỗi khi lấy giỏ hàng:", err);
             });
     }, []);
 
+
     const updateQuantity = (productId: number, quantity: number) => {
-        setCartItems(prev => prev.map(item => item.productId === productId ? { ...item, quantity } : item));
+        setCartItems(prev =>
+            prev.map(item =>
+                item.productId === productId ? { ...item, quantity } : item
+            )
+        );
     };
 
     const removeItem = (productId: number) => {
@@ -49,16 +79,16 @@ const CartPage = () => {
     };
 
     return (
-        <div className="p-6 max-w-screen-lg mx-auto">
+        <div className="p-6 max-w-screen-lg mx-auto cart-container">
             <Title level={3}>Giỏ Hàng</Title>
             <List
                 itemLayout="horizontal"
                 dataSource={cartItems}
                 renderItem={item => (
-                    <Card className="mb-4">
+                    <Card className="mb-4 cart-item">
                         <Row gutter={16} align="middle">
                             <Col xs={24} sm={4}>
-                                <img src={item.image} alt={item.name} className="w-full" />
+                                <img src={item.image} alt={item.name} className="w-full cart-item-image" />
                             </Col>
                             <Col xs={24} sm={16}>
                                 <Text strong>{item.name}</Text>
@@ -79,14 +109,14 @@ const CartPage = () => {
                     </Card>
                 )}
             />
-            <Card className="text-right">
-                <Title level={4}>Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫</Title>
-                <Row justify="end" gutter={16}>
+            <Card className="text-right cart-summary">
+                <Title level={4} className="total-price">Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫</Title>
+                <Row justify="end" gutter={16} className="cart-actions">
                     <Col>
-                        <Button type="primary" size="large">THANH TOÁN</Button>
+                        <Button type="primary" size="large" className="checkout-btn">THANH TOÁN</Button>
                     </Col>
                     <Col>
-                        <Button danger onClick={clearCart}>Xoá tất cả</Button>
+                        <Button danger onClick={clearCart} className="clear-btn">Xoá tất cả</Button>
                     </Col>
                 </Row>
             </Card>
