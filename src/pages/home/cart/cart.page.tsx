@@ -2,6 +2,7 @@ import { Card, Button, InputNumber, List, Typography, Row, Col } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { getCart } from '@/services/api';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
@@ -36,6 +37,11 @@ const CartPage = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
     const [totalPrice, setTotalPrice] = useState<number>(0);
+    const navigate = useNavigate();
+
+    const handleCheckout = () => {
+        navigate('/thanh-toan');
+    };
 
     // Fetch cart data and merge duplicates
     useEffect(() => {
@@ -129,7 +135,14 @@ const CartPage = () => {
                 </Title>
                 <Row justify="end" gutter={16} className="cart-actions">
                     <Col>
-                        <Button type="primary" size="large" className="checkout-btn">THANH TOÁN</Button>
+                        <Button
+                            type="primary"
+                            size="large"
+                            className="checkout-btn"
+                            onClick={handleCheckout}
+                        >
+                            THANH TOÁN
+                        </Button>
                     </Col>
                     <Col>
                         <Button danger onClick={clearCart} className="clear-btn">Xoá tất cả</Button>

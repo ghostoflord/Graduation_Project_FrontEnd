@@ -27,6 +27,7 @@ import PageUnderConstruction from './pages/home/header/pageunderconstruction/pag
 import SalesPolicy from './pages/home/header/salespolicy/sales.policy';
 import ProductDetail from './pages/home/product/product.detail';
 import CartPage from './pages/home/cart/cart.page';
+import CheckoutPage from './pages/home/checkoutpage/checkout.page';
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: "gio-hang",
         element: <CartPage />
+      },
+      {
+        path: "thanh-toan",
+        element: <CheckoutPage />
       },
     ]
   },

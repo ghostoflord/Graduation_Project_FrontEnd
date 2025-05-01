@@ -1,0 +1,109 @@
+.checkout-page {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    gap: 2rem;
+    background-color: #f5f5f5;
+
+    .left-panel {
+        flex: 2;
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+
+        h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .ant-input,
+        .ant-select-selector,
+        .ant-input-affix-wrapper {
+            width: 100%;
+        }
+
+        .form-item {
+            margin-bottom: 1rem;
+        }
+    }
+
+    .right-panel {
+        flex: 1.2;
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+
+        h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+
+            img {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+                border-radius: 4px;
+                border: 1px solid #e0e0e0;
+            }
+
+            .item-info {
+                flex: 1;
+            }
+
+            .item-price {
+                font-weight: bold;
+            }
+        }
+
+        .discount {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .summary {
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+
+            .label {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 0.5rem;
+                font-size: 1rem;
+            }
+
+            .total {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #1677ff;
+                display: flex;
+                justify-content: space-between;
+                margin-top: 1rem;
+            }
+
+            .order-btn {
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .back-link {
+                margin-top: 1rem;
+                display: inline-block;
+                color: #1677ff;
+                cursor: pointer;
+            }
+        }
+    }
+}
