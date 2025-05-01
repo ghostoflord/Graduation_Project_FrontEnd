@@ -51,31 +51,33 @@ const CartPage = () => {
             .then(res => {
                 const rawItems: CartItem[] = res.data.items;
                 const mergedItems = mergeDuplicateItems(rawItems);
-
-                setCartItems(mergedItems);
-                setTotalQuantity(mergedItems.reduce((sum, item) => sum + item.quantity, 0));
-                setTotalPrice(mergedItems.reduce((sum, item) => sum + item.price * item.quantity, 0));
+                updateCartState(mergedItems);
             })
             .catch(err => {
                 console.error("Lỗi khi lấy giỏ hàng:", err);
             });
     }, []);
 
+    const updateCartState = (items: CartItem[]) => {
+        setCartItems(items);
+        setTotalQuantity(items.reduce((sum, item) => sum + item.quantity, 0));
+        setTotalPrice(items.reduce((sum, item) => sum + item.price * item.quantity, 0));
+    };
 
     const updateQuantity = (productId: number, quantity: number) => {
-        setCartItems(prev =>
-            prev.map(item =>
-                item.productId === productId ? { ...item, quantity } : item
-            )
+        const updated = cartItems.map(item =>
+            item.productId === productId ? { ...item, quantity } : item
         );
+        updateCartState(updated);
     };
 
     const removeItem = (productId: number) => {
-        setCartItems(prev => prev.filter(item => item.productId !== productId));
+        const updated = cartItems.filter(item => item.productId !== productId);
+        updateCartState(updated);
     };
 
     const clearCart = () => {
-        setCartItems([]);
+        updateCartState([]);
     };
 
     return (
@@ -87,14 +89,25 @@ const CartPage = () => {
                 renderItem={item => (
                     <Card className="mb-4 cart-item">
                         <Row gutter={16} align="middle">
+                            {/* Cột hình ảnh */}
                             <Col xs={24} sm={4}>
                                 <img src={item.image} alt={item.name} className="w-full cart-item-image" />
                             </Col>
-                            <Col xs={24} sm={16}>
+
+                            {/* Cột thông tin sản phẩm */}
+                            <Col xs={24} sm={12}>
                                 <Text strong>{item.name}</Text>
                                 <div>{item.shortDescription}</div>
+                                <div><Text type="secondary">{item.detailDescription}</Text></div>
                             </Col>
-                            <Col xs={24} sm={4} className="text-center">
+
+                            {/* Cột giá */}
+                            <Col xs={12} sm={4} className="text-center">
+                                <Text>Giá: {item.price.toLocaleString('vi-VN')} ₫</Text>
+                            </Col>
+
+                            {/* Cột điều chỉnh số lượng và nút xóa */}
+                            <Col xs={12} sm={4} className="text-center">
                                 <InputNumber
                                     min={1}
                                     value={item.quantity}
@@ -107,10 +120,13 @@ const CartPage = () => {
                             </Col>
                         </Row>
                     </Card>
+
                 )}
             />
             <Card className="text-right cart-summary">
-                <Title level={4} className="total-price">Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫</Title>
+                <Title level={4} className="total-price">
+                    Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫
+                </Title>
                 <Row justify="end" gutter={16} className="cart-actions">
                     <Col>
                         <Button type="primary" size="large" className="checkout-btn">THANH TOÁN</Button>
