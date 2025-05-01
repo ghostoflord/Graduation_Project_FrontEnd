@@ -57,9 +57,9 @@ const CheckoutPage = () => {
         if (!userId) return message.error("Thiếu thông tin người dùng");
         try {
             const res = await placeOrderAPI({ userId, name, address, phone });
-            if (res?.statusCode === 200) {
+            if (res?.statusCode === 201) {
                 message.success("Đặt hàng thành công!");
-                navigate("/");
+                setTimeout(() => navigate("/"), 1000); // Đợi 1s để hiển thị message
             } else {
                 message.error(res?.message || "Đặt hàng thất bại");
             }
@@ -68,6 +68,7 @@ const CheckoutPage = () => {
             message.error("Lỗi server khi đặt hàng");
         }
     };
+
 
     return (
         <div className="checkout-container">
