@@ -158,6 +158,15 @@ export const addToCartAPI = (data: {
 export const placeOrderAPI = (data: { userId: number; name: string; address: string; phone: string }) => {
     return axios.post("/api/v1/orders/place", data);
 };
+
+//dashboard
+export const getDashboardAPI = () => {
+    return axios.get<IBackendRes<{
+        countOrder: number;
+        countUser: number;
+        countProduct: number;
+    }>>("/api/v1/dashboard");
+};
 // export const addToCartAPI = (data: {
 //     quantity: number;
 //     price: number;

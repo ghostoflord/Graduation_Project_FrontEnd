@@ -28,6 +28,7 @@ import SalesPolicy from './pages/home/header/salespolicy/sales.policy';
 import ProductDetail from './pages/home/product/product.detail';
 import CartPage from './pages/home/cart/cart.page';
 import CheckoutPage from './pages/home/checkoutpage/checkout.page';
+import AdminDashboard from './components/admin/dashboard/admin.dashboard';
 
 const router = createBrowserRouter([
   {
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
     element: <AdminPage />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
       {
         path: "user",
         element: <UserPage />,
