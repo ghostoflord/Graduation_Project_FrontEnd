@@ -4,10 +4,11 @@ import './home.header.scss';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { MenuProps } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 import logo from '@/assets/logo.png';
+
 export default function Header() {
     const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary = { sum: 0 }, setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
@@ -20,16 +21,34 @@ export default function Header() {
         navigate('/login');
     };
 
-    const itemsDropdown: MenuProps['items'] = [
-        {
-            label: <Link to="/profile">Trang cá nhân</Link>,
-            key: 'profile',
-        },
-        {
-            label: <span onClick={handleLogout} style={{ cursor: "pointer" }}>Đăng xuất</span>,
-            key: 'logout',
+    // ✅ Sử dụng useMemo để tạo dropdown menu theo role
+    const itemsDropdown: MenuProps['items'] = useMemo(() => {
+        if (!isAuthenticated || !user) return [];
+
+        const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN'; // Nếu là mảng thì dùng: user?.roles?.includes('ADMIN')
+
+        const items: MenuProps['items'] = [];
+
+        if (isAdmin) {
+            items.push({
+                label: <Link to="/admin">Quản trị hệ thống</Link>,
+                key: 'admin',
+            });
         }
-    ];
+
+        items.push(
+            {
+                label: <Link to="/profile">Trang cá nhân</Link>,
+                key: 'profile',
+            },
+            {
+                label: <span onClick={handleLogout} style={{ cursor: 'pointer' }}>Đăng xuất</span>,
+                key: 'logout',
+            }
+        );
+
+        return items;
+    }, [user, isAuthenticated]);
 
     useEffect(() => {
         if (!user?.id) return;
@@ -90,25 +109,7 @@ export default function Header() {
                             onClick={() => navigate('/gio-hang')}
                         />
                         {cartSummary && Number(cartSummary.sum) > 0 && (
-                            // <span
-                            //     style={{
-                            //         position: 'absolute',
-                            //         top: -5,
-                            //         right: -5,
-                            //         backgroundColor: '#ff4d4f',
-                            //         color: 'white',
-                            //         borderRadius: '50%',
-                            //         padding: '0 6px',
-                            //         fontSize: '12px',
-                            //         fontWeight: 'bold',
-                            //         lineHeight: '20px',
-                            //         minWidth: 20,
-                            //         textAlign: 'center',
-                            //         zIndex: 1
-                            //     }}
-                            // >
                             <span className="cart-badge">{cartSummary.sum}</span>
-                            // </span>
                         )}
                     </div>
                 </div>
@@ -118,9 +119,7 @@ export default function Header() {
                 <ul>
                     <li><NavLink to="/danh-muc-san-pham">Danh mục sản phẩm</NavLink></li>
                     <li><NavLink to="/">Trang chủ</NavLink></li>
-                    <li>
-                        <IntroduceDropDown /> {/* dùng component tách riêng */}
-                    </li>
+                    <li><IntroduceDropDown /></li>
                     <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
                     <li><NavLink to="/tin-tuc">Tin tức</NavLink></li>
                     <li><NavLink to="/tuyen-dung">Tuyển dụng</NavLink></li>
