@@ -154,7 +154,10 @@ export const addToCartAPI = (data: {
     return axios.post('/api/v1/carts/addproduct', data);
 };
 
-
+// order
+export const placeOrderAPI = (data: { userId: number; name: string; address: string; phone: string }) => {
+    return axios.post("/api/v1/orders/place", data);
+};
 // export const addToCartAPI = (data: {
 //     quantity: number;
 //     price: number;

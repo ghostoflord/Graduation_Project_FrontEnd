@@ -136,6 +136,14 @@ declare global {
         items: CartItem[];
     }
 
+    // order
+    interface IOrder {
+        userId: number;
+        name: string;
+        address: string;
+        phone: string;
+    }
+
     // now not user
     interface IHistory {
         _id: string;
