@@ -42,7 +42,7 @@ const TableProduct = () => {
 
     const handleDeleteProduct = async (id: string) => {
         setIsDeleteProduct(true)
-        try {
+        try {   
             const res = await deleteProductAPI(id);
             // Kiểm tra status code hoặc flag success từ API
             if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API

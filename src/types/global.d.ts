@@ -144,6 +144,16 @@ declare global {
         phone: string;
     }
 
+    interface IOrderTable {
+        id: number;
+        receiverName: string;
+        receiverAddress: string;
+        receiverPhone: string;
+        totalPrice: number;
+        status: string;
+        userId: number;
+    }
+
     // now not user
     interface IHistory {
         _id: string;
