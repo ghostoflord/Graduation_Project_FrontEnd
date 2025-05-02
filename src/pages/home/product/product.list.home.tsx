@@ -3,6 +3,7 @@ import { getProductsAPI } from '@/services/api';
 import './product.list.home.scss';
 import { Link } from 'react-router-dom';
 import { slugify } from '@/utils/slugify';
+import { PropagateLoader } from 'react-spinners';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProductTable[]>([]);
@@ -15,20 +16,20 @@ const ProductList = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                console.log(` Fetching current=${current}, pageSize=${pageSize}`);
                 const response = await getProductsAPI(`current=${current}&pageSize=${pageSize}`);
-                console.log('Response:', response.data);
-
                 const productList = response.data?.result ?? [];
                 const totalProducts = response.data?.meta?.total || 0;
 
-                setProducts(productList);
-                setTotal(totalProducts);
+                // Optional delay to help you see the spinner clearly
+                setTimeout(() => {
+                    setProducts(productList);
+                    setTotal(totalProducts);
+                    setLoading(false);
+                }, 500);
             } catch (error) {
                 console.error('Lỗi khi lấy sản phẩm:', error);
                 setProducts([]);
                 setTotal(0);
-            } finally {
                 setLoading(false);
             }
         };
@@ -47,49 +48,50 @@ const ProductList = () => {
 
     return (
         <div className="product-list-container">
-            {loading ? (
-                <div className="product-list-loading">Loading sản phẩm...</div>
-            ) : products.length > 0 ? (
+            {products.length > 0 ? (
                 <>
-                    <div className="product-list">
-                        {products.map((product) => (
-                            <div className="product-card" key={product.id}>
-                                <Link to={`/product/${slugify(product.name)}-${product.id}`}>
-                                    <div className="product-badge">Best Seller</div>
-                                    <div className="product-discount">-20%</div>
-                                    <div className="product-image">
-                                        <img src={product.image || '/default-product.jpg'} alt={product.name} />
-                                    </div>
-                                    <div className="product-info">
-                                        <div className="product-name">{product.name}</div>
-                                        <div className="product-price">
-                                            <span className="price-current">{formatPrice(product.price)}</span>
-                                            <span className="price-old">{product.priceOld ? formatPrice(product.priceOld) : ''}</span>
-                                        </div>
-                                        <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
-                                    </div>
-                                </Link>
+                    <div className="product-list-wrapper">
+                        {loading && (
+                            <div className="product-list-overlay">
+                                <PropagateLoader size={15} color="#36d6b4" />
                             </div>
-                        ))}
+                        )}
+                        <div className={`product-list ${loading ? 'loading' : ''}`}>
+                            {products.map((product) => (
+                                <div className="product-card" key={product.id}>
+                                    <Link to={`/product/${slugify(product.name)}-${product.id}`}>
+                                        <div className="product-badge">Best Seller</div>
+                                        <div className="product-discount">-20%</div>
+                                        <div className="product-image">
+                                            <img src={product.image || '/default-product.jpg'} alt={product.name} />
+                                        </div>
+                                        <div className="product-info">
+                                            <div className="product-name">{product.name}</div>
+                                            <div className="product-price">
+                                                <span className="price-current">{formatPrice(product.price)}</span>
+                                                <span className="price-old">{product.priceOld ? formatPrice(product.priceOld) : ''}</span>
+                                            </div>
+                                            <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
+                                        </div>
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Pagination Controls */}
                     <div className="pagination">
-                        <button
-                            onClick={() => setCurrent((prev) => Math.max(prev - 1, 1))}
-                            disabled={current === 1}
-                        >
+                        <button onClick={() => setCurrent((prev) => Math.max(prev - 1, 1))} disabled={current === 1}>
                             Trang trước
                         </button>
                         <span>Trang {current} / {totalPages}</span>
-                        <button
-                            onClick={() => setCurrent((prev) => Math.min(prev + 1, totalPages))}
-                            disabled={current === totalPages}
-                        >
+                        <button onClick={() => setCurrent((prev) => Math.min(prev + 1, totalPages))} disabled={current === totalPages}>
                             Trang sau
                         </button>
                     </div>
                 </>
+            ) : loading ? (
+                <div className="product-list-loading">Đang tải sản phẩm...</div>
             ) : (
                 <div>Không có sản phẩm nào.</div>
             )}
