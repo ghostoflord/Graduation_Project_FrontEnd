@@ -5,7 +5,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { fetchAllOrders } from '@/services/api';
 
 
-const TableOrder: React.FC = () => {
+const TableOrder = () => {
     const actionRef = useRef<ActionType>();
 
     const handleExport = async () => {
@@ -32,7 +32,7 @@ const TableOrder: React.FC = () => {
         }
     };
 
-    const columns: ProColumns<Order>[] = [
+    const columns: ProColumns<IOrderTable>[] = [
         { title: 'ID', dataIndex: 'id' },
         { title: 'Receiver Name', dataIndex: 'receiverName' },
         { title: 'Receiver Address', dataIndex: 'receiverAddress' },
@@ -57,7 +57,7 @@ const TableOrder: React.FC = () => {
     ];
 
     return (
-        <ProTable<Order>
+        <ProTable<IOrderTable>
             headerTitle="Order List"
             actionRef={actionRef}
             columns={columns}
