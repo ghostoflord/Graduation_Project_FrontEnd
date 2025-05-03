@@ -17,6 +17,7 @@ export default function Header() {
         setUser(null);
         setIsAuthenticated(false);
         localStorage.removeItem("access_token");
+        localStorage.removeItem("user");
         message.success("Đăng xuất thành công!");
         navigate('/login');
     };
