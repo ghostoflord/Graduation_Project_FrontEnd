@@ -1,3 +1,5 @@
+import { create } from "zustand";
+
 export { };
 
 declare global {
@@ -135,6 +137,16 @@ declare global {
         userId: number;
         items: CartItem[];
     }
+
+    interface CartState {
+        items: CartItem[];
+        total: number;
+        addItem: (item: CartItem) => void;
+        updateItems: (items: CartItem[]) => void;
+        clearCart: () => void;
+    }
+
+
 
     // order
     interface IOrder {

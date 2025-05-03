@@ -1,5 +1,6 @@
 import axios from 'services/axios.customize';
 import queryString from 'query-string';
+import { create } from 'zustand';
 
 
 //auth
@@ -108,6 +109,11 @@ export const uploadFileAPI = (file: any, folder: string) => {
     });
 }
 
+export const resendVerificationAPI = (email: string) => {
+    const urlBackend = "/api/v1/auth/resend-verification";
+    return axios.post<IBackendRes<any>>(urlBackend, { email });
+};
+
 //product
 export const getProductsAPI = (query: string) => {
     const urlBackend = `/api/v1/products?${query}`;
@@ -153,6 +159,37 @@ export const addToCartAPI = (data: {
 }) => {
     return axios.post('/api/v1/carts/addproduct', data);
 };
+
+export const useCartStore = create<CartState>((set) => ({
+    items: [],
+    total: 0,
+    addItem: (item) =>
+        set((state) => {
+            const existing = state.items.find(i => i.productId === item.productId);
+            let newItems;
+
+            if (existing) {
+                newItems = state.items.map(i =>
+                    i.productId === item.productId
+                        ? { ...i, quantity: i.quantity + item.quantity }
+                        : i
+                );
+            } else {
+                newItems = [...state.items, item];
+            }
+
+            const newTotal = newItems.reduce((sum, i) => sum + i.quantity, 0);
+
+            return { items: newItems, total: newTotal };
+        }),
+
+    updateItems: (items) => set({
+        items,
+        total: items.reduce((sum, i) => sum + i.quantity, 0),
+    }),
+
+    clearCart: () => set({ items: [], total: 0 }),
+}));
 
 // order
 export const placeOrderAPI = (data: { userId: number; name: string; address: string; phone: string }) => {

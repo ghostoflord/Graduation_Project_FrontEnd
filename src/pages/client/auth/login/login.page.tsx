@@ -4,7 +4,7 @@ import './login.page.scss';
 import { useState } from 'react';
 import type { FormProps } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
-import { loginAPI } from '@/services/api';
+import { loginAPI, resendVerificationAPI } from '@/services/api';
 import ModalChangePassword from '../../../../components/client/account/modal.change.password';
 
 type FieldType = {
@@ -26,8 +26,42 @@ const LoginPage = () => {
             const res = await loginAPI(username, password);
             if (res?.data) {
                 const user = res.data.user;
-                console.log('User info: ', user); // 👉 log để chắc chắn có role
+                console.log('User info: ', user);
 
+                // Kiểm tra active
+                if (!user.active) {
+                    notification.warning({
+                        message: 'Tài khoản chưa được xác thực, vui lòng xác thực tài khảon',
+                        description: (
+                            <span>
+                                Vui lòng nhấn{' '}
+                                <Button
+                                    type="link"
+                                    onClick={async () => {
+                                        try {
+                                            console.log('Email cần gửi lại mã xác thực:', user.email); // 👉 Thêm dòng này
+                                            await resendVerificationAPI(user.email);
+                                            notification.success({
+                                                message: 'Gửi lại thành công',
+                                                description: 'Vui lòng kiểm tra email để kích hoạt tài khoản.',
+                                            });
+                                        } catch (err) {
+                                            notification.error({
+                                                message: 'Lỗi',
+                                                description: 'Không thể gửi lại mã xác thực. Vui lòng thử lại.',
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Gửi lại mã xác thực
+                                </Button>
+                            </span>
+                        ),
+                        duration: 0,
+                    });
+                    setIsSubmit(false);
+                    return;
+                }
                 setIsAuthenticated(true);
                 setUser(user);
                 localStorage.setItem('access_token', res.data.access_token);
@@ -35,7 +69,6 @@ const LoginPage = () => {
 
                 message.success('Đăng nhập tài khoản thành công!');
 
-                // 👇 Điều hướng theo role
                 if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
                     navigate('/admin/dashboard');
                 } else {
