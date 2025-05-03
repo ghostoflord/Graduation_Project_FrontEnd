@@ -8,11 +8,11 @@ import { useEffect, useMemo } from 'react';
 import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 import logo from '@/assets/logo.png';
-
+import { useState } from 'react';
 export default function Header() {
     const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary = { sum: 0 }, setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
-
+    const [showCategory, setShowCategory] = useState(false);
     const handleLogout = () => {
         setUser(null);
         setIsAuthenticated(false);
@@ -22,11 +22,10 @@ export default function Header() {
         navigate('/login');
     };
 
-    // ✅ Sử dụng useMemo để tạo dropdown menu theo role
     const itemsDropdown: MenuProps['items'] = useMemo(() => {
         if (!isAuthenticated || !user) return [];
 
-        const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN'; // Nếu là mảng thì dùng: user?.roles?.includes('ADMIN')
+        const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
 
         const items: MenuProps['items'] = [];
 
@@ -118,7 +117,23 @@ export default function Header() {
 
             <div className="header-menu">
                 <ul>
-                    <li><NavLink to="/danh-muc-san-pham">Danh mục sản phẩm</NavLink></li>
+                    <li
+                        className={`category-dropdown ${showCategory ? 'open' : ''}`}
+                        onClick={() => setShowCategory(!showCategory)}
+                    >
+                        <span className="dropdown-link">Danh mục sản phẩm</span>
+                        <div className="dropdown-menu">
+                            <ul>
+                                <li><NavLink to="/laptop-van-phong"><i className="fa fa-laptop"></i> Laptop văn phòng</NavLink></li>
+                                <li><NavLink to="/laptop-gaming"><i className="fa fa-gamepad"></i> Laptop gaming</NavLink></li>
+                                <li><NavLink to="/laptop-content-creator"><i className="fa fa-video-camera"></i> Laptop content creator</NavLink></li>
+                                <li><NavLink to="/pc-desktop"><i className="fa fa-desktop"></i> PC Desktop chính hãng</NavLink></li>
+                                <li><NavLink to="/man-hinh"><i className="fa fa-tv"></i> LCD - Màn hình</NavLink></li>
+                                <li><NavLink to="/gear-gaming"><i className="fa fa-keyboard-o"></i> Gear gaming</NavLink></li>
+                                <li><NavLink to="/linh-kien"><i className="fa fa-cogs"></i> Linh kiện & thiết bị khác</NavLink></li>
+                            </ul>
+                        </div>
+                    </li>
                     <li><NavLink to="/">Trang chủ</NavLink></li>
                     <li><IntroduceDropDown /></li>
                     <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
