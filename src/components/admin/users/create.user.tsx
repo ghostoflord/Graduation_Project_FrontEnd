@@ -95,17 +95,18 @@ const CreateUser = (props: IProps) => {
         setIsSubmit(true);
         const { name, email, password, gender, address, age } = values;
 
-        // Chuyển avatar sang dạng base64
-        const avatarBase64 = avatarFile ? await getBase64(avatarFile.originFileObj as RcFile) : '';
+        // Lấy base64 từ avatar file
+        const avatarBase64 = avatarFile
+            ? await getBase64(avatarFile.originFileObj as RcFile)
+            : '';
 
         try {
-            // Gọi API để tạo người dùng mới
             const res = await createUserAPI(
                 name,
                 email,
                 password,
                 gender,
-                avatarBase64,  // Gửi base64 của avatar
+                avatarBase64, // ✅ Gửi base64 chứ không phải URL
                 address,
                 age
             );
@@ -132,6 +133,7 @@ const CreateUser = (props: IProps) => {
             setIsSubmit(false);
         }
     };
+
 
     return (
         <Modal

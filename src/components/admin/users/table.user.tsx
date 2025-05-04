@@ -107,16 +107,17 @@ const TableUser = () => {
         {
             title: 'Avatar',
             dataIndex: 'avatar',
-            render: (dom, entity, index, action, schema) => {
-                const avatar = entity.avatar; // lấy giá trị avatar từ entity
-                return avatar ? (
+            render: (_, entity) => {
+                const avatar = entity.avatar;
+                const avatarUrl = avatar ? `http://localhost:8080/upload/avatars/${avatar}` : null;
+                return avatarUrl ? (
                     <img
-                        src={avatar}
+                        src={avatarUrl}
                         alt="User Avatar"
                         style={{ width: 50, height: 50, borderRadius: '50%' }}
                     />
                 ) : (
-                    <span>No avatar</span> // trường hợp không có avatar
+                    <span>No avatar</span>
                 );
             },
         },

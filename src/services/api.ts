@@ -79,7 +79,7 @@ export const getUsersAPI = (query: string) => {
 }
 
 export const createUserAPI = (name: string, email: string, password: string, gender: string, avatar: string, address: string, age: string) => {
-    return axios.post("/api/v1/users", { name, email, password, gender, avatarBase64: avatar, address, age });
+    return axios.post("/api/v1/users", { name, email, password, gender, avatar, address, age });
 };
 
 export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string) => {
