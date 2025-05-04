@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import "./home.footer.scss";
 import logo from '@/assets/logo.png';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -24,16 +25,14 @@ const Footer = () => {
                             <p><strong>Hotline:</strong> 1900.8946</p>
                         </div>
                     </div>
-
                     <div className="footer-column">
                         <h4>Chính sách</h4>
                         <ul>
-                            <li>Chính sách bán hàng</li>
-                            <li>Phương thức đổi trả</li>
-                            <li>Phương thức vận chuyển</li>
-                            <li>Hướng dẫn mua trả góp</li>
-                            <li>Phương thức thanh toán</li>
-                            <li>Chính sách bảo mật</li>
+                            <li><Link to="/chinh-sach-ban-hang">Chính sách bán hàng</Link></li>
+                            <li><Link to="/doi-tra">Phương thức đổi trả</Link></li>
+                            <li><Link to="/van-chuyen">Phương thức vận chuyển</Link></li>
+                            <li><Link to="/phuong-thuc-thanh-toan">Phương thức thanh toán</Link></li>
+                            <li><Link to="/bao-mat">Chính sách bảo mật</Link></li>
                         </ul>
                     </div>
 

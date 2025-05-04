@@ -29,6 +29,10 @@ import ProductDetail from './pages/home/product/product.detail';
 import CartPage from './pages/home/cart/cart.page';
 import CheckoutPage from './pages/home/checkoutpage/checkout.page';
 import AdminDashboard from './components/admin/dashboard/admin.dashboard';
+import ReturnPolicy from './pages/home/footer/returnpolicy/return.policy';
+import ShippingPolicy from './pages/home/footer/shippingpolicy/shipping.policy';
+import PaymentPolicy from './pages/home/footer/paymentpolicy/payment.policy';
+import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
 
 const router = createBrowserRouter([
   {
@@ -86,6 +90,22 @@ const router = createBrowserRouter([
       {
         path: "thanh-toan",
         element: <CheckoutPage />
+      },
+      {
+        path: "doi-tra",
+        element: <ReturnPolicy />
+      },
+      {
+        path: "van-chuyen",
+        element: <ShippingPolicy />
+      },
+      {
+        path: "phuong-thuc-thanh-toan",
+        element: <PaymentPolicy />
+      },
+      {
+        path: "bao-mat",
+        element: <PrivacyPolicy />
       },
     ]
   },
