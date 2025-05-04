@@ -109,7 +109,7 @@ const TableUser = () => {
             dataIndex: 'avatar',
             render: (_, entity) => {
                 const avatar = entity.avatar;
-                const avatarUrl = avatar ? `http://localhost:8080/upload/avatars/${avatar}` : null;
+                const avatarUrl = avatar ? `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${avatar}` : null;
                 return avatarUrl ? (
                     <img
                         src={avatarUrl}

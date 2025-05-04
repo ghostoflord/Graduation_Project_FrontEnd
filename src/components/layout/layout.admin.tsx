@@ -106,8 +106,9 @@ const LayoutAdmin = () => {
     ];
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`;
+    console.log("user", user);
 
-    // FIX Ở ĐÂY: chuyển <Outlet /> thành <Navigate />
+    // FIX Ở ĐÂY: chuyển <Outlet /> thành <Navigate/>
     if (isAuthenticated === false) {
         return <Navigate to="/login" replace />;
     }
