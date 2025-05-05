@@ -131,8 +131,12 @@ export const getProductDetailSlugAPI = (slug: string) => {
 };
 
 export const createProductAPI = (name: string, productCode: string, detailDescription: string, guarantee: string, image: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string) => {
-    return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, imageBase64: image, factory, price, sold, quantity, shortDescription });
+    return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription });
 };
+
+// export const createUserAPI = (name: string, email: string, password: string, gender: string, avatar: string, address: string, age: string) => {
+//     return axios.post("/api/v1/users", { name, email, password, gender, avatar, address, age });
+// };
 
 export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string) => {
     const urlBackend = "/api/v1/users";

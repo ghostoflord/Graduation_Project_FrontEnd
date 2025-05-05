@@ -42,8 +42,9 @@ const TableProduct = () => {
 
     const handleDeleteProduct = async (id: string) => {
         setIsDeleteProduct(true)
-        try {   
+        try {
             const res = await deleteProductAPI(id);
+            console.log("API response: ", res.data);
             // Kiểm tra status code hoặc flag success từ API
             if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
                 message.success(res.message || 'Xóa user thành công');
@@ -112,6 +113,25 @@ const TableProduct = () => {
                 )
             }
         },
+        {
+            title: 'Image',
+            dataIndex: 'image',
+            render: (_, entity) => {
+                const avatarUrl = entity.image?.startsWith('http')
+                    ? entity.image // nếu đã là full URL thì dùng luôn
+                    : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${entity.image}`;
+                return avatarUrl ? (
+                    <img
+                        src={avatarUrl}
+                        alt="Product Avatar"
+                        style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                ) : (
+                    <span>No product</span>
+                );
+            },
+        },
+
         {
             title: 'Ngày cập nhật',
             dataIndex: 'updatedAt',

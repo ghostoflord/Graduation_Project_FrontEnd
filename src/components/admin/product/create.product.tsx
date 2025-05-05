@@ -1,21 +1,10 @@
 import { useState } from 'react';
-import {
-    App,
-    Divider,
-    Form,
-    Input,
-    Modal,
-    Select,
-    Upload,
-    Button,
-    Image,
-    InputNumber
-} from 'antd';
+import { Modal, Form, Input, Upload, Button, Image, App, Divider } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import type { FormProps } from 'antd';
-import type { RcFile, UploadFile } from 'antd/es/upload';
-import type { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
-import { createProductAPI, uploadFileAPI } from '@/services/api';
+import { uploadFileAPI, createProductAPI } from '@/services/api';
+import { UploadFile, RcFile } from 'antd/es/upload';
+import { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
+import { FormProps } from 'antd/lib';
 
 interface IProps {
     openModalCreate: boolean;
@@ -26,14 +15,13 @@ interface IProps {
 type FieldType = {
     name: string;
     productCode: string;
+    price: string;
     detailDescription: string;
     guarantee: string;
     factory: string;
-    image: UploadFile[];  // Chứa thông tin avatar
-    price: string;
-    sold: string;
-    quantity: string;
     shortDescription: string;
+    image: UploadFile[];
+    quantity: string;
 };
 
 const CreateProduct = (props: IProps) => {
@@ -63,11 +51,10 @@ const CreateProduct = (props: IProps) => {
         setPreviewImage(file.preview as string);
     };
 
-    const handleUploadAvatar = async (options: RcCustomRequestOptions) => {
+    const handleUploadImage = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options;
-
         try {
-            // Upload avatar image to backend and get file name
+            // Upload product image to backend and get file name
             const res = await uploadFileAPI(file as File, "products");
 
             if (res && res.data) {
@@ -97,17 +84,26 @@ const CreateProduct = (props: IProps) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
-        const { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription } = values;
-
-        // Chuyển avatar sang dạng base64
-        const imageBase64 = imageFile ? await getBase64(imageFile.originFileObj as RcFile) : '';
-
+        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity } = values;
+        // Lấy base64 từ avatar file
+        const imageUrl = imageFile
+            ? await getBase64(imageFile.originFileObj as RcFile)
+            : '';
         try {
-            // Gọi API để tạo người dùng mới
-            const res = await createProductAPI(name, productCode, detailDescription, guarantee, imageBase64, factory, price, sold, quantity, shortDescription);
+            const res = await createProductAPI(
+                name,
+                productCode,
+                detailDescription,
+                guarantee,
+                imageUrl,  // Gửi URL ảnh sản phẩm
+                factory,
+                price,
+                quantity,
+                shortDescription
+            );
 
             if (res && res.data) {
-                message.success('Tạo mới product thành công');
+                message.success('Tạo mới sản phẩm thành công');
                 form.resetFields();
                 setImageFile(null);
                 setPreviewImage("");
@@ -148,84 +144,68 @@ const CreateProduct = (props: IProps) => {
             <Form
                 form={form}
                 layout="vertical"
-                name="create-user"
+                name="create-product"
                 onFinish={onFinish}
                 autoComplete="off"
             >
                 <Form.Item<FieldType>
-                    label="Name Product"
+                    label="Tên Sản Phẩm"
                     name="name"
                     rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}>
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
-                    label="Product Code;"
+                    label="Mã Sản Phẩm"
                     name="productCode"
                     rules={[{ required: true, message: 'Vui lòng nhập mã sản phẩm!' }]}>
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
-                    label="Detail Description;"
-                    name="detailDescription"
-                    rules={[{ required: true, message: 'Vui lòng nhập miêu tả sản phẩm!' }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Short Description"
-                    name="shortDescription"
-                    rules={[{ required: true, message: 'Vui lòng miêu tả ngắn về sản phẩm!' }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Factory"
-                    name="factory"
-                    rules={[{ required: true, message: 'Vui lòng nhập tên công ty!' }]}>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<FieldType>
-                    label="Sold"
-                    name="sold"
-                    rules={[{ required: true, message: 'Vui lòng nhập số lượng đã bán!' }]}>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<FieldType>
-                    label="Quantity"
-                    name="quantity"
-                    rules={[{ required: true, message: 'Vui lòng nhập số lượng hàng hóa!' }]}>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item<FieldType>
-                    label="Guarantee"
-                    name="guarantee"
-                    rules={[{ required: true, message: 'Vui lòng chọn trạng thái hàng hóa!' }]}>
-                    <Select placeholder="Chọn trạng thái">
-                        <Select.Option value="IN_STOCK">IN STOCK</Select.Option>
-                        <Select.Option value="OUT_OF_STOCK">OUT OF STOCK</Select.Option>
-                    </Select>
-                </Form.Item>
-
-                <Form.Item<FieldType>
-                    labelCol={{ span: 24 }}
-                    label="Giá tiền"
+                    label="Giá"
                     name="price"
-                    rules={[{ required: true, message: 'Vui lòng nhập giá tiền!' }]}
-                >
-                    <InputNumber
-                        min={1}
-                        style={{ width: '100%' }}
-                        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        addonAfter=" đ"
-                    />
+                    rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm!' }]}>
+                    <Input type="number" />
                 </Form.Item>
 
+                <Form.Item<FieldType>
+                    label="Miêu Tả"
+                    name="description"
+                    rules={[{ required: true, message: 'Vui lòng nhập miêu tả sản phẩm!' }]}>
+                    <Input.TextArea />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Bảo Hành"
+                    name="guarantee"
+                    rules={[{ required: true, message: 'Vui lòng nhập thông tin bảo hành!' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Nhà Máy"
+                    name="factory"
+                    rules={[{ required: true, message: 'Vui lòng nhập nhà máy!' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Mô Tả Ngắn"
+                    name="shortDescription"
+                    rules={[{ required: true, message: 'Vui lòng nhập mô tả ngắn!' }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Số Lượng"
+                    name="quantity"
+                    rules={[{ required: true, message: 'Vui lòng nhập số lượng sản phẩm!' }]}>
+                    <Input type="number" />
+                </Form.Item>
 
                 <Form.Item
-                    label="Image"
+                    label="Ảnh sản phẩm"
                     name="image"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
@@ -233,7 +213,7 @@ const CreateProduct = (props: IProps) => {
                     <Upload
                         listType="picture"
                         maxCount={1}
-                        customRequest={handleUploadAvatar}
+                        customRequest={handleUploadImage}
                         fileList={imageFile ? [imageFile] : []}
                         onRemove={() => {
                             setImageFile(null);

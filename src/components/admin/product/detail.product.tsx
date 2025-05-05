@@ -1,7 +1,5 @@
-
-
 import { FORMATE_DATE_VN } from "@/services/helper";
-import { Avatar, Badge, Descriptions, Drawer } from "antd";
+import { Avatar, Descriptions, Drawer } from "antd";
 import dayjs from 'dayjs';
 
 interface IProps {
@@ -9,8 +7,8 @@ interface IProps {
     setOpenViewDetail: (v: boolean) => void;
     dataViewDetail: IProductTable | null;
     setDataViewDetail: (v: IUserTable | null) => void;
-
 }
+
 const DetailProduct = (props: IProps) => {
     const { openViewDetail, setOpenViewDetail, dataViewDetail, setDataViewDetail } = props;
 
@@ -21,6 +19,7 @@ const DetailProduct = (props: IProps) => {
 
     const imageURL = `${import.meta.env.VITE_BACKEND_URL}/upload/products/${dataViewDetail?.image}`
     console.log("CHECK", imageURL)
+
     return (
         <>
             <Drawer
@@ -45,17 +44,18 @@ const DetailProduct = (props: IProps) => {
                     <Descriptions.Item label="Sold">{dataViewDetail?.sold}</Descriptions.Item>
                     <Descriptions.Item label="short decs">{dataViewDetail?.shortDescription}</Descriptions.Item>
                     <Descriptions.Item label="Image">
-                        <Avatar size={40} src={imageURL}></Avatar>
+                        <Avatar size={64} src={imageURL} />
                     </Descriptions.Item>
                     <Descriptions.Item label="Created At">
-                        {dayjs(dataViewDetail?.createdAt).format(FORMATE_DATE_VN)}
+                        {dataViewDetail?.createdAt ? dayjs(dataViewDetail.createdAt).format(FORMATE_DATE_VN) : "N/A"}
                     </Descriptions.Item>
                     <Descriptions.Item label="Updated At">
-                        {dayjs(dataViewDetail?.updatedAt).format(FORMATE_DATE_VN)}
+                        {dataViewDetail?.updatedAt ? dayjs(dataViewDetail.updatedAt).format(FORMATE_DATE_VN) : "N/A"}
                     </Descriptions.Item>
                 </Descriptions>
             </Drawer>
         </>
-    )
+    );
 }
+
 export default DetailProduct;

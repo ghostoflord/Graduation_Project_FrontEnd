@@ -106,7 +106,7 @@ const CreateUser = (props: IProps) => {
                 email,
                 password,
                 gender,
-                avatarBase64, // ✅ Gửi base64 chứ không phải URL
+                avatarBase64, // Gửi base64 chứ không phải URL
                 address,
                 age
             );
