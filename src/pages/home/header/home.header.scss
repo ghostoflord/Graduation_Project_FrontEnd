@@ -124,12 +124,31 @@
       flex-wrap: wrap;
       gap: 10px;
       padding: 10px;
+      justify-content: center;
 
       .store-button,
-      .news-links,
-      .call-phone,
-      .login-button {
+      .news-links {
         display: none;
+      }
+
+      .call-phone {
+        display: block;
+        text-align: center;
+        width: 100%;
+
+        div {
+          color: #fff;
+          font-size: 14px;
+        }
+
+        .phone-number {
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
+
+      .login-button {
+        display: inline-flex;
       }
 
       .logo img {
@@ -222,7 +241,7 @@
       left: 0;
       background: #fff;
       color: #000;
-      width: 220px; // 👈 Co lại chiều ngang
+      width: 220px; //  Co lại chiều ngang
       display: none;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       border-radius: 4px;
@@ -231,7 +250,7 @@
       ul {
         list-style: none;
         margin: 0;
-        padding: 6px 0; // 👈 Co padding top-bottom
+        padding: 6px 0; //  Co padding top-bottom
 
         display: flex;
         flex-direction: column;
@@ -242,8 +261,8 @@
           a {
             display: flex;
             align-items: center;
-            padding: 8px 16px; // 👈 Ít padding hơn
-            font-size: 13px; // 👈 Nhỏ hơn một chút
+            padding: 8px 16px; //  Ít padding hơn
+            font-size: 13px; //  Nhỏ hơn một chút
             line-height: 1.4;
             gap: 6px;
             color: #333;
