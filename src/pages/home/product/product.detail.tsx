@@ -77,7 +77,11 @@ const ProductDetail = () => {
     return (
         <div className="product-detail">
             <div className="product-images">
-                <img src={product.image || '/default-product.jpg'} alt={product.name} />
+                <img
+                    src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`}
+                    alt={product.name}
+                    onError={(e) => (e.currentTarget.src = '/default-product.jpg')}
+                />
             </div>
             <div className="product-info">
                 <h1>{product.name}</h1>

@@ -6,6 +6,32 @@ import { getCart, placeOrderAPI } from '@/services/api';
 
 const { Title, Text } = Typography;
 
+interface CartItem {
+    productId: number;
+    name: string;
+    price: number;
+    quantity: number;
+    image: string;
+    detailDescription: string;
+    shortDescription: string;
+}
+
+const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
+    const map = new Map<number, CartItem>();
+    items.forEach(item => {
+        if (map.has(item.productId)) {
+            const existing = map.get(item.productId)!;
+            map.set(item.productId, {
+                ...existing,
+                quantity: existing.quantity + item.quantity
+            });
+        } else {
+            map.set(item.productId, { ...item });
+        }
+    });
+    return Array.from(map.values());
+};
+
 const CheckoutPage = () => {
     const [userId, setUserId] = useState<number | null>(null);
     const [name, setName] = useState('');
@@ -36,9 +62,10 @@ const CheckoutPage = () => {
             getCart(uid).then(cartRes => {
                 console.log("Giỏ hàng trả về:", cartRes?.data);
                 if (cartRes?.data?.items) {
-                    const items = cartRes.data.items;
-                    setCartItems(items);
-                    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                    const rawItems: CartItem[] = cartRes.data.items;
+                    const mergedItems = mergeDuplicateItems(rawItems); // Gộp các sản phẩm trùng
+                    setCartItems(mergedItems);
+                    const total = mergedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
                     setTotalPrice(total);
                 } else {
                     message.warning("Giỏ hàng trống");
@@ -69,7 +96,6 @@ const CheckoutPage = () => {
         }
     };
 
-
     return (
         <div className="checkout-container">
             <Row gutter={32}>
@@ -94,7 +120,11 @@ const CheckoutPage = () => {
                             <>
                                 {cartItems.map(item => (
                                     <div className="product-row" key={item.productId}>
-                                        <img src={item.image} alt={item.name} />
+                                        <img
+                                            src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`}
+                                            alt={item.name}
+                                            className="product-image"
+                                        />
                                         <div className="product-info">
                                             <Text strong>{item.name}</Text>
                                             <div>{item.shortDescription}</div>
@@ -116,9 +146,7 @@ const CheckoutPage = () => {
                         <Button type="primary" block size="large" className="place-order-btn" onClick={handlePlaceOrder}>
                             ĐẶT HÀNG
                         </Button>
-                        <Button type="link" block onClick={() => navigate('/')}>
-                            ← Quay về trang chủ
-                        </Button>
+                        <Button type="link" block onClick={() => navigate('/')}>← Quay về trang chủ</Button>
                     </Card>
                 </Col>
             </Row>
