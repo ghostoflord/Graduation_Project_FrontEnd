@@ -87,6 +87,12 @@ declare global {
         detail: any;
     }
 
+    interface UserAccountInfo {
+        name: string;
+        email: string;
+        orderCount: number;
+        cartSum: number;
+    }
     // Product
     interface IProductTable {
         id: string;

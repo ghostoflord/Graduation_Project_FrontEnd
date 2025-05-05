@@ -33,6 +33,7 @@ import ReturnPolicy from './pages/home/footer/returnpolicy/return.policy';
 import ShippingPolicy from './pages/home/footer/shippingpolicy/shipping.policy';
 import PaymentPolicy from './pages/home/footer/paymentpolicy/payment.policy';
 import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
+import AccountPage from './pages/home/accountpage/account.page';
 
 const router = createBrowserRouter([
   {
@@ -106,6 +107,10 @@ const router = createBrowserRouter([
       {
         path: "bao-mat",
         element: <PrivacyPolicy />
+      },
+      {
+        path: "profile",
+        element: < AccountPage />
       },
     ]
   },

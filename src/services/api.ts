@@ -93,6 +93,11 @@ export const deleteUserAPI = (id: string) => {
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
+export const getAccountInfoAPI = () => {
+    const urlBackend = "/api/v1/users/account/info";
+    return axios.get<IBackendRes<UserAccountInfo>>(urlBackend);
+};
+
 export const uploadFileAPI = (file: any, folder: string) => {
     const bodyFormData = new FormData();
     bodyFormData.append('file', file);
