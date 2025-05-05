@@ -168,14 +168,14 @@ const UpdateProduct = (props: IProps) => {
                     </Form.Item>
 
                     <Form.Item<FieldType>
-                        label="Product Code;"
+                        label="Product Code"
                         name="productCode"
                         rules={[{ required: true, message: 'Vui lòng nhập mã sản phẩm!' }]}>
                         <Input />
                     </Form.Item>
 
                     <Form.Item<FieldType>
-                        label="Detail Description;"
+                        label="Detail Description"
                         name="detailDescription"
                         rules={[{ required: true, message: 'Vui lòng nhập miêu tả sản phẩm!' }]}>
                         <Input />

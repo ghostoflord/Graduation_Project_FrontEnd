@@ -180,3 +180,21 @@
     opacity: 0.4;
     pointer-events: none;
 }
+
+//
+.product-image {
+    width: 100%;
+    aspect-ratio: 1 / 1; // giữ khung hình vuông linh hoạt theo chiều ngang
+    background: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; // giữ tỉ lệ, không méo hình
+        display: block;
+    }
+}

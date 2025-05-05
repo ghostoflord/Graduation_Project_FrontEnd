@@ -25,7 +25,7 @@ const ProductList = () => {
                     setProducts(productList);
                     setTotal(totalProducts);
                     setLoading(false);
-                }, 500);
+                }, 5000);
             } catch (error) {
                 console.error('Lỗi khi lấy sản phẩm:', error);
                 setProducts([]);
@@ -63,7 +63,14 @@ const ProductList = () => {
                                         <div className="product-badge">Best Seller</div>
                                         <div className="product-discount">-20%</div>
                                         <div className="product-image">
-                                            <img src={product.image || '/default-product.jpg'} alt={product.name} />
+                                            <img
+                                                src={
+                                                    product.image
+                                                        ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
+                                                        : '/default-product.jpg'
+                                                }
+                                                alt={product.name}
+                                            />
                                         </div>
                                         <div className="product-info">
                                             <div className="product-name">{product.name}</div>

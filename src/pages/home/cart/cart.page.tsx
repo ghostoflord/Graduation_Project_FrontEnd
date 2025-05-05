@@ -97,7 +97,17 @@ const CartPage = () => {
                         <Row gutter={16} align="middle">
                             {/* Cột hình ảnh */}
                             <Col xs={24} sm={4}>
-                                <img src={item.image} alt={item.name} className="w-full cart-item-image" />
+                                <div className="product-image">
+                                    <img
+                                        src={
+                                            item.image
+                                                ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`
+                                                : '/default-product.jpg'
+                                        }
+                                        alt={item.name}
+                                        className="w-full cart-item-image"
+                                    />
+                                </div>
                             </Col>
 
                             {/* Cột thông tin sản phẩm */}

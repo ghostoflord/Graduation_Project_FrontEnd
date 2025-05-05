@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Form, Input, Upload, Button, Image, App, Divider } from 'antd';
+import { Modal, Form, Input, Upload, Button, Image, App, Divider, Select, InputNumber } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { uploadFileAPI, createProductAPI } from '@/services/api';
 import { UploadFile, RcFile } from 'antd/es/upload';
@@ -22,6 +22,7 @@ type FieldType = {
     shortDescription: string;
     image: UploadFile[];
     quantity: string;
+    sold: string;
 };
 
 const CreateProduct = (props: IProps) => {
@@ -151,57 +152,84 @@ const CreateProduct = (props: IProps) => {
                 <Form.Item<FieldType>
                     label="Tên Sản Phẩm"
                     name="name"
-                    rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}>
+                    rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
+                >
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Mã Sản Phẩm"
                     name="productCode"
-                    rules={[{ required: true, message: 'Vui lòng nhập mã sản phẩm!' }]}>
+                    rules={[{ required: true, message: 'Vui lòng nhập mã sản phẩm!' }]}
+                >
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
-                    label="Giá"
-                    name="price"
-                    rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm!' }]}>
-                    <Input type="number" />
-                </Form.Item>
-
-                <Form.Item<FieldType>
-                    label="Miêu Tả"
-                    name="description"
-                    rules={[{ required: true, message: 'Vui lòng nhập miêu tả sản phẩm!' }]}>
+                    label="Miêu Tả Chi Tiết"
+                    name="detailDescription"
+                    rules={[{ required: true, message: 'Vui lòng nhập miêu tả sản phẩm!' }]}
+                >
                     <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item<FieldType>
-                    label="Bảo Hành"
-                    name="guarantee"
-                    rules={[{ required: true, message: 'Vui lòng nhập thông tin bảo hành!' }]}>
+                    label="Mô Tả Ngắn"
+                    name="shortDescription"
+                    rules={[{ required: true, message: 'Vui lòng nhập mô tả ngắn!' }]}
+                >
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Nhà Máy"
                     name="factory"
-                    rules={[{ required: true, message: 'Vui lòng nhập nhà máy!' }]}>
+                    rules={[{ required: true, message: 'Vui lòng nhập nhà máy!' }]}
+                >
                     <Input />
                 </Form.Item>
 
                 <Form.Item<FieldType>
-                    label="Mô Tả Ngắn"
-                    name="shortDescription"
-                    rules={[{ required: true, message: 'Vui lòng nhập mô tả ngắn!' }]}>
-                    <Input />
+                    label="Đã Bán"
+                    name="sold"
+                    rules={[{ required: true, message: 'Vui lòng nhập số lượng đã bán!' }]}
+                >
+                    <Input type="number" />
                 </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Số Lượng"
                     name="quantity"
-                    rules={[{ required: true, message: 'Vui lòng nhập số lượng sản phẩm!' }]}>
+                    rules={[{ required: true, message: 'Vui lòng nhập số lượng sản phẩm!' }]}
+                >
                     <Input type="number" />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Trạng Thái"
+                    name="guarantee"
+                    rules={[{ required: true, message: 'Vui lòng chọn trạng thái hàng hóa!' }]}
+                >
+                    <Select placeholder="Chọn trạng thái">
+                        <Select.Option value="IN_STOCK">IN STOCK</Select.Option>
+                        <Select.Option value="OUT_OF_STOCK">OUT OF STOCK</Select.Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    labelCol={{ span: 24 }}
+                    label="Giá tiền"
+                    name="price"
+                    rules={[{ required: true, message: 'Vui lòng nhập giá tiền!' }]}
+                >
+                    <InputNumber
+                        min={1}
+                        style={{ width: '100%' }}
+                        formatter={(value) =>
+                            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                        }
+                        addonAfter=" đ"
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -209,7 +237,8 @@ const CreateProduct = (props: IProps) => {
                     name="image"
                     valuePropName="fileList"
                     getValueFromEvent={normFile}
-                    rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm!" }]}>
+                    rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm!" }]}
+                >
                     <Upload
                         listType="picture"
                         maxCount={1}
@@ -220,7 +249,8 @@ const CreateProduct = (props: IProps) => {
                             setPreviewImage("");
                         }}
                         onPreview={handlePreview}
-                        accept="image/*">
+                        accept="image/*"
+                    >
                         <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
                     </Upload>
                 </Form.Item>
@@ -236,6 +266,7 @@ const CreateProduct = (props: IProps) => {
             </Form>
         </Modal>
     );
+
 };
 
 export default CreateProduct;
