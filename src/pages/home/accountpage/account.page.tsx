@@ -18,6 +18,7 @@ import "./account.page.scss";
 import { getAccountInfoAPI, logoutAPI } from "@/services/api";
 import { useNavigate } from "react-router-dom";
 import { useCurrentApp } from "@/components/context/app.context";
+import ModalChangePassword from "../../../components/client/account/modal.change.password";
 
 
 const { Title, Text } = Typography;
@@ -34,7 +35,7 @@ const AccountPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const { setUser, setIsAuthenticated, setCarts, setCartSummary } = useCurrentApp();
-
+    const [changePassword, setChangePassword] = useState(false);
     useEffect(() => {
         const fetchAccountInfo = async () => {
             try {
@@ -87,41 +88,53 @@ const AccountPage = () => {
     }
 
     return (
-        <div className="account-page">
-            <Row gutter={[16, 16]}>
-                <Col xs={24} md={8}>
-                    <Card className="account-card order-history">
-                        <Title level={5}>Lịch sử đơn hàng</Title>
-                        <Text>{userData.orderCount} đơn hàng</Text>
-                    </Card>
-                </Col>
+        <>
+            <div className="account-page">
+                <Row gutter={[16, 16]}>
+                    <Col xs={24} md={8}>
+                        <Card className="account-card order-history">
+                            <Title level={5}>Lịch sử đơn hàng</Title>
+                            <Text>{userData.orderCount} đơn hàng</Text>
+                        </Card>
+                    </Col>
 
-                <Col xs={24} md={8}>
-                    <Card className="account-card greeting-card">
-                        <UserOutlined className="greeting-icon" />
-                        <Title level={5}>Xin chào, {userData.name}!</Title>
-                    </Card>
-                </Col>
+                    <Col xs={24} md={8}>
+                        <Card className="account-card greeting-card">
+                            <UserOutlined className="greeting-icon" />
+                            <Title level={5}>Xin chào, {userData.name}!</Title>
+                        </Card>
+                    </Col>
 
-                <Col xs={24} md={8}>
-                    <Card title="Thông tin tài khoản" className="account-card">
-                        <Space direction="vertical" style={{ width: "100%" }}>
-                            <Button icon={<LockOutlined />} block>Đổi mật khẩu</Button>
-                            <Button icon={<LogoutOutlined />} block danger onClick={handleLogout}>
-                                Đăng xuất
-                            </Button>
-                        </Space>
-                    </Card>
-                </Col>
+                    <Col xs={24} md={8}>
+                        <Card title="Thông tin tài khoản" className="account-card">
+                            <Space direction="vertical" style={{ width: "100%" }}>
+                                <Button
+                                    icon={<LockOutlined />}
+                                    block
+                                    onClick={() => setChangePassword(true)}
+                                >
+                                    Đổi mật khẩu
+                                </Button>
+                                <Button icon={<LogoutOutlined />} block danger onClick={handleLogout}>
+                                    Đăng xuất
+                                </Button>
+                            </Space>
+                        </Card>
+                    </Col>
 
-                <Col span={24}>
-                    <Card title="Thông tin cá nhân" className="account-card">
-                        <p><strong>Họ và tên:</strong> {userData.name}</p>
-                        <p><strong>Email:</strong> {userData.email}</p>
-                    </Card>
-                </Col>
-            </Row>
-        </div>
+                    <Col span={24}>
+                        <Card title="Thông tin cá nhân" className="account-card">
+                            <p><strong>Họ và tên:</strong> {userData.name}</p>
+                            <p><strong>Email:</strong> {userData.email}</p>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+            <ModalChangePassword
+                isModalOpen={changePassword}
+                setIsModalOpen={setChangePassword}
+            />
+        </>
     );
 };
 
