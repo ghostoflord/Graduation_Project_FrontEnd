@@ -9,6 +9,7 @@ import { CSVLink } from "react-csv";
 import CreateUser from './create.user';
 import DetailUser from './detail.user';
 import UpdateUser from './update.user';
+import ImportUser from './import.user';
 type TSearch = {
     name: string;
     email: string;
@@ -38,6 +39,9 @@ const TableUser = () => {
 
     //delete user
     const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
+
+    // import user 
+    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
     const handleDeleteUser = async (id: string) => {
         setIsDeleteUser(true);
         try {
@@ -258,7 +262,7 @@ const TableUser = () => {
                     <Button
                         icon={<CloudUploadOutlined />}
                         type="primary"
-                    // onClick={() => setOpenModalImport(true)}
+                        onClick={() => setOpenModalImport(true)}
                     >
                         Import
                     </Button>,
@@ -296,6 +300,11 @@ const TableUser = () => {
                 refreshTable={refreshTable}
                 setDataUpdate={setDataUpdate}
                 dataUpdate={dataUpdate}
+            />
+
+            <ImportUser
+                openModalImport={openModalImport}
+                setOpenModalImport={setOpenModalImport}
             />
         </>
     );

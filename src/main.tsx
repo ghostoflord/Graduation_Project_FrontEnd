@@ -85,6 +85,10 @@ const router = createBrowserRouter([
         element: <SalesPolicy />
       },
       {
+        path: "tra-cuu-bao-hanh",
+        element: <PageUnderConstruction />
+      },
+      {
         path: "gio-hang",
         element: <CartPage />
       },

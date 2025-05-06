@@ -230,3 +230,8 @@ export const getDashboardAPI = () => {
 //         }
 //     });
 // };
+
+// import excel user
+export const importUserExcelAPI = (data: any[]) => {
+    return axios.post("/api/v1/users/import", data);
+};
