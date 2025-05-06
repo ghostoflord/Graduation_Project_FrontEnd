@@ -1,7 +1,20 @@
 import { useEffect, useState } from 'react';
-import { App, Divider, Form, Input, Modal, Select } from 'antd';
+import {
+    App,
+    Divider,
+    Form,
+    Input,
+    Modal,
+    Select,
+    Upload,
+    Button,
+    Image
+} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
-import { updateUserAPI } from '@/services/api';
+import { updateUserAPI, uploadFileAPI } from '@/services/api';
+import type { RcFile, UploadFile } from 'antd/es/upload';
+import type { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
 
 interface IProps {
     openModalUpdate: boolean;
@@ -12,24 +25,76 @@ interface IProps {
 }
 
 type FieldType = {
-    id: string,
-    firstName: string,
-    lastName: string,
-    name: string,
-    address: string,
-    gender: string,
-    age: string
+    id: string;
+    firstName: string;
+    lastName: string;
+    name: string;
+    address: string;
+    gender: string;
+    age: string;
+    avatar?: UploadFile[];
 };
 
 const UpdateUser = (props: IProps) => {
-    const { openModalUpdate, setOpenModalUpdate, refreshTable,
-        setDataUpdate, dataUpdate
+    const {
+        openModalUpdate,
+        setOpenModalUpdate,
+        refreshTable,
+        setDataUpdate,
+        dataUpdate
     } = props;
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const { message, notification } = App.useApp();
-
-    // https://ant.design/components/form#components-form-demo-control-hooks
     const [form] = Form.useForm();
+
+    const [avatarFile, setAvatarFile] = useState<UploadFile | null>(null);
+    const [previewImage, setPreviewImage] = useState<string>("");
+
+    const normFile = (e: any) => {
+        return Array.isArray(e) ? e : e?.fileList;
+    };
+
+    const getBase64 = (file: RcFile): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+        });
+
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview && file.originFileObj) {
+            file.preview = await getBase64(file.originFileObj as RcFile);
+        }
+        setPreviewImage(file.preview as string);
+    };
+
+    const handleUploadAvatar = async (options: RcCustomRequestOptions) => {
+        const { file, onSuccess, onError } = options;
+        try {
+            const res = await uploadFileAPI(file as File, 'avatars');
+            if (res && res.data) {
+                const uploadedUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${res.data.fileName}`;
+                const uploadedFile: UploadFile = {
+                    uid: (file as RcFile).uid,
+                    name: res.data.fileName,
+                    status: 'done',
+                    url: uploadedUrl,
+                    thumbUrl: uploadedUrl,
+                    originFileObj: file as RcFile
+                };
+                setAvatarFile(uploadedFile);
+                await handlePreview(uploadedFile);
+                setTimeout(() => {
+                    onSuccess?.("ok", uploadedFile as any);
+                }, 100);
+            } else {
+                onError?.(new Error(res?.message || "Upload failed"));
+            }
+        } catch (err: any) {
+            onError?.(err);
+        }
+    };
 
     useEffect(() => {
         if (dataUpdate) {
@@ -40,103 +105,107 @@ const UpdateUser = (props: IProps) => {
                 lastName: dataUpdate.lastName,
                 address: dataUpdate.address,
                 gender: dataUpdate.gender,
-                age: dataUpdate.age,
-            })
+                age: dataUpdate.age
+            });
+            if (dataUpdate.avatar) {
+                const avatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${dataUpdate.avatar}`;
+                const file: UploadFile = {
+                    uid: '-1',
+                    name: dataUpdate.avatar,
+                    status: 'done',
+                    url: avatarUrl,
+                    thumbUrl: avatarUrl
+                };
+                setAvatarFile(file);
+                setPreviewImage(avatarUrl);
+            }
         }
-    }, [dataUpdate])
+    }, [dataUpdate]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { id, firstName, lastName, name, address, gender, age } = values;
-        setIsSubmit(true)
-        const res = await updateUserAPI(id, firstName, lastName, name, address, gender, age);
+        setIsSubmit(true);
+        const avatarBase64 = avatarFile && avatarFile.originFileObj ? await getBase64(avatarFile.originFileObj as RcFile) : '';
+        const res = await updateUserAPI(id, firstName, lastName, name, address, gender, age, avatarBase64);
         if (res && res.data) {
             message.success('Cập nhật user thành công');
             form.resetFields();
             setOpenModalUpdate(false);
             setDataUpdate(null);
+            setAvatarFile(null);
+            setPreviewImage("");
             refreshTable();
         } else {
             notification.error({
                 message: 'Đã có lỗi xảy ra',
                 description: res.message
-            })
+            });
         }
-        setIsSubmit(false)
+        setIsSubmit(false);
     };
 
     return (
-        <>
-
-            <Modal
-                title="Cập nhật người dùng"
-                open={openModalUpdate}
-                onOk={() => { form.submit() }}
-                onCancel={() => {
-                    setOpenModalUpdate(false);
-                    setDataUpdate(null);
-                    form.resetFields();
-                }}
-                okText={"Cập nhật"}
-                cancelText={"Hủy"}
-                confirmLoading={isSubmit}
+        <Modal
+            title="Cập nhật người dùng"
+            open={openModalUpdate}
+            onOk={() => form.submit()}
+            onCancel={() => {
+                setOpenModalUpdate(false);
+                setDataUpdate(null);
+                form.resetFields();
+                setAvatarFile(null);
+                setPreviewImage("");
+            }}
+            okText={"Cập nhật"}
+            cancelText={"Hủy"}
+            confirmLoading={isSubmit}
+        >
+            <Divider />
+            <Form
+                form={form}
+                name="form-update"
+                style={{ maxWidth: 600 }}
+                onFinish={onFinish}
+                autoComplete="off"
+                layout="vertical"
             >
-                <Divider />
-
-                <Form
-                    form={form}
-                    name="form-update"
-                    style={{ maxWidth: 600 }}
-                    onFinish={onFinish}
-                    autoComplete="off"
+                <Form.Item<FieldType> hidden label="id" name="id">
+                    <Input disabled />
+                </Form.Item>
+                <Form.Item<FieldType> label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}> <Input /> </Form.Item>
+                <Form.Item<FieldType> label="Giới tính" name="gender" rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}> <Select placeholder="Chọn giới tính"> <Select.Option value="MALE">Nam</Select.Option> <Select.Option value="FEMALE">Nữ</Select.Option> <Select.Option value="OTHER">Khác</Select.Option> </Select> </Form.Item>
+                <Form.Item<FieldType> label="Địa chỉ" name="address" rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}> <Input /> </Form.Item>
+                <Form.Item<FieldType>
+                    label="Avatar"
+                    name="avatar"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
                 >
-                    <Form.Item<FieldType>
-                        hidden
-                        labelCol={{ span: 24 }}
-                        label="id"
-                        name="id"
-                        rules={[
-                            { required: true, message: 'Vui lòng nhập id!' },
-
-                        ]}
+                    <Upload
+                        listType="picture"
+                        maxCount={1}
+                        customRequest={handleUploadAvatar}
+                        fileList={avatarFile ? [avatarFile] : []}
+                        onRemove={() => {
+                            setAvatarFile(null);
+                            setPreviewImage("");
+                        }}
+                        onPreview={handlePreview}
+                        accept="image/*"
                     >
-                        <Input disabled />
-                    </Form.Item>
-                    <Form.Item<FieldType>
-                        labelCol={{ span: 24 }}
-                        label="Ten"
-                        name="name"
-                        rules={[{ required: true, message: 'Vui lòng nhập ten !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item<FieldType>
-                        labelCol={{ span: 24 }}
-                        label="Giới tính"
-                        name="gender"
-                        rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}
-                    >
-                        <Select
-                            placeholder="Chọn giới tính"
-                            allowClear
-                            style={{ width: '100%' }}
-                        >
-                            <Select.Option value="male">MALE</Select.Option>
-                            <Select.Option value="female">FEMALE</Select.Option>
-                            <Select.Option value="other">OTHER</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item<FieldType>
-                        labelCol={{ span: 24 }}
-                        label="Địa chỉ"
-                        name="address"
-                        rules={[{ required: true, message: 'Vui lòng nhập địa chỉ !' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </>
+                        <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+                    </Upload>
+                </Form.Item>
+                {previewImage && (
+                    <Image
+                        width={100}
+                        src={previewImage}
+                        style={{ marginTop: 10, borderRadius: 4 }}
+                        preview={false}
+                    />
+                )}
+            </Form>
+        </Modal>
     );
 };
 

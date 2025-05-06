@@ -44,7 +44,12 @@ const DetailUser = (props: IProps) => {
                         <Badge status="processing" text={dataViewDetail?.role} />
                     </Descriptions.Item>
                     <Descriptions.Item label="Avatar">
-                        <Avatar size={40} src={avatarURL}></Avatar>
+                        <Avatar
+                            size={40}
+                            src={avatarURL}
+                            alt="avatar"
+                            onError={() => false} // để avatar hiện fallback mặc định của Ant
+                        />
                     </Descriptions.Item>
                     <Descriptions.Item label="Created At">
                         {dayjs(dataViewDetail?.createdAt).format(FORMATE_DATE_VN)}

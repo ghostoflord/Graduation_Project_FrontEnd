@@ -195,20 +195,12 @@ const TableProduct = () => {
                     }
 
 
-                    // if (sort && sort.createdAt) {
-                    //     query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`
-                    // } else query += `&sort=-createdAt`;
-
-                    // if (sort && sort.mainText) {
-                    //     query += `&sort=${sort.mainText === "ascend" ? "mainText" : "-mainText"}`
-                    // }
-
-                    // if (sort && sort.author) {
-                    //     query += `&sort=${sort.author === "ascend" ? "author" : "-author"}`
-                    // }
-                    // if (sort && sort.price) {
-                    //     query += `&sort=${sort.price === "ascend" ? "price" : "-price"}`
-                    // }
+                    if (sort && sort.name) {
+                        query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
+                    }
+                    if (sort && sort.price) {
+                        query += `&sort=${sort.price === "ascend" ? "price" : "-price"}`
+                    }
 
                     const res = await getProductsAPI(query);
                     if (res.data) {

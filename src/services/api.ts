@@ -73,6 +73,13 @@ export const sendRequest = async <T>(props: IRequest) => { //type
 };
 
 //user
+
+export const updateUserAPI = (id: string,firstName: string,lastName: string,name: string,address: string,gender: string,age: string,avatar?: string // base64
+) => {
+    const urlBackend = "/api/v1/users/update";
+    return axios.post<IBackendRes<IRegister>>(urlBackend, {id,firstName,lastName,name,address,gender,age,avatar});
+};
+
 export const getUsersAPI = (query: string) => {
     const urlBackend = `/api/v1/users?${query}`;
     return axios.get<IBackendRes<IModelPaginate<IUserTable>>>(urlBackend)
@@ -82,11 +89,11 @@ export const createUserAPI = (name: string, email: string, password: string, gen
     return axios.post("/api/v1/users", { name, email, password, gender, avatar, address, age });
 };
 
-export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string) => {
-    const urlBackend = "/api/v1/users";
-    return axios.put<IBackendRes<IRegister>>(urlBackend,
-        { id, firstName, lastName, name, address, gender, age })
-}
+// export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string) => {
+//     const urlBackend = "/api/v1/users";
+//     return axios.put<IBackendRes<IRegister>>(urlBackend,
+//         { id, firstName, lastName, name, address, gender, age })
+// }
 
 export const deleteUserAPI = (id: string) => {
     const urlBackend = `/api/v1/users/${id}`;
@@ -235,3 +242,4 @@ export const getDashboardAPI = () => {
 export const importUserExcelAPI = (data: any[]) => {
     return axios.post("/api/v1/users/import", data);
 };
+

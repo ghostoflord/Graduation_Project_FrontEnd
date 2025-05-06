@@ -90,6 +90,7 @@ const TableUser = () => {
         {
             title: ' Name',
             dataIndex: 'name',
+            sorter: true,
         },
         {
             title: 'Email',
@@ -206,19 +207,11 @@ const TableUser = () => {
                         if (params.name) {
                             query += `&name=/${params.name}/i`
                         }
-
-                        // const createDateRange = dateRangeValidate(params.createdAtRange);
-                        // if (createDateRange) {
-                        //     query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
-                        // }
                     }
 
-                    // default
-
-                    // if (sort && sort.createdAt) {
-                    //     query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`
-                    // } else query += `&sort=-createdAt`;
-
+                    if (sort && sort.name) {
+                        query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
+                    } else query += `&sort=-name`;
 
                     const res = await getUsersAPI(query);
                     if (res.data) {
