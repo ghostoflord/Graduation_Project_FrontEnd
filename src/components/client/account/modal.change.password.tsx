@@ -3,12 +3,19 @@ import { SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons
 import { useState } from "react";
 import { sendRequest } from "@/services/api";
 
-const ModalChangePassword = (props: any) => {
-    const { isModalOpen, setIsModalOpen } = props;
+interface ModalChangePasswordProps {
+    isModalOpen: boolean;
+    setIsModalOpen: (open: boolean) => void;
+    onSuccess?: () => void; // 👈 Thêm callback
+}
+
+const ModalChangePassword = (props: ModalChangePasswordProps) => {
+    const { isModalOpen, setIsModalOpen, onSuccess } = props;
     const [current, setCurrent] = useState(0);
     const [form] = Form.useForm();
     const [userEmail, setUserEmail] = useState("");
     const [isSubmit, setIsSubmit] = useState(false);
+
     const onFinishStep0 = async (values: any) => {
         const { email } = values;
 
@@ -51,17 +58,24 @@ const ModalChangePassword = (props: any) => {
         if (res?.statusCode === 200) {
             notification.success({
                 message: "Thay đổi mật khẩu thành công",
-                description: "Vui lòng về trang đăng nhập đẻ đăng nhập lại"
+                description: "Bạn sẽ được chuyển hướng đến trang đăng nhập."
             });
+
             setCurrent(2);
-            console.log("Đã chuyển sang bước 2");
+
+            // Gọi callback để chuyển trang và xóa dữ liệu
+            if (onSuccess) {
+                setTimeout(() => {
+                    onSuccess();
+                }, 1000); // Cho phép user thấy màn hình "Hoàn thành"
+            }
+
         } else {
             notification.error({
                 message: "Lỗi API",
                 description: res?.message || "Không thể đổi mật khẩu."
             });
         }
-
     };
 
     const resetModal = () => {
@@ -121,14 +135,14 @@ const ModalChangePassword = (props: any) => {
                         <Form.Item name="confirmPassword" rules={[{ required: true, message: "Xác nhận mật khẩu!" }]}>
                             <Input.Password placeholder="Xác nhận mật khẩu" />
                         </Form.Item>
-                        <Button type="primary" htmlType="submit" >Xác nhận</Button>
+                        <Button type="primary" htmlType="submit">Xác nhận</Button>
                     </Form>
                 </>
             )}
 
             {current === 2 && (
                 <div style={{ margin: "20px 0", textAlign: "center" }}>
-                    <p> Đổi mật khẩu thành công! Vui lòng đăng nhập lại.</p>
+                    <p>Đổi mật khẩu thành công! Vui lòng đăng nhập lại.</p>
                     <Button onClick={resetModal}>Đóng</Button>
                 </div>
             )}

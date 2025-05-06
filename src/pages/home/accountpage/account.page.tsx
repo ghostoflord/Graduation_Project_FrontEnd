@@ -133,6 +133,19 @@ const AccountPage = () => {
             <ModalChangePassword
                 isModalOpen={changePassword}
                 setIsModalOpen={setChangePassword}
+                onSuccess={() => {
+                    localStorage.clear();
+                    setUser(null);
+                    setIsAuthenticated(false);
+                    setCarts([]);
+                    setCartSummary({ sum: 0 });
+
+                    message.success("Vui lòng đăng nhập lại.");
+
+                    setTimeout(() => {
+                        navigate("/login");
+                    }, 800);
+                }}
             />
         </>
     );
