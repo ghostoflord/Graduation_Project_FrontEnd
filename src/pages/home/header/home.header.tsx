@@ -142,18 +142,26 @@ export default function Header() {
                         className={`category-dropdown ${showCategory ? 'open' : ''}`}
                         onClick={() => setShowCategory(!showCategory)}
                     >
-                        <span className="dropdown-link">Danh mục sản phẩm</span>
+                        {/* <li className="category-dropdown"> */}
+                        <span className="dropdown-link">Lọc sản phẩm</span>
                         <div className="dropdown-menu">
                             <ul>
-                                <li><NavLink to="/laptop-van-phong"><i className="fa fa-laptop"></i> Laptop văn phòng</NavLink></li>
-                                <li><NavLink to="/laptop-gaming"><i className="fa fa-gamepad"></i> Laptop gaming</NavLink></li>
-                                <li><NavLink to="/laptop-content-creator"><i className="fa fa-video-camera"></i> Laptop content creator</NavLink></li>
-                                <li><NavLink to="/pc-desktop"><i className="fa fa-desktop"></i> PC Desktop chính hãng</NavLink></li>
-                                <li><NavLink to="/man-hinh"><i className="fa fa-tv"></i> LCD - Màn hình</NavLink></li>
-                                <li><NavLink to="/gear-gaming"><i className="fa fa-keyboard-o"></i> Gear gaming</NavLink></li>
-                                <li><NavLink to="/linh-kien"><i className="fa fa-cogs"></i> Linh kiện & thiết bị khác</NavLink></li>
+                                <li>
+                                    <NavLink to="/?sort=price_asc">Giá tăng dần</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/?sort=price_desc">Giá giảm dần</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink>
+                                </li>
                             </ul>
                         </div>
+                        {/* </li> */}
+
                     </li>
                     <li><NavLink to="/">Trang chủ</NavLink></li>
                     <li><IntroduceDropDown /></li>

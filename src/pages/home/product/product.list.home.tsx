@@ -16,15 +16,34 @@ const ProductList = () => {
     const query = new URLSearchParams(location.search);
     const search = query.get('search') || '';
 
+    const sort = query.get('sort'); // 'price_asc', 'price_desc'
+    const priceFrom = query.get('priceFrom');
+    const priceTo = query.get('priceTo');
+
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
                 let queryParams = `current=${current}&pageSize=${pageSize}`;
-
+                let filters: string[] = [];
                 if (search) {
                     const filterStr = `name~'${search}'`; // giả sử chỉ filter theo tên
                     queryParams += `&filter=${encodeURIComponent(filterStr)}`;
+                }
+
+                if (priceTo) {
+                    filters.push(`price<=${priceTo}`);
+                }
+
+                if (filters.length > 0) {
+                    const filterStr = filters.join(';'); // AND conditions
+                    queryParams += `&filter=${encodeURIComponent(filterStr)}`;
+                }
+
+                if (sort === 'price_asc') {
+                    queryParams += `&sort=price`;
+                } else if (sort === 'price_desc') {
+                    queryParams += `&sort=price,desc`;
                 }
 
                 const response = await getProductsAPI(queryParams);
@@ -45,7 +64,7 @@ const ProductList = () => {
         };
 
         fetchProducts();
-    }, [current, pageSize, search]);
+    }, [current, pageSize, search, sort, priceFrom, priceTo]);
 
 
     const formatPrice = (price: any) => {
