@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getProductsAPI } from '@/services/api';
 import './product.list.home.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { slugify } from '@/utils/slugify';
 import { PropagateLoader } from 'react-spinners';
 
@@ -12,20 +12,30 @@ const ProductList = () => {
     const [pageSize] = useState(10);
     const [total, setTotal] = useState(0);
 
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const search = query.get('search') || '';
+
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const response = await getProductsAPI(`current=${current}&pageSize=${pageSize}`);
+                let queryParams = `current=${current}&pageSize=${pageSize}`;
+
+                if (search) {
+                    const filterStr = `name~'${search}'`; // giả sử chỉ filter theo tên
+                    queryParams += `&filter=${encodeURIComponent(filterStr)}`;
+                }
+
+                const response = await getProductsAPI(queryParams);
                 const productList = response.data?.result ?? [];
                 const totalProducts = response.data?.meta?.total || 0;
 
-                // Optional delay to help you see the spinner clearly
                 setTimeout(() => {
                     setProducts(productList);
                     setTotal(totalProducts);
                     setLoading(false);
-                }, 5000);
+                }, 500); // giảm delay lại hợp lý hơn
             } catch (error) {
                 console.error('Lỗi khi lấy sản phẩm:', error);
                 setProducts([]);
@@ -33,8 +43,10 @@ const ProductList = () => {
                 setLoading(false);
             }
         };
+
         fetchProducts();
-    }, [current, pageSize]);
+    }, [current, pageSize, search]);
+
 
     const formatPrice = (price: any) => {
         if (!price) return 'Đang cập nhật';

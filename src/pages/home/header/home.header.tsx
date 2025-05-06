@@ -1,7 +1,7 @@
 import { Badge, Button, Input, Avatar, Space, Dropdown, message } from 'antd';
 import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import './home.header.scss';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { MenuProps } from 'antd';
 import { useEffect, useMemo } from 'react';
@@ -13,6 +13,11 @@ export default function Header() {
     const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary = { sum: 0 }, setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
     const [showCategory, setShowCategory] = useState(false);
+
+    //
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const [searchValue, setSearchValue] = useState(query.get('search') || '');
     const handleLogout = () => {
         setUser(null);
         setIsAuthenticated(false);
@@ -21,6 +26,16 @@ export default function Header() {
         message.success("Đăng xuất thành công!");
         navigate('/login');
     };
+
+    const handleSearch = (value: string) => {
+        const trimmed = value.trim();
+        if (trimmed) {
+            navigate(`/?search=${encodeURIComponent(trimmed)}`);
+        } else {
+            navigate(`/`);
+        }
+    };
+
 
     const itemsDropdown: MenuProps['items'] = useMemo(() => {
         if (!isAuthenticated || !user) return [];
@@ -75,7 +90,13 @@ export default function Header() {
                 </div>
                 <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
                 <div className="search-bar">
-                    <Input.Search placeholder="Từ khóa..." allowClear />
+                    <Input.Search
+                        placeholder="Từ khóa..."
+                        allowClear
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        onSearch={handleSearch}
+                    />
                 </div>
                 <div className="news-links">
                     <a href="#">Tin khuyến mãi</a>
