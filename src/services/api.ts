@@ -74,10 +74,10 @@ export const sendRequest = async <T>(props: IRequest) => { //type
 
 //user
 
-export const updateUserAPI = (id: string,firstName: string,lastName: string,name: string,address: string,gender: string,age: string,avatar?: string // base64
+export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string, avatar?: string // base64
 ) => {
     const urlBackend = "/api/v1/users/update";
-    return axios.post<IBackendRes<IRegister>>(urlBackend, {id,firstName,lastName,name,address,gender,age,avatar});
+    return axios.post<IBackendRes<IRegister>>(urlBackend, { id, firstName, lastName, name, address, gender, age, avatar });
 };
 
 export const getUsersAPI = (query: string) => {
@@ -150,11 +150,25 @@ export const createProductAPI = (name: string, productCode: string, detailDescri
 //     return axios.post("/api/v1/users", { name, email, password, gender, avatar, address, age });
 // };
 
-export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string) => {
-    const urlBackend = "/api/v1/users";
-    return axios.put<IBackendRes<IRegister>>(urlBackend,
-        { id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription })
-}
+export const updateProductAPI = (
+    id: string,
+    name: string,
+    productCode: string,
+    detailDescription: string,
+    guarantee: string,
+    factory: string,
+    price: string,
+    sold: string,
+    quantity: string,
+    shortDescription: string,
+    image?: string // thêm ảnh base64
+) => {
+    const urlBackend = "/api/v1/products/update"; // sửa lại đúng endpoint
+    return axios.put<IBackendRes<IRegister>>(urlBackend, {
+        id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription, image
+    });
+};
+
 
 export const deleteProductAPI = (id: string) => {
     const urlBackend = `/api/v1/products/${id}`;

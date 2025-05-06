@@ -14,8 +14,6 @@ import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { updateUserAPI, uploadFileAPI } from '@/services/api';
 import type { RcFile, UploadFile } from 'antd/es/upload';
-import type { UploadRequestOption as RcCustomRequestOptions } from 'rc-upload/lib/interface';
-
 interface IProps {
     openModalUpdate: boolean;
     setOpenModalUpdate: (v: boolean) => void;
@@ -43,16 +41,14 @@ const UpdateUser = (props: IProps) => {
         setDataUpdate,
         dataUpdate
     } = props;
-    const [isSubmit, setIsSubmit] = useState<boolean>(false);
+    const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
     const [form] = Form.useForm();
 
     const [avatarFile, setAvatarFile] = useState<UploadFile | null>(null);
     const [previewImage, setPreviewImage] = useState<string>("");
 
-    const normFile = (e: any) => {
-        return Array.isArray(e) ? e : e?.fileList;
-    };
+    const normFile = (e: any) => Array.isArray(e) ? e : e?.fileList;
 
     const getBase64 = (file: RcFile): Promise<string> =>
         new Promise((resolve, reject) => {
@@ -98,13 +94,14 @@ const UpdateUser = (props: IProps) => {
 
     useEffect(() => {
         if (dataUpdate) {
+            form.resetFields();
             form.setFieldsValue({
                 id: dataUpdate.id,
                 firstName: dataUpdate.firstName,
                 name: dataUpdate.name,
                 lastName: dataUpdate.lastName,
                 address: dataUpdate.address,
-                gender: dataUpdate.gender,
+                gender: dataUpdate.gender ?? undefined,
                 age: dataUpdate.age
             });
             if (dataUpdate.avatar) {
@@ -125,8 +122,19 @@ const UpdateUser = (props: IProps) => {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { id, firstName, lastName, name, address, gender, age } = values;
         setIsSubmit(true);
-        const avatarBase64 = avatarFile && avatarFile.originFileObj ? await getBase64(avatarFile.originFileObj as RcFile) : '';
-        const res = await updateUserAPI(id, firstName, lastName, name, address, gender, age, avatarBase64);
+        const avatarBase64 = avatarFile?.originFileObj
+            ? await getBase64(avatarFile.originFileObj as RcFile)
+            : '';
+        const res = await updateUserAPI(
+            id,
+            firstName,
+            lastName,
+            name,
+            address,
+            gender,
+            age,
+            avatarBase64
+        );
         if (res && res.data) {
             message.success('Cập nhật user thành công');
             form.resetFields();
@@ -156,8 +164,8 @@ const UpdateUser = (props: IProps) => {
                 setAvatarFile(null);
                 setPreviewImage("");
             }}
-            okText={"Cập nhật"}
-            cancelText={"Hủy"}
+            okText="Cập nhật"
+            cancelText="Hủy"
             confirmLoading={isSubmit}
         >
             <Divider />
@@ -172,9 +180,31 @@ const UpdateUser = (props: IProps) => {
                 <Form.Item<FieldType> hidden label="id" name="id">
                     <Input disabled />
                 </Form.Item>
-                <Form.Item<FieldType> label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}> <Input /> </Form.Item>
-                <Form.Item<FieldType> label="Giới tính" name="gender" rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}> <Select placeholder="Chọn giới tính"> <Select.Option value="MALE">Nam</Select.Option> <Select.Option value="FEMALE">Nữ</Select.Option> <Select.Option value="OTHER">Khác</Select.Option> </Select> </Form.Item>
-                <Form.Item<FieldType> label="Địa chỉ" name="address" rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}> <Input /> </Form.Item>
+                <Form.Item<FieldType>
+                    label="Tên"
+                    name="name"
+                    rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Giới tính"
+                    name="gender"
+                    rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}
+                >
+                    <Select placeholder="Chọn giới tính" allowClear>
+                        <Select.Option value="MALE">Nam</Select.Option>
+                        <Select.Option value="FEMALE">Nữ</Select.Option>
+                        <Select.Option value="OTHER">Khác</Select.Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Địa chỉ"
+                    name="address"
+                    rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+                >
+                    <Input />
+                </Form.Item>
                 <Form.Item<FieldType>
                     label="Avatar"
                     name="avatar"
