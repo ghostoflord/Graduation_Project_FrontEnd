@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 import CreateUser from '../create.user';
 import UpdateUser from '../update.user';
-
+import { CSVLink } from "react-csv";
+import { ExportOutlined } from "@ant-design/icons";
 const pageSize = 5;
 
 const TableUserMobile = () => {
@@ -18,8 +19,8 @@ const TableUserMobile = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const { message, notification } = App.useApp();
-
     const fetchUsers = async () => {
+        <Space direction="vertical"> </Space>
         setLoading(true);
         try {
             const res = await getUsersAPI('current=1&pageSize=100'); // lấy hết rồi phân trang local
@@ -73,6 +74,12 @@ const TableUserMobile = () => {
                 >
                     Add New User
                 </Button>
+
+                <CSVLink data={users} filename="export-user.csv">
+                    <Button icon={<ExportOutlined />} type="primary" block>
+                        Export
+                    </Button>
+                </CSVLink>
 
                 {loading ? (
                     <Spin tip="Loading..." />
