@@ -40,7 +40,7 @@ const TableOrder = () => {
         {
             title: 'Tổng Số Lượng',
             dataIndex: 'totalPrice',
-            render: (_, record) => record.totalPrice.toLocaleString('vi-VN'),
+            render: (_, record) => record.totalPrice,
         },
         {
             title: 'Status',
