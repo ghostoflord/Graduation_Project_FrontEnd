@@ -124,10 +124,13 @@ const LayoutAdmin = () => {
     return (
         <Layout style={{ minHeight: '100vh' }} className="layout-admin">
             <Sider
-                theme='light'
+                theme="light"
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
+                breakpoint="lg" // tương ứng ~ 992px (gần 1000px)
+                collapsedWidth={80} // chỉ hiển thị icon khi collapsed
+                onBreakpoint={(broken) => setCollapsed(broken)} // tự collapse khi xuống dưới breakpoint
             >
                 <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
                     Admin
