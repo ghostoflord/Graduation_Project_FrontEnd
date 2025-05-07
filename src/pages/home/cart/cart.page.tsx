@@ -1,7 +1,7 @@
-import { Card, Button, InputNumber, List, Typography, Row, Col } from 'antd';
+import { Card, Button, InputNumber, List, Typography, Row, Col, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-import { getCart } from '@/services/api';
+import { getCart, removeCartItemAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
@@ -43,8 +43,7 @@ const CartPage = () => {
         navigate('/thanh-toan');
     };
 
-    // Fetch cart data and merge duplicates
-    useEffect(() => {
+    const fetchCart = () => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const userId = user.id;
 
@@ -62,6 +61,10 @@ const CartPage = () => {
             .catch(err => {
                 console.error("Lỗi khi lấy giỏ hàng:", err);
             });
+    };
+
+    useEffect(() => {
+        fetchCart();
     }, []);
 
     const updateCartState = (items: CartItem[]) => {
@@ -77,13 +80,29 @@ const CartPage = () => {
         updateCartState(updated);
     };
 
-    const removeItem = (productId: number) => {
-        const updated = cartItems.filter(item => item.productId !== productId);
-        updateCartState(updated);
+    const removeItem = async (productId: number) => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const userId = user.id;
+
+        if (!userId) {
+            console.warn("Không tìm thấy userId");
+            return;
+        }
+
+        try {
+            await removeCartItemAPI(userId, productId);
+            const updated = cartItems.filter(item => item.productId !== productId);
+            updateCartState(updated);
+            message.success('Đã xóa sản phẩm khỏi giỏ hàng');
+        } catch (error) {
+            console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
+            message.error('Xóa sản phẩm thất bại');
+        }
     };
 
     const clearCart = () => {
         updateCartState([]);
+        message.success('Đã xoá tất cả sản phẩm trong giỏ hàng');
     };
 
     return (
@@ -130,13 +149,16 @@ const CartPage = () => {
                                     onChange={(value) => updateQuantity(item.productId, value || 1)}
                                     className="mb-2"
                                 />
-                                <Button danger icon={<DeleteOutlined />} onClick={() => removeItem(item.productId)}>
+                                <Button
+                                    danger
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => removeItem(item.productId)}
+                                >
                                     Xoá
                                 </Button>
                             </Col>
                         </Row>
                     </Card>
-
                 )}
             />
             <Card className="text-right cart-summary">
@@ -155,7 +177,9 @@ const CartPage = () => {
                         </Button>
                     </Col>
                     <Col>
-                        <Button danger onClick={clearCart} className="clear-btn">Xoá tất cả</Button>
+                        <Button danger onClick={clearCart} className="clear-btn">
+                            Xoá tất cả
+                        </Button>
                     </Col>
                 </Row>
             </Card>

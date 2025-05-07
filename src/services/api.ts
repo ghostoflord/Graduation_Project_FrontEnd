@@ -221,6 +221,16 @@ export const useCartStore = create<CartState>((set) => ({
     clearCart: () => set({ items: [], total: 0 }),
 }));
 
+export const removeCartItemAPI = (userId: number, productId: number) => {
+    const urlBackend = "/api/v1/carts/remove";
+    return axios.delete<IBackendRes<any>>(urlBackend, {
+        params: {
+            userId,
+            productId
+        }
+    });
+};
+
 // order
 export const placeOrderAPI = (data: { userId: number; name: string; address: string; phone: string }) => {
     return axios.post("/api/v1/orders/place", data);
