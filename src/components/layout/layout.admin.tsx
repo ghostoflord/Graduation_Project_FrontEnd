@@ -47,7 +47,7 @@ const LayoutAdmin = () => {
             ]
         },
         {
-            label: <Link to='/admin/product'>Manage Books</Link>,
+            label: <Link to='/admin/product'>Manage Products</Link>,
             key: '/admin/product',
             icon: <ExceptionOutlined />
         },

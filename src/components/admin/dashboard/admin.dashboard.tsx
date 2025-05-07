@@ -24,9 +24,9 @@ const AdminDashboard = () => {
     const formatter = (value: number) => <CountUp end={value} separator="," />;
 
     return (
-        <Row gutter={[40, 40]}>
-            <Col span={8}>
-                <Card title="" bordered={false}>
+        <Row gutter={[24, 24]}>
+            <Col xs={24} sm={24} md={24} lg={8}>
+                <Card bordered={false}>
                     <Statistic
                         title="Tổng Users"
                         value={dataDashboard.countUser}
@@ -34,8 +34,8 @@ const AdminDashboard = () => {
                     />
                 </Card>
             </Col>
-            <Col span={8}>
-                <Card title="" bordered={false}>
+            <Col xs={24} sm={24} md={24} lg={8}>
+                <Card bordered={false}>
                     <Statistic
                         title="Tổng Đơn hàng"
                         value={dataDashboard.countOrder}
@@ -43,10 +43,10 @@ const AdminDashboard = () => {
                     />
                 </Card>
             </Col>
-            <Col span={8}>
-                <Card title="" bordered={false}>
+            <Col xs={24} sm={24} md={24} lg={8}>
+                <Card bordered={false}>
                     <Statistic
-                        title="Tổng Books"
+                        title="Tổng Products"
                         value={dataDashboard.countProduct}
                         formatter={formatter}
                     />
