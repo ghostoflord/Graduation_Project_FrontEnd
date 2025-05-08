@@ -115,6 +115,13 @@ const AccountPage = () => {
                                 >
                                     Đổi mật khẩu
                                 </Button>
+                                <Button
+                                    icon={<EnvironmentOutlined />}
+                                    block
+                                    onClick={() => navigate("/lich-su-mua-hang")}
+                                >
+                                    Lịch sử giao hàng
+                                </Button>
                                 <Button icon={<LogoutOutlined />} block danger onClick={handleLogout}>
                                     Đăng xuất
                                 </Button>
