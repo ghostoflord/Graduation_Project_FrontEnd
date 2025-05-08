@@ -34,6 +34,7 @@ import ShippingPolicy from './pages/home/footer/shippingpolicy/shipping.policy';
 import PaymentPolicy from './pages/home/footer/paymentpolicy/payment.policy';
 import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
 import AccountPage from './pages/home/accountpage/account.page';
+import OrderHistory from './pages/home/orderhistory/ordet.history';
 
 const router = createBrowserRouter([
   {
@@ -115,6 +116,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: < AccountPage />
+      },
+      {
+        path: "lich-su-mua-hang",
+        element: < OrderHistory />
       },
     ]
   },

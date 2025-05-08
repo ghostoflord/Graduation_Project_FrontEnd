@@ -1,0 +1,127 @@
+import React, { useEffect, useState } from 'react';
+import { Table, Button, message, Popconfirm, Tag } from 'antd';
+import axios from '@/services/axios.customize';
+import { fetchMyOrders } from '@/services/api';
+
+interface OrderSummary {
+    id: number;
+    totalPrice: number;
+    status: string;
+    createdAt: string;
+    receiverName: string;
+    receiverPhone: string;
+}
+
+const OrderHistory = () => {
+    const [orders, setOrders] = useState<OrderSummary[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const fetchOrders = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchMyOrders();
+            console.log(data);  // Kiểm tra dữ liệu trả về
+            setOrders(data);  // Gán vào state
+        } catch (err) {
+            message.error('Không thể tải danh sách đơn hàng');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancelOrder = async (orderId: number) => {
+        try {
+            await axios.post(`/api/v1/orders/${orderId}/cancel`);
+            message.success('Đơn hàng đã được hủy');
+            fetchOrders(); // cập nhật lại danh sách
+        } catch (err: any) {
+            if (err.response?.data?.message) {
+                message.error(err.response.data.message);
+            } else {
+                message.error('Không thể hủy đơn hàng');
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchOrders();
+    }, []);
+
+    const renderStatus = (status: string) => {
+        switch (status) {
+            case 'PENDING':
+                return <Tag color="orange">Chờ xác nhận</Tag>;
+            case 'CONFIRMED':
+                return <Tag color="blue">Đã xác nhận</Tag>;
+            case 'CANCELED':
+                return <Tag color="red">Đã hủy</Tag>;
+            case 'SHIPPED':
+                return <Tag color="cyan">Đang giao</Tag>;
+            case 'DELIVERED':
+                return <Tag color="green">Đã giao</Tag>;
+            default:
+                return <Tag>{status}</Tag>;
+        }
+    };
+
+    const columns = [
+        {
+            title: 'Mã đơn hàng',
+            dataIndex: 'id',
+            render: (text: any) => {
+                console.log(text); // Kiểm tra giá trị từng cột
+                return text;
+            },
+        },
+        {
+            title: 'Tên người nhận',
+            dataIndex: 'receiverName',
+        },
+        {
+            title: 'SĐT',
+            dataIndex: 'receiverPhone',
+        },
+        {
+            title: 'Tổng Sản Phẩm',
+            dataIndex: 'totalPrice',
+            render: (totalPrice: number) => `${totalPrice.toLocaleString()}`,
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+            render: (date: string) => new Date(date).toLocaleString(),
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            render: renderStatus,
+        },
+        {
+            title: 'Hành động',
+            render: (_: any, record: OrderSummary) =>
+                (record.status === 'PENDING' || record.status === 'CONFIRMED') ? (
+                    <Popconfirm
+                        title="Xác nhận hủy đơn hàng?"
+                        onConfirm={() => handleCancelOrder(record.id)}
+                        okText="Đồng ý"
+                        cancelText="Hủy"
+                    >
+                        <Button danger>Hủy đơn</Button>
+                    </Popconfirm>
+                ) : null,
+        },
+    ];
+
+
+    return (
+        <Table
+            rowKey="id"
+            loading={loading}
+            columns={columns}
+            dataSource={orders}
+            pagination={{ pageSize: 5 }}
+        />
+    );
+};
+
+export default OrderHistory;

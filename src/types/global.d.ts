@@ -168,7 +168,7 @@ declare global {
         receiverAddress: string;
         receiverPhone: string;
         totalPrice: number;
-        status: string;
+        status: string; 
         userId: number;
     }
 

@@ -241,6 +241,10 @@ export const fetchAllOrders = async (): Promise<IOrderTable[]> => {
     return response.data;
 };
 
+export const fetchMyOrders = async (): Promise<IOrderTable[]> => {
+    const response = await axios.get('/api/v1/orders/my-orders');
+    return response.data; // assuming RestResponse<T>
+};
 //dashboard
 export const getDashboardAPI = () => {
     return axios.get<IBackendRes<{
