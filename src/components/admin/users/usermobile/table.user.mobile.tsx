@@ -17,8 +17,10 @@ const TableUserMobile = () => {
     const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
     const { message, notification } = App.useApp();
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 5;
+
     const fetchUsers = async () => {
         <Space direction="vertical"> </Space>
         setLoading(true);
@@ -147,6 +149,8 @@ const TableUserMobile = () => {
                                 total={users.length}
                                 onChange={(page) => setCurrentPage(page)}
                                 size="small"
+                                responsive
+                                simple={window.innerWidth < 1000}
                             />
                         </div>
                     </>

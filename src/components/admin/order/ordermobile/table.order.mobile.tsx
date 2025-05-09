@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, List, Spin, Button, Row, Col } from 'antd';
+import { Card, List, Spin, Button, Row, Col, Pagination } from 'antd';
 import { fetchAllOrders } from '@/services/api';
 import { DownloadOutlined } from '@ant-design/icons';
 import { CSVLink } from 'react-csv';
@@ -7,6 +7,10 @@ import { CSVLink } from 'react-csv';
 const TableOrderMobile = () => {
     const [orders, setOrders] = useState<IOrderTable[]>([]);
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 5;
+
+    const paginatedOrders = orders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,7 +53,7 @@ const TableOrderMobile = () => {
                 <Spin />
             ) : (
                 <List
-                    dataSource={orders}
+                    dataSource={paginatedOrders}
                     renderItem={(item) => (
                         <Card
                             key={item.id}
@@ -60,6 +64,18 @@ const TableOrderMobile = () => {
                             <div><strong>Điện thoại:</strong> {item.receiverPhone}</div>
                             <div><strong>Tổng:</strong> {item.totalPrice} Đơn</div>
                             <div><strong>Trạng thái:</strong> {item.status}</div>
+                            <div style={{ textAlign: 'center', marginTop: 16 }}>
+                                <Pagination
+                                    current={currentPage}
+                                    pageSize={pageSize}
+                                    total={orders.length}
+                                    onChange={(page) => setCurrentPage(page)}
+                                    size="small"
+                                    responsive
+                                    simple={window.innerWidth < 1000}
+                                />
+                            </div>
+
                         </Card>
                     )}
                 />

@@ -147,6 +147,7 @@ const TableProductMobile = () => {
                         total={total}
                         onChange={(page) => setCurrentPage(page)}
                         showSizeChanger={false}
+                        simple={window.innerWidth < 576}
                     />
                 </div>
             </div>
