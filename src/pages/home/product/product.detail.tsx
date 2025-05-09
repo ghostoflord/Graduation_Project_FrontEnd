@@ -44,6 +44,13 @@ const ProductDetail = () => {
     const handleAddToCart = async () => {
         if (!product) return;
 
+        // Kiểm tra nếu số lượng trong kho không đủ
+        const availableQuantity = Number(product.quantity);
+        if (isNaN(availableQuantity) || availableQuantity <= 0) {
+            message.error("Sản phẩm này đã hết hàng.");
+            return;
+        }
+
         const user = JSON.parse(localStorage.getItem("user") || "{}");
         const userId = user.id;
 
@@ -59,8 +66,6 @@ const ProductDetail = () => {
             userId,
         };
 
-        console.log("Sending to API:", cartData); // ✅ check log
-
         try {
             const res = await addToCartAPI(cartData);
             message.success("Đã thêm vào giỏ hàng!");
@@ -69,6 +74,7 @@ const ProductDetail = () => {
             message.error("Thêm vào giỏ hàng thất bại.");
         }
     };
+
 
 
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
@@ -96,11 +102,15 @@ const ProductDetail = () => {
                     <button onClick={increaseQty}><PlusOutlined /></button>
                 </div>
 
-                <button className="add-to-cart-btn" onClick={handleAddToCart}>
-
+                <button
+                    className="add-to-cart-btn"
+                    onClick={handleAddToCart}
+                    disabled={!product.quantity || Number(product.quantity) <= 0}
+                >
                     <ShoppingCartOutlined style={{ marginRight: 8 }} />
-                    Thêm vào giỏ hàng
+                    {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
                 </button>
+
             </div>
         </div>
     );
