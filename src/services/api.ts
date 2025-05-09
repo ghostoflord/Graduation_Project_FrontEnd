@@ -250,6 +250,12 @@ export const fetchOrderDetails = async (orderId: number) => {
     const res = await axios.get(`/api/v1/orders/${orderId}/details`);
     return res.data; // nếu backend trả về trong { data: ... }
 };
+
+// Gọi API checkout để trừ quantity
+export const checkoutOrder = async (items: { productId: number; quantity: number }[]) => {
+    const res = await axios.post('/api/v1/orders/checkout', items);
+    return res.data; // nếu backend trả về { message: "Checkout successful" }
+};
 //dashboard
 export const getDashboardAPI = () => {
     return axios.get<IBackendRes<{

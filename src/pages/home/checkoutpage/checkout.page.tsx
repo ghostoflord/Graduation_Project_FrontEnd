@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './checkout.page.scss';
 import { Input, Button, Radio, Row, Col, Typography, Card, Divider, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { getCart, placeOrderAPI } from '@/services/api';
+import { checkoutOrder, getCart, placeOrderAPI } from '@/services/api';
 
 const { Title, Text } = Typography;
 
@@ -82,17 +82,27 @@ const CheckoutPage = () => {
 
     const handlePlaceOrder = async () => {
         if (!userId) return message.error("Thiếu thông tin người dùng");
+
         try {
             const res = await placeOrderAPI({ userId, name, address, phone });
+
             if (res?.statusCode === 201) {
+                // Gọi API để trừ hàng
+                const itemsToCheckout = cartItems.map(item => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                }));
+
+                await checkoutOrder(itemsToCheckout);
+
                 message.success("Đặt hàng thành công!");
-                setTimeout(() => navigate("/"), 1000); // Đợi 1s để hiển thị message
+                setTimeout(() => navigate("/"), 1000);
             } else {
                 message.error(res?.message || "Đặt hàng thất bại");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            message.error("Lỗi server khi đặt hàng");
+            message.error("Lỗi khi xử lý đơn hàng");
         }
     };
 
