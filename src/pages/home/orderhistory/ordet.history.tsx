@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, message, Popconfirm, Tag } from 'antd';
 import axios from '@/services/axios.customize';
-import { fetchMyOrders } from '@/services/api';
+import { fetchMyOrders, fetchOrderDetails } from '@/services/api';
+import OrderDetailModal from './orderdetail/order.detail.modal';
 
 interface OrderSummary {
     id: number;
@@ -15,6 +16,10 @@ interface OrderSummary {
 const OrderHistory = () => {
     const [orders, setOrders] = useState<OrderSummary[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+
+    // view orderId 
+    const [selectedOrder, setSelectedOrder] = useState<OrderHistory | null>(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const fetchOrders = async () => {
         setLoading(true);
@@ -43,6 +48,16 @@ const OrderHistory = () => {
         }
     };
 
+    const handleViewOrderDetails = async (orderId: number) => {
+        try {
+            const data = await fetchOrderDetails(orderId);
+            setSelectedOrder(data);
+            setModalVisible(true);
+        } catch (err) {
+            message.error('Không thể tải chi tiết đơn hàng');
+        }
+    };
+
     useEffect(() => {
         fetchOrders();
     }, []);
@@ -68,10 +83,11 @@ const OrderHistory = () => {
         {
             title: 'Mã đơn hàng',
             dataIndex: 'id',
-            render: (text: any) => {
-                console.log(text); // Kiểm tra giá trị từng cột
-                return text;
-            },
+            render: (id: number) => (
+                <Button type="link" onClick={() => handleViewOrderDetails(id)}>
+                    {id}
+                </Button>
+            ),
         },
         {
             title: 'Tên người nhận',
@@ -114,13 +130,20 @@ const OrderHistory = () => {
 
 
     return (
-        <Table
-            rowKey="id"
-            loading={loading}
-            columns={columns}
-            dataSource={orders}
-            pagination={{ pageSize: 5 }}
-        />
+        <>
+            <Table
+                rowKey="id"
+                loading={loading}
+                columns={columns}
+                dataSource={orders}
+                pagination={{ pageSize: 5 }}
+            />
+            <OrderDetailModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                order={selectedOrder}
+            />
+        </>
     );
 };
 

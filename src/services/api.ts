@@ -245,6 +245,11 @@ export const fetchMyOrders = async (): Promise<IOrderTable[]> => {
     const response = await axios.get('/api/v1/orders/my-orders');
     return response.data; // assuming RestResponse<T>
 };
+
+export const fetchOrderDetails = async (orderId: number) => {
+    const res = await axios.get(`/api/v1/orders/${orderId}/details`);
+    return res.data; // nếu backend trả về trong { data: ... }
+};
 //dashboard
 export const getDashboardAPI = () => {
     return axios.get<IBackendRes<{
