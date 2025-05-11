@@ -35,6 +35,7 @@ import PaymentPolicy from './pages/home/footer/paymentpolicy/payment.policy';
 import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
 import AccountPage from './pages/home/accountpage/account.page';
 import OrderHistory from './pages/home/orderhistory/ordet.history';
+import Oauth2Redirect from './pages/client/auth/login/Oauth2Redirect';
 
 const router = createBrowserRouter([
   {
@@ -154,6 +155,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LoginPage />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/oauth2/redirect",
+    element: <Oauth2Redirect />
   },
   {
     path: "/register",

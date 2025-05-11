@@ -24,14 +24,25 @@ const LoginPage = () => {
 
         try {
             const res = await loginAPI(username, password);
+            console.log('Response from login API:', res); // Log to check response
             if (res?.data) {
                 const user = res.data.user;
-                console.log('User info: ', user);
+                console.log('User info: ', user);  // Log to check user data
+
+                // Kiểm tra email có tồn tại hay không
+                if (!user.email) {
+                    notification.warning({
+                        message: 'Không có email từ GitHub',
+                        description: 'Vui lòng cung cấp email của bạn hoặc xác thực tài khoản qua phương thức khác.',
+                    });
+                    setIsSubmit(false);
+                    return;
+                }
 
                 // Kiểm tra active
                 if (!user.active) {
                     notification.warning({
-                        message: 'Tài khoản chưa được xác thực, vui lòng xác thực tài khảon',
+                        message: 'Tài khoản chưa được xác thực, vui lòng xác thực tài khoản',
                         description: (
                             <span>
                                 Vui lòng nhấn{' '}
@@ -62,6 +73,8 @@ const LoginPage = () => {
                     setIsSubmit(false);
                     return;
                 }
+
+                // Lưu user vào context và localStorage
                 setIsAuthenticated(true);
                 setUser(user);
                 localStorage.setItem('access_token', res.data.access_token);
@@ -108,10 +121,7 @@ const LoginPage = () => {
                                     labelCol={{ span: 24 }}
                                     label="Email"
                                     name="username"
-                                    rules={[
-                                        { required: true, message: 'Email không được để trống!' },
-                                        { type: 'email', message: 'Email không đúng định dạng!' },
-                                    ]}
+                                    rules={[{ required: true, message: 'Email không được để trống!' }, { type: 'email', message: 'Email không đúng định dạng!' }]}
                                 >
                                     <Input />
                                 </Form.Item>
@@ -133,6 +143,13 @@ const LoginPage = () => {
                                     }}>
                                         <Button type="primary" htmlType="submit" loading={isSubmit}>
                                             Đăng Nhập
+                                        </Button>
+                                        <Button
+                                            onClick={() =>
+                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
+                                            }
+                                        >
+                                            Đăng nhập với GitHub
                                         </Button>
                                         <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>
                                     </div>
