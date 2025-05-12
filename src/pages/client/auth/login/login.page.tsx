@@ -6,7 +6,7 @@ import type { FormProps } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
 import { loginAPI, resendVerificationAPI } from '@/services/api';
 import ModalChangePassword from '../../../../components/client/account/modal.change.password';
-
+import { GithubOutlined, GoogleOutlined } from '@ant-design/icons';
 type FieldType = {
     username: string;
     password: string;
@@ -135,7 +135,7 @@ const LoginPage = () => {
                                     <Input.Password />
                                 </Form.Item>
 
-                                <Form.Item>
+                                {/* <Form.Item>
                                     <div style={{
                                         display: "flex",
                                         justifyContent: "space-between",
@@ -143,17 +143,73 @@ const LoginPage = () => {
                                     }}>
                                         <Button type="primary" htmlType="submit" loading={isSubmit}>
                                             Đăng Nhập
-                                        </Button>
-                                        <Button
+                                        </Button> */}
+                                {/* <Button
                                             onClick={() =>
                                                 window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
                                             }
                                         >
                                             Đăng nhập với GitHub
                                         </Button>
+                                        <Button
+                                            onClick={() =>
+                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`
+                                            }
+                                        >
+                                            Đăng nhập với Google
+                                        </Button> */}
+                                {/* <Button
+                                            icon={<GithubOutlined />}
+                                            className="oauth-button github"
+                                            onClick={() =>
+                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
+                                            }
+                                        >
+                                            <span className="btn-text">Đăng nhập với GitHub</span>
+                                        </Button>
+                                        <Button
+                                            icon={<GoogleOutlined />}
+                                            className="oauth-button google"
+                                            onClick={() =>
+                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`
+                                            }
+                                        >
+                                            <span className="btn-text">Đăng nhập với Google</span>
+                                        </Button>
+
+                                        <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>
+                                    </div>
+                                </Form.Item> */}
+                                <Form.Item>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Button type="primary" htmlType="submit" loading={isSubmit}>
+                                            Đăng Nhập
+                                        </Button>
                                         <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>
                                     </div>
                                 </Form.Item>
+
+                                <div className="oauth-wrapper">
+                                    <Button
+                                        icon={<GithubOutlined />}
+                                        className="oauth-button github"
+                                        onClick={() =>
+                                            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
+                                        }
+                                    >
+                                        <span className="btn-text">Đăng nhập với GitHub</span>
+                                    </Button>
+                                    <Button
+                                        icon={<GoogleOutlined />}
+                                        className="oauth-button google"
+                                        onClick={() =>
+                                            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`
+                                        }
+                                    >
+                                        <span className="btn-text">Đăng nhập với Google</span>
+                                    </Button>
+                                </div>
+
 
                                 <Divider>Or</Divider>
                                 <p className="text text-normal" style={{ textAlign: 'center' }}>
