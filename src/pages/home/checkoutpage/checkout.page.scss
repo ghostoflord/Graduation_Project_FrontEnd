@@ -115,3 +115,47 @@
     border-radius: 8px;
     margin-right: 16px;
 }
+
+.product-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+
+    img.product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        flex-shrink: 0;
+    }
+
+    .product-info {
+        flex: 1 1 60%;
+        min-width: 0;
+
+        p,
+        div {
+            word-break: break-word;
+        }
+    }
+
+    .product-price {
+        white-space: nowrap;
+        font-weight: bold;
+        color: #333;
+    }
+}
+
+.payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .ant-radio-button-wrapper {
+        flex: 1 1 100%;
+        text-align: center;
+    }
+}

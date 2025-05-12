@@ -1,4 +1,14 @@
-import { Card, Button, InputNumber, List, Typography, Row, Col, message } from 'antd';
+import {
+    Card,
+    Button,
+    InputNumber,
+    List,
+    Typography,
+    Row,
+    Col,
+    message,
+    Empty,
+} from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { getCart, removeCartItemAPI } from '@/services/api';
@@ -24,7 +34,7 @@ const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
             const existing = map.get(item.productId)!;
             map.set(item.productId, {
                 ...existing,
-                quantity: existing.quantity + item.quantity
+                quantity: existing.quantity + item.quantity,
             });
         } else {
             map.set(item.productId, { ...item });
@@ -48,7 +58,7 @@ const CartPage = () => {
         const userId = user.id;
 
         if (!userId) {
-            console.warn("Không tìm thấy userId");
+            console.warn('Không tìm thấy userId');
             return;
         }
 
@@ -59,7 +69,7 @@ const CartPage = () => {
                 updateCartState(mergedItems);
             })
             .catch(err => {
-                console.error("Lỗi khi lấy giỏ hàng:", err);
+                console.error('Lỗi khi lấy giỏ hàng:', err);
             });
     };
 
@@ -85,7 +95,7 @@ const CartPage = () => {
         const userId = user.id;
 
         if (!userId) {
-            console.warn("Không tìm thấy userId");
+            console.warn('Không tìm thấy userId');
             return;
         }
 
@@ -95,7 +105,7 @@ const CartPage = () => {
             updateCartState(updated);
             message.success('Đã xóa sản phẩm khỏi giỏ hàng');
         } catch (error) {
-            console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
+            console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
             message.error('Xóa sản phẩm thất bại');
         }
     };
@@ -108,81 +118,95 @@ const CartPage = () => {
     return (
         <div className="p-6 max-w-screen-lg mx-auto cart-container">
             <Title level={3}>Giỏ Hàng</Title>
-            <List
-                itemLayout="horizontal"
-                dataSource={cartItems}
-                renderItem={item => (
-                    <Card className="mb-4 cart-item">
-                        <Row gutter={16} align="middle">
-                            {/* Cột hình ảnh */}
-                            <Col xs={24} sm={4}>
-                                <div className="product-image">
-                                    <img
-                                        src={
-                                            item.image
-                                                ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`
-                                                : '/default-product.jpg'
-                                        }
-                                        alt={item.name}
-                                        className="w-full cart-item-image"
-                                    />
-                                </div>
-                            </Col>
 
-                            {/* Cột thông tin sản phẩm */}
-                            <Col xs={24} sm={12}>
-                                <Text strong>{item.name}</Text>
-                                <div>{item.shortDescription}</div>
-                                <div><Text type="secondary">{item.detailDescription}</Text></div>
-                            </Col>
+            {cartItems.length === 0 ? (
+                <div className="text-center my-10">
+                    <Empty description="Giỏ hàng trống, vui lòng quay lại trang chủ." />
+                    <Button type="primary" onClick={() => navigate('/')}>
+                        Về trang chủ
+                    </Button>
+                </div>
+            ) : (
+                <>
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={cartItems}
+                        renderItem={item => (
+                            <Card className="mb-4 cart-item">
+                                <Row gutter={16} align="middle">
+                                    <Col xs={24} sm={4}>
+                                        <div className="product-image">
+                                            <img
+                                                src={
+                                                    item.image
+                                                        ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`
+                                                        : '/default-product.jpg'
+                                                }
+                                                alt={item.name}
+                                                className="w-full cart-item-image"
+                                            />
+                                        </div>
+                                    </Col>
+                                    <Col xs={24} sm={12}>
+                                        <Text strong>{item.name}</Text>
+                                        <div>{item.shortDescription}</div>
+                                        <div>
+                                            <Text type="secondary">
+                                                {item.detailDescription}
+                                            </Text>
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} sm={4} className="text-center">
+                                        <Text>
+                                            Giá: {item.price.toLocaleString('vi-VN')} ₫
+                                        </Text>
+                                    </Col>
+                                    <Col xs={12} sm={4} className="text-center">
+                                        <InputNumber
+                                            min={1}
+                                            value={item.quantity}
+                                            onChange={value =>
+                                                updateQuantity(item.productId, value || 1)
+                                            }
+                                            className="mb-2"
+                                        />
+                                        <Button
+                                            danger
+                                            icon={<DeleteOutlined />}
+                                            onClick={() => removeItem(item.productId)}
+                                        >
+                                            Xoá
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        )}
+                    />
 
-                            {/* Cột giá */}
-                            <Col xs={12} sm={4} className="text-center">
-                                <Text>Giá: {item.price.toLocaleString('vi-VN')} ₫</Text>
-                            </Col>
-
-                            {/* Cột điều chỉnh số lượng và nút xóa */}
-                            <Col xs={12} sm={4} className="text-center">
-                                <InputNumber
-                                    min={1}
-                                    value={item.quantity}
-                                    onChange={(value) => updateQuantity(item.productId, value || 1)}
-                                    className="mb-2"
-                                />
+                    <Card className="text-right cart-summary">
+                        <Title level={4} className="total-price">
+                            Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫
+                        </Title>
+                        <Row justify="end" gutter={16} className="cart-actions">
+                            <Col>
                                 <Button
-                                    danger
-                                    icon={<DeleteOutlined />}
-                                    onClick={() => removeItem(item.productId)}
+                                    type="primary"
+                                    size="large"
+                                    className="checkout-btn"
+                                    onClick={handleCheckout}
                                 >
-                                    Xoá
+                                    THANH TOÁN
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button danger onClick={clearCart} className="clear-btn">
+                                    Xoá tất cả
                                 </Button>
                             </Col>
                         </Row>
                     </Card>
-                )}
-            />
-            <Card className="text-right cart-summary">
-                <Title level={4} className="total-price">
-                    Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫
-                </Title>
-                <Row justify="end" gutter={16} className="cart-actions">
-                    <Col>
-                        <Button
-                            type="primary"
-                            size="large"
-                            className="checkout-btn"
-                            onClick={handleCheckout}
-                        >
-                            THANH TOÁN
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button danger onClick={clearCart} className="clear-btn">
-                            Xoá tất cả
-                        </Button>
-                    </Col>
-                </Row>
-            </Card>
+                </>
+            )}
         </div>
     );
 };
