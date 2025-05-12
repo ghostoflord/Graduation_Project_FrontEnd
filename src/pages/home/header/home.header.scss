@@ -218,6 +218,12 @@
     text-align: center;
     z-index: 1;
 
+    // Thêm max-width hoặc xử lý số lớn
+    max-width: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     // Ẩn khi dưới 1000px
     @media (max-width: 999px) {
       display: none;

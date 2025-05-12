@@ -36,6 +36,8 @@ import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
 import AccountPage from './pages/home/accountpage/account.page';
 import OrderHistory from './pages/home/orderhistory/ordet.history';
 import Oauth2Redirect from './pages/client/auth/login/Oauth2Redirect';
+import TableUserResponsive from './components/admin/users/table.user.responsive';
+import CheckoutResponsive from './pages/home/checkoutpage/checkout.responsive';
 
 const router = createBrowserRouter([
   {
@@ -96,7 +98,7 @@ const router = createBrowserRouter([
       },
       {
         path: "thanh-toan",
-        element: <CheckoutPage />
+        element: <CheckoutResponsive />
       },
       {
         path: "doi-tra",

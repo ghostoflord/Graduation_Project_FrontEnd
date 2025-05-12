@@ -66,8 +66,7 @@ export default function Header() {
     }, [user, isAuthenticated]);
 
     useEffect(() => {
-        if (!user?.id) return;
-
+        if (!user?.id || cartSummary?.sum) return;
         (async () => {
             try {
                 const res = await getCart(user.id);
@@ -78,7 +77,8 @@ export default function Header() {
                 console.error('Failed to fetch cart:', error);
             }
         })();
-    }, [user?.id, setCartSummary]);
+    }, [user?.id]);
+
 
     return (
         <div className="header-wrapper">
