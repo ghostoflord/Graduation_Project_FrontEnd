@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './checkout.page.scss';
 import { Input, Button, Radio, Row, Col, Typography, Card, Divider, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { checkoutOrder, getCart, placeOrderAPI } from '@/services/api';
+import { checkoutOrder, getCart, placeOrderAPI, createVNPayURL } from '@/services/api';
 
 const { Title, Text } = Typography;
 
@@ -39,10 +39,10 @@ const CheckoutPage = () => {
     const [phone, setPhone] = useState('');
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
+    const [paymentMethod, setPaymentMethod] = useState<string>('cod');
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Lấy user từ localStorage
         const storedUser = localStorage.getItem("user");
         if (!storedUser) {
             message.error("Không tìm thấy thông tin người dùng");
@@ -58,12 +58,10 @@ const CheckoutPage = () => {
             setAddress(user.address || '');
             setPhone(user.phone || '');
 
-            // Lấy giỏ hàng
             getCart(uid).then(cartRes => {
-                console.log("Giỏ hàng trả về:", cartRes?.data);
                 if (cartRes?.data?.items) {
                     const rawItems: CartItem[] = cartRes.data.items;
-                    const mergedItems = mergeDuplicateItems(rawItems); // Gộp các sản phẩm trùng
+                    const mergedItems = mergeDuplicateItems(rawItems);
                     setCartItems(mergedItems);
                     const total = mergedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
                     setTotalPrice(total);
@@ -83,26 +81,38 @@ const CheckoutPage = () => {
     const handlePlaceOrder = async () => {
         if (!userId) return message.error("Thiếu thông tin người dùng");
 
-        try {
-            const res = await placeOrderAPI({ userId, name, address, phone });
+        const itemsToCheckout = cartItems.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+        }));
 
-            if (res?.statusCode === 201) {
-                // Gọi API để trừ hàng
-                const itemsToCheckout = cartItems.map(item => ({
-                    productId: item.productId,
-                    quantity: item.quantity,
-                }));
-
-                await checkoutOrder(itemsToCheckout);
-
-                message.success("Đặt hàng thành công!");
-                setTimeout(() => navigate("/"), 1000);
-            } else {
-                message.error(res?.message || "Đặt hàng thất bại");
+        if (paymentMethod === 'cod') {
+            try {
+                const res = await placeOrderAPI({ userId, name, address, phone });
+                if (res?.statusCode === 201) {
+                    await checkoutOrder(itemsToCheckout);
+                    message.success("Đặt hàng thành công!");
+                    setTimeout(() => navigate("/"), 1000);
+                } else {
+                    message.error(res?.message || "Đặt hàng thất bại");
+                }
+            } catch (err) {
+                console.error(err);
+                message.error("Lỗi khi xử lý đơn hàng");
             }
-        } catch (err: any) {
-            console.error(err);
-            message.error("Lỗi khi xử lý đơn hàng");
+        } else if (paymentMethod === 'vnpay') {
+            try {
+                const paymentRef = `ORDER_${Date.now()}`;
+                const res = await createVNPayURL({ amount: totalPrice, paymentRef });
+                if (res?.data) {
+                    window.location.href = res.data;
+                } else {
+                    message.error("Không thể tạo URL thanh toán");
+                }
+            } catch (err) {
+                console.error(err);
+                message.error("Lỗi khi tạo thanh toán VNPAY");
+            }
         }
     };
 
@@ -115,8 +125,12 @@ const CheckoutPage = () => {
                     <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Số điện thoại" className="mb-3" />
                     <Input value={address} onChange={e => setAddress(e.target.value)} placeholder="Địa chỉ" className="mb-3" />
                     <Title level={4}>Thanh toán</Title>
-                    <Radio.Group className="payment-methods">
-                        <Radio.Button value="bank">Chuyển khoản qua ngân hàng</Radio.Button>
+                    <Radio.Group
+                        className="payment-methods"
+                        value={paymentMethod}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                    >
+                        <Radio.Button value="vnpay">Thanh toán qua VNPAY</Radio.Button>
                         <Radio.Button value="cod">Thanh toán khi giao hàng (COD)</Radio.Button>
                     </Radio.Group>
                 </Col>
@@ -153,8 +167,15 @@ const CheckoutPage = () => {
                                 </div>
                             </>
                         )}
-                        <Button type="primary" block size="large" className="place-order-btn" onClick={handlePlaceOrder}>
-                            ĐẶT HÀNG
+                        <Button
+                            type="primary"
+                            block
+                            size="large"
+                            className="place-order-btn"
+                            onClick={handlePlaceOrder}
+                            disabled={cartItems.length === 0}
+                        >
+                            {paymentMethod === 'cod' ? 'ĐẶT HÀNG' : 'THANH TOÁN VNPAY'}
                         </Button>
                         <Button type="link" block onClick={() => navigate('/')}>← Quay về trang chủ</Button>
                     </Card>

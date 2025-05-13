@@ -282,3 +282,8 @@ export const importUserExcelAPI = (data: any[]) => {
     return axios.post("/api/v1/users/import", data);
 };
 
+/// vnpay
+export const createVNPayURL = (data: { amount: number, paymentRef: string }) => {
+    return axios.post('/api/v1/payment/vnpay', data);
+};
+
