@@ -26,8 +26,6 @@ import RecruitmentInfo from './pages/home/header/recruitmentinfo/recruitment.inf
 import PageUnderConstruction from './pages/home/header/pageunderconstruction/page.under.construction';
 import SalesPolicy from './pages/home/header/salespolicy/sales.policy';
 import ProductDetail from './pages/home/product/product.detail';
-import CartPage from './pages/home/cart/cart.page';
-import CheckoutPage from './pages/home/checkoutpage/checkout.page';
 import AdminDashboard from './components/admin/dashboard/admin.dashboard';
 import ReturnPolicy from './pages/home/footer/returnpolicy/return.policy';
 import ShippingPolicy from './pages/home/footer/shippingpolicy/shipping.policy';
@@ -36,8 +34,8 @@ import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
 import AccountPage from './pages/home/accountpage/account.page';
 import OrderHistory from './pages/home/orderhistory/ordet.history';
 import Oauth2Redirect from './pages/client/auth/login/Oauth2Redirect';
-import TableUserResponsive from './components/admin/users/table.user.responsive';
 import CheckoutResponsive from './pages/home/checkoutpage/checkout.responsive';
+import CartResponsive from './pages/home/cart/cartmobile/cart.responsive';
 
 const router = createBrowserRouter([
   {
@@ -94,7 +92,7 @@ const router = createBrowserRouter([
       },
       {
         path: "gio-hang",
-        element: <CartPage />
+        element: <CartResponsive />
       },
       {
         path: "thanh-toan",

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import CheckoutMobile from './checkoutpagemobile/checkout.Mobile';
+
 import CheckoutPage from './checkout.page';
+import CheckoutMobile from './checkoutpagemobile/checkout.mobile';
 
 const CheckoutResponsive = () => {
     const [isMobile, setIsMobile] = useState(false);
