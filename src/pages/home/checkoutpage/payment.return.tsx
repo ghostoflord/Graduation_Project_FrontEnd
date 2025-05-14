@@ -1,32 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const PaymentReturn = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const hasSentRef = useRef(false); // Dùng useRef để giữ trạng thái qua các lần render
 
     useEffect(() => {
         const vnp_ResponseCode = searchParams.get('vnp_ResponseCode');
         const paymentStatus = vnp_ResponseCode === '00' ? 'success' : 'fail';
 
-        //  Ưu tiên lấy từ localStorage, nếu không có thì fallback từ URL
-        const userId =
-            localStorage.getItem('vnp_userId') || searchParams.get('userId');
-        const amount =
-            localStorage.getItem('vnp_amount') || searchParams.get('vnp_Amount');
-        const paymentRef =
-            localStorage.getItem('vnp_paymentRef') || searchParams.get('vnp_TxnRef');
-
-        console.log(' [DEBUG] Final Params:', { userId, amount, paymentRef, paymentStatus });
+        const userId = localStorage.getItem('vnp_userId') || searchParams.get('userId');
+        const amount = localStorage.getItem('vnp_amount') || searchParams.get('vnp_Amount');
+        const paymentRef = localStorage.getItem('vnp_paymentRef') || searchParams.get('vnp_TxnRef');
 
         if (!userId || !amount || !paymentRef) {
-            console.error('Thiếu dữ liệu thanh toán');
+            console.error('Thiếu thông tin thanh toán. Huỷ giao dịch.');
             navigate('/order-fail');
             return;
         }
 
         const sendPaymentResult = async () => {
+            if (hasSentRef.current) return; // Tránh gửi request lần 2
+            hasSentRef.current = true;
+
             try {
                 const res = await axios.post('http://localhost:8080/api/v1/payment/vnpay/response', {
                     userId,
@@ -36,18 +34,16 @@ const PaymentReturn = () => {
                 });
 
                 if (res.data.statusCode === 200) {
-                    //  Xoá localStorage nếu có
                     localStorage.removeItem('vnp_userId');
                     localStorage.removeItem('vnp_amount');
                     localStorage.removeItem('vnp_paymentRef');
-
                     navigate('/order-success');
                 } else {
-                    console.error(' Thanh toán thất bại từ backend:', res.data.message);
+                    console.error('Phản hồi không thành công từ backend:', res.data.message);
                     navigate('/order-fail');
                 }
             } catch (err) {
-                console.error(' Lỗi khi gửi phản hồi thanh toán:', err);
+                console.error("Lỗi gửi kết quả thanh toán:", err);
                 navigate('/order-fail');
             }
         };

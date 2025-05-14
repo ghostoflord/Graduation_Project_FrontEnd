@@ -238,7 +238,7 @@ export const placeOrderAPI = (data: {
     receiverAddress: string;
     receiverPhone: string;
 }) => {
-    return axios.post('/api/v1/order/place', data);
+    return axios.post('/api/v1/orders/place', data);
 };
 
 export const fetchAllOrders = async (): Promise<IOrderTable[]> => {

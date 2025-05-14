@@ -88,9 +88,8 @@ const CheckoutPage = () => {
 
         if (paymentMethod === 'cod') {
             try {
-                const res = await placeOrderAPI({ userId, name, address, phone });
+                const res = await placeOrderAPI({ userId, name, address, phone, items: itemsToCheckout }); // gửi cả items
                 if (res?.statusCode === 201) {
-                    await checkoutOrder(itemsToCheckout);
                     message.success("Đặt hàng thành công!");
                     setTimeout(() => navigate("/"), 1000);
                 } else {
@@ -106,7 +105,7 @@ const CheckoutPage = () => {
                 const res = await createVNPayURL({
                     amount: totalPrice,
                     paymentRef,
-                    userId, //  thêm userId ở đây
+                    userId,
                 });
                 if (res?.data) {
                     window.location.href = res.data;
@@ -119,6 +118,7 @@ const CheckoutPage = () => {
             }
         }
     };
+
 
     return (
         <div className="checkout-container">
