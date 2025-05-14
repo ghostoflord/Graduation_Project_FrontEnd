@@ -36,6 +36,9 @@ import OrderHistory from './pages/home/orderhistory/ordet.history';
 import Oauth2Redirect from './pages/client/auth/login/Oauth2Redirect';
 import CheckoutResponsive from './pages/home/checkoutpage/checkout.responsive';
 import CartResponsive from './pages/home/cart/cartmobile/cart.responsive';
+import PaymentReturn from './pages/home/checkoutpage/payment.return';
+import OrderSuccess from './pages/home/checkoutpage/orderstatus/order.success';
+import OrderFail from './pages/home/checkoutpage/orderstatus/orderfail';
 
 const router = createBrowserRouter([
   {
@@ -164,6 +167,18 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/payment-return",
+    element: <PaymentReturn />
+  },
+  {
+    path: "/order-success",
+    element: <OrderSuccess />
+  },
+  {
+    path: "/order-fail",
+    element: <OrderFail />
   },
   {
     path: "*", // Catch-all cho route ngoài admin

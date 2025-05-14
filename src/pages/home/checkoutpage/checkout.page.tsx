@@ -103,7 +103,11 @@ const CheckoutPage = () => {
         } else if (paymentMethod === 'vnpay') {
             try {
                 const paymentRef = `ORDER_${Date.now()}`;
-                const res = await createVNPayURL({ amount: totalPrice, paymentRef });
+                const res = await createVNPayURL({
+                    amount: totalPrice,
+                    paymentRef,
+                    userId, //  thêm userId ở đây
+                });
                 if (res?.data) {
                     window.location.href = res.data;
                 } else {
