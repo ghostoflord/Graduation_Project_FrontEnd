@@ -86,10 +86,19 @@ const CheckoutPage = () => {
             quantity: item.quantity,
         }));
 
+        const orderPayload = {
+            userId,
+            receiverName: name,
+            receiverAddress: address,
+            receiverPhone: phone,
+            items: itemsToCheckout,
+        };
+
         if (paymentMethod === 'cod') {
             try {
-                const res = await placeOrderAPI({ userId, name, address, phone, items: itemsToCheckout }); // gửi cả items
+                const res = await placeOrderAPI(orderPayload);
                 if (res?.statusCode === 201) {
+                    await checkoutOrder(itemsToCheckout);
                     message.success("Đặt hàng thành công!");
                     setTimeout(() => navigate("/"), 1000);
                 } else {
@@ -103,9 +112,9 @@ const CheckoutPage = () => {
             try {
                 const paymentRef = `ORDER_${Date.now()}`;
                 const res = await createVNPayURL({
+                    ...orderPayload,
                     amount: totalPrice,
                     paymentRef,
-                    userId,
                 });
                 if (res?.data) {
                     window.location.href = res.data;
@@ -118,7 +127,6 @@ const CheckoutPage = () => {
             }
         }
     };
-
 
     return (
         <div className="checkout-container">

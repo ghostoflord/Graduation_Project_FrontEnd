@@ -162,21 +162,30 @@ declare global {
         receiverPhone: phone
     }
 
-    interface IOrderTable {
-        id: number;
+    export interface VNPayRequestData {
+        userId: number;
+        amount: number;
+        paymentRef: string;
+        paymentStatus: string;
         receiverName: string;
         receiverAddress: string;
         receiverPhone: string;
-        totalPrice: number;
-        status: string;
-        userId: number;
+        items: {
+            productId: number;
+            quantity: number;
+        }[];
     }
+
 
     // vnpay
     export interface VNPayRequestData {
-        amount: number;
-        paymentRef: string;
-        userId: number;
+        amount: totalPrice,
+        paymentRef,
+        userId,
+        name,
+        address,
+        phone,
+        items: itemsToCheckout,
     }
 
     // now not user
