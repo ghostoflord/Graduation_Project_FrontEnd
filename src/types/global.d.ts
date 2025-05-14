@@ -109,6 +109,8 @@ declare global {
         slug: string;
         createdAt: Date;
         updatedAt: Date;
+        bestsell: string;
+        sell: string;
     }
 
     // cart

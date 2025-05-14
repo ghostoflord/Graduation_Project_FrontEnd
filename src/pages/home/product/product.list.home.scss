@@ -198,3 +198,39 @@
         display: block;
     }
 }
+
+.product-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.best-seller {
+    background-color: #ff6347;
+}
+
+.hot {
+    background-color: #ff9800;
+}
+
+.featured {
+    background-color: #4caf50;
+}
+
+.product-discount {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    z-index: 1;
+}

@@ -45,7 +45,6 @@ const ProductList = () => {
                 } else if (sort === 'price_desc') {
                     queryParams += `&sort=price,desc`;
                 }
-
                 const response = await getProductsAPI(queryParams);
                 const productList = response.data?.result ?? [];
                 const totalProducts = response.data?.meta?.total || 0;
@@ -66,7 +65,6 @@ const ProductList = () => {
         fetchProducts();
     }, [current, pageSize, search, sort, priceFrom, priceTo]);
 
-
     const formatPrice = (price: any) => {
         if (!price) return 'Đang cập nhật';
         const cleanPrice = String(price).replace(/\./g, '');
@@ -76,6 +74,27 @@ const ProductList = () => {
     };
 
     const totalPages = Math.ceil(total / pageSize);
+
+    const renderBestsellBadge = (bestsell: string) => {
+        switch (bestsell) {
+            case 'BESTSELLER':
+                return <div className="product-badge best-seller">Best Seller</div>;
+            case 'HOT':
+                return <div className="product-badge hot">Hot</div>;
+            case 'FEATURED':
+                return <div className="product-badge featured">Featured</div>;
+            default:
+                return null;
+        }
+    };
+
+    const renderSellBadge = (sell: string) => {
+        if (sell && !isNaN(Number(sell))) {
+            const discountPercentage = Number(sell);
+            return <div className="product-discount">Giảm {discountPercentage}%</div>;
+        }
+        return null;
+    };
 
     return (
         <div className="product-list-container">
@@ -91,8 +110,8 @@ const ProductList = () => {
                             {products.map((product) => (
                                 <div className="product-card" key={product.id}>
                                     <Link to={`/product/${slugify(product.name)}-${product.id}`}>
-                                        <div className="product-badge">Best Seller</div>
-                                        <div className="product-discount">-20%</div>
+                                        {renderBestsellBadge(product.bestsell)}
+                                        {renderSellBadge(product.sell)}
                                         <div className="product-image">
                                             <img
                                                 src={
@@ -107,7 +126,9 @@ const ProductList = () => {
                                             <div className="product-name">{product.name}</div>
                                             <div className="product-price">
                                                 <span className="price-current">{formatPrice(product.price)}</span>
-                                                <span className="price-old">{product.priceOld ? formatPrice(product.priceOld) : ''}</span>
+                                                <span className="price-old">
+                                                    {product.priceOld ? formatPrice(product.priceOld) : ''}
+                                                </span>
                                             </div>
                                             <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
                                         </div>
