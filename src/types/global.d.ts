@@ -157,9 +157,9 @@ declare global {
     // order
     interface IOrder {
         userId: number;
-        name: string;
-        address: string;
-        phone: string;
+        receiverName: name,
+        receiverAddress: address,
+        receiverPhone: phone
     }
 
     interface IOrderTable {
@@ -168,7 +168,14 @@ declare global {
         receiverAddress: string;
         receiverPhone: string;
         totalPrice: number;
-        status: string; 
+        status: string;
+        userId: number;
+    }
+
+    // vnpay
+    export interface VNPayRequestData {
+        amount: number;
+        paymentRef: string;
         userId: number;
     }
 

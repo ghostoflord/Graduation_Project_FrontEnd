@@ -232,8 +232,13 @@ export const removeCartItemAPI = (userId: number, productId: number) => {
 };
 
 // order
-export const placeOrderAPI = (data: { userId: number; name: string; address: string; phone: string }) => {
-    return axios.post("/api/v1/orders/place", data);
+export const placeOrderAPI = (data: {
+    userId: number;
+    receiverName: string;
+    receiverAddress: string;
+    receiverPhone: string;
+}) => {
+    return axios.post('/api/v1/order/place', data);
 };
 
 export const fetchAllOrders = async (): Promise<IOrderTable[]> => {
@@ -283,7 +288,7 @@ export const importUserExcelAPI = (data: any[]) => {
 };
 
 /// vnpay
-export const createVNPayURL = (data: { amount: number, paymentRef: string }) => {
+export const createVNPayURL = (data: VNPayRequestData) => {
     return axios.post('/api/v1/payment/vnpay', data);
 };
 
