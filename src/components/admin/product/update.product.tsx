@@ -36,6 +36,8 @@ type FieldType = {
     sold: string;
     quantity: string;
     shortDescription: string;
+    bestsell: string;
+    sell: string;
     image?: UploadFile[];
 };
 
@@ -116,27 +118,29 @@ const UpdateProduct = ({
     }, [dataUpdate]);
 
     const handleCancel = () => {
-        setOpenModalUpdate(false);
-        setDataUpdate(null);
         form.resetFields();
         setImageFile(null);
         setPreviewImage("");
+        setDataUpdate(null);            // ⚠️ RESET TRƯỚC
+        setOpenModalUpdate(false);
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        console.log(" Submit form với dữ liệu:", values);
         const {
             id, name, productCode, detailDescription,
-            guarantee, factory, price, sold, quantity, shortDescription
+            guarantee, factory, price, sold, quantity, shortDescription, bestsell, sell
         } = values;
+
 
         setIsSubmit(true);
 
-        // ✅ Sử dụng tên file thay vì base64
+        //  Sử dụng tên file thay vì base64
         const imageFileName = imageFile?.name || '';
 
         const res = await updateProductAPI(
             id, name, productCode, detailDescription,
-            guarantee, factory, price, sold, quantity, shortDescription,
+            guarantee, factory, price, sold, quantity, shortDescription, bestsell, sell,
             imageFileName
         );
 
@@ -213,6 +217,23 @@ const UpdateProduct = ({
 
                 <Form.Item<FieldType> label="Mô tả ngắn" name="shortDescription" rules={[{ required: true }]}>
                     <Input />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Phân loại nổi bật"
+                    name="bestsell"
+                    rules={[{ required: true, message: 'Vui lòng chọn phân loại!' }]}
+                >
+                    <Select placeholder="Chọn phân loại nổi bật">
+                        <Select.Option value="NONE">Không nổi bật</Select.Option>
+                        <Select.Option value="BESTSELLER">Bán chạy</Select.Option>
+                        <Select.Option value="HOT">Hot</Select.Option>
+                        <Select.Option value="FEATURED">Đặc sắc</Select.Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item<FieldType> label="Số lượng" name="sell" rules={[{ required: true }]}>
+                    <InputNumber style={{ width: "100%" }} min={0} />
                 </Form.Item>
 
                 <Form.Item

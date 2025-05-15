@@ -157,11 +157,13 @@ export const updateProductAPI = (
     sold: string,
     quantity: string,
     shortDescription: string,
+    bestsell: string,
+    sell: string,
     image?: string // thêm ảnh base64
 ) => {
     const urlBackend = "/api/v1/products/update"; // sửa lại đúng endpoint
     return axios.put<IBackendRes<IRegister>>(urlBackend, {
-        id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription, image
+        id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription, bestsell, sell, image
     });
 };
 
