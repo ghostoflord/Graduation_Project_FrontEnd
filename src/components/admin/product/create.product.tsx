@@ -23,6 +23,8 @@ type FieldType = {
     image: UploadFile[];
     quantity: string;
     sold: string;
+    bestsell: string;
+    sell: string;
 };
 
 const CreateProduct = (props: IProps) => {
@@ -84,8 +86,9 @@ const CreateProduct = (props: IProps) => {
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        console.log('🎯 Form values:', values);
         setIsSubmit(true);
-        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity } = values;
+        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity, bestsell, sell, sold } = values;
         // Lấy base64 từ avatar file
         const imageUrl = imageFile
             ? await getBase64(imageFile.originFileObj as RcFile)
@@ -96,11 +99,14 @@ const CreateProduct = (props: IProps) => {
                 productCode,
                 detailDescription,
                 guarantee,
-                imageUrl,  // Gửi URL ảnh sản phẩm
+                imageUrl,         // ảnh đúng vị trí
                 factory,
                 price,
+                sold,
                 quantity,
-                shortDescription
+                shortDescription,
+                bestsell,
+                sell
             );
 
             if (res && res.data) {
@@ -232,6 +238,35 @@ const CreateProduct = (props: IProps) => {
                     />
                 </Form.Item>
 
+                <Form.Item<FieldType>
+                    label="Phân loại nổi bật"
+                    name="bestsell"
+                    rules={[{ required: true, message: 'Vui lòng chọn phân loại!' }]}
+                >
+                    <Select placeholder="Chọn phân loại nổi bật">
+                        <Select.Option value="NONE">Không nổi bật</Select.Option>
+                        <Select.Option value="BESTSELLER">Bán chạy</Select.Option>
+                        <Select.Option value="HOT">Hot</Select.Option>
+                        <Select.Option value="FEATURED">Đặc sắc</Select.Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Giảm giá"
+                    name="sell"
+                    rules={[{ required: true, message: 'Vui lòng nhập phần trăm giảm giá!' }]}
+                >
+                    <InputNumber
+                        min={0}
+                        max={100}
+                        step={1}
+                        precision={0}
+                        style={{ width: '100%' }}
+                    // formatter={(value) => `${value}%`}
+                    // parser={(value) => value?.replace(/[^\d]/g, '') || ''}
+                    // addonAfter="%"
+                    />
+                </Form.Item>
                 <Form.Item
                     label="Ảnh sản phẩm"
                     name="image"
