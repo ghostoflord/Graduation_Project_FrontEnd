@@ -88,9 +88,9 @@ const CheckoutPage = () => {
 
         const orderPayload = {
             userId,
-            receiverName: name,
-            receiverAddress: address,
-            receiverPhone: phone,
+            name,
+            address,
+            phone,
             items: itemsToCheckout,
         };
 

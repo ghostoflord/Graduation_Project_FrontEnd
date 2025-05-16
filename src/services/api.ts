@@ -232,9 +232,9 @@ export const removeCartItemAPI = (userId: number, productId: number) => {
 // order
 export const placeOrderAPI = (data: {
     userId: number;
-    receiverName: string;
-    receiverAddress: string;
-    receiverPhone: string;
+    name: string,
+    address: string,
+    phone: string,
 }) => {
     return axios.post('/api/v1/orders/place', data);
 };

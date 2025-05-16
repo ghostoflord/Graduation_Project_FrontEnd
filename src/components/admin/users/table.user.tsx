@@ -209,9 +209,9 @@ const TableUser = () => {
                         }
                     }
 
-                    if (sort && sort.name) {
-                        query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
-                    } else query += `&sort=-name`;
+                    // if (sort && sort.name) {
+                    //     query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
+                    // } else query += `&sort=-name`;
 
                     const res = await getUsersAPI(query);
                     if (res.data) {
