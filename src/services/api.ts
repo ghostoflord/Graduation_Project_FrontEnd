@@ -229,6 +229,11 @@ export const removeCartItemAPI = (userId: number, productId: number) => {
     });
 };
 
+export const clearCartAPI = (userId: number) => {
+    const urlBackend = `/api/v1/carts/${userId}/clears`;
+    return axios.delete<IBackendRes<any>>(urlBackend);
+};
+
 // order
 export const placeOrderAPI = (data: {
     userId: number;

@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-import { getCart, removeCartItemAPI } from '@/services/api';
+import { clearCartAPI, getCart, removeCartItemAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context'; // import context
 
@@ -119,9 +119,23 @@ const CartPage = () => {
         }
     };
 
-    const clearCart = () => {
-        updateCartState([]);
-        message.success('Đã xoá tất cả sản phẩm trong giỏ hàng');
+    const clearCart = async () => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const userId = user.id;
+
+        if (!userId) {
+            console.warn('Không tìm thấy userId');
+            return;
+        }
+
+        try {
+            await clearCartAPI(userId);
+            updateCartState([]);
+            message.success('Đã xoá tất cả sản phẩm trong giỏ hàng');
+        } catch (error) {
+            console.error('Lỗi khi xoá tất cả sản phẩm:', error);
+            message.error('Xoá giỏ hàng thất bại');
+        }
     };
 
     return (
