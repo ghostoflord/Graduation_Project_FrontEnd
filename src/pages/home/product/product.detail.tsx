@@ -1,16 +1,17 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getProductDetailSlugAPI, addToCartAPI } from '@/services/api';
+import { getProductDetailSlugAPI, addToCartAPI, getCart } from '@/services/api';
 import { ShoppingCartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import './product.detail.scss';
+import { useCurrentApp } from '@/components/context/app.context';
 
 const ProductDetail = () => {
     const { slug } = useParams<{ slug: string }>();
     const [product, setProduct] = useState<IProductTable | null>(null);
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
-
+    const { setCartSummary } = useCurrentApp();
     useEffect(() => {
         const fetchProductDetail = async () => {
             if (!slug) {
@@ -44,7 +45,6 @@ const ProductDetail = () => {
     const handleAddToCart = async () => {
         if (!product) return;
 
-        // Kiểm tra nếu số lượng trong kho không đủ
         const availableQuantity = Number(product.quantity);
         if (isNaN(availableQuantity) || availableQuantity <= 0) {
             message.error("Sản phẩm này đã hết hàng.");
@@ -67,8 +67,15 @@ const ProductDetail = () => {
         };
 
         try {
-            const res = await addToCartAPI(cartData);
+            await addToCartAPI(cartData);
             message.success("Đã thêm vào giỏ hàng!");
+
+            // ✅ Sau khi thêm xong, gọi lại getCart để cập nhật cartSummary trong context
+            const res = await getCart(userId);
+            if (res?.data) {
+                setCartSummary(res.data); // Cập nhật để Header thấy sự thay đổi
+            }
+
         } catch (err) {
             console.error("Lỗi khi thêm vào giỏ hàng:", err);
             message.error("Thêm vào giỏ hàng thất bại.");

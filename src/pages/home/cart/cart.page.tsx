@@ -13,6 +13,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { getCart, removeCartItemAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
+import { useCurrentApp } from '@/components/context/app.context'; // import context
 
 const { Title, Text } = Typography;
 
@@ -48,6 +49,7 @@ const CartPage = () => {
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const navigate = useNavigate();
+    const { setCartSummary } = useCurrentApp();  // Lấy hàm setCartSummary từ context
 
     const handleCheckout = () => {
         navigate('/thanh-toan');
@@ -79,8 +81,15 @@ const CartPage = () => {
 
     const updateCartState = (items: CartItem[]) => {
         setCartItems(items);
-        setTotalQuantity(items.reduce((sum, item) => sum + item.quantity, 0));
+        const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
+        setTotalQuantity(totalQty);
         setTotalPrice(items.reduce((sum, item) => sum + item.price * item.quantity, 0));
+
+        // Đồng bộ lên Context cartSummary luôn
+        setCartSummary(prev => ({
+            ...prev,
+            sum: totalQty,
+        }));
     };
 
     const updateQuantity = (productId: number, quantity: number) => {
@@ -132,7 +141,7 @@ const CartPage = () => {
                         itemLayout="horizontal"
                         dataSource={cartItems}
                         renderItem={item => (
-                            <Card className="mb-4 cart-item">
+                            <Card className="mb-4 cart-item" key={item.productId}>
                                 <Row gutter={16} align="middle">
                                     <Col xs={24} sm={4}>
                                         <div className="product-image">

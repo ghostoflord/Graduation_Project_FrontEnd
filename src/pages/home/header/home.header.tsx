@@ -4,26 +4,33 @@ import './home.header.scss';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
 import type { MenuProps } from 'antd';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 import logo from '@/assets/logo.png';
-import { useState } from 'react';
+
 export default function Header() {
-    const { user, isAuthenticated, setIsAuthenticated, setUser, cartSummary = { sum: 0 }, setCartSummary } = useCurrentApp();
+    const {
+        user,
+        isAuthenticated,
+        setIsAuthenticated,
+        setUser,
+        cartSummary = { sum: 0 },
+        setCartSummary
+    } = useCurrentApp();
+
     const navigate = useNavigate();
     const [showCategory, setShowCategory] = useState(false);
-
-    //
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const [searchValue, setSearchValue] = useState(query.get('search') || '');
+
     const handleLogout = () => {
         setUser(null);
         setIsAuthenticated(false);
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("user");
-        message.success("Đăng xuất thành công!");
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        message.success('Đăng xuất thành công!');
         navigate('/login');
     };
 
@@ -36,12 +43,10 @@ export default function Header() {
         }
     };
 
-
     const itemsDropdown: MenuProps['items'] = useMemo(() => {
         if (!isAuthenticated || !user) return [];
 
         const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
-
         const items: MenuProps['items'] = [];
 
         if (isAdmin) {
@@ -79,7 +84,6 @@ export default function Header() {
         })();
     }, [user?.id]);
 
-
     return (
         <div className="header-wrapper">
             <div className="header-top">
@@ -88,7 +92,9 @@ export default function Header() {
                         <img src={logo} alt="LaptopNew" />
                     </Link>
                 </div>
+
                 <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
+
                 <div className="search-bar">
                     <Input.Search
                         placeholder="Từ khóa..."
@@ -98,15 +104,18 @@ export default function Header() {
                         onSearch={handleSearch}
                     />
                 </div>
+
                 <div className="news-links">
                     <a href="#">Tin khuyến mãi</a>
                     <span>|</span>
                     <a href="#">Tin tức công nghệ</a>
                 </div>
+
                 <div className="call-phone">
                     <div>Gọi mua hàng</div>
                     <div className="phone-number">1900.8946</div>
                 </div>
+
                 <div className="actions">
                     {!isAuthenticated ? (
                         <Link to="/login">
@@ -122,17 +131,16 @@ export default function Header() {
                             </Space>
                         </Dropdown>
                     )}
-                    <div style={{ position: 'relative' }}>
+
+                    {/* ✅ Giỏ hàng dùng Badge */}
+                    <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
                         <Button
                             shape="circle"
                             icon={<ShoppingCartOutlined />}
                             className="cart-button"
                             onClick={() => navigate('/gio-hang')}
                         />
-                        {cartSummary && Number(cartSummary.sum) > 0 && (
-                            <span className="cart-badge">{cartSummary.sum}</span>
-                        )}
-                    </div>
+                    </Badge>
                 </div>
             </div>
 
@@ -142,7 +150,6 @@ export default function Header() {
                         className={`category-dropdown ${showCategory ? 'open' : ''}`}
                         onClick={() => setShowCategory(!showCategory)}
                     >
-                        {/* <li className="category-dropdown"> */}
                         <span className="dropdown-link">Lọc sản phẩm</span>
                         <div className="dropdown-menu">
                             <ul>
@@ -160,8 +167,6 @@ export default function Header() {
                                 </li>
                             </ul>
                         </div>
-                        {/* </li> */}
-
                     </li>
                     <li><NavLink to="/">Trang chủ</NavLink></li>
                     <li><IntroduceDropDown /></li>
