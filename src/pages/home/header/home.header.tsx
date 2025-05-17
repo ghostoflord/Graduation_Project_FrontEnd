@@ -85,98 +85,101 @@ export default function Header() {
     }, [user?.id]);
 
     return (
-        <div className="header-wrapper">
-            <div className="header-top">
-                <div className="logo">
-                    <Link to="/">
-                        <img src={logo} alt="LaptopNew" />
-                    </Link>
-                </div>
+        <div className="container">
+            <div className="header-wrapper">
+                <div className="header-top">
 
-                <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
-
-                <div className="search-bar">
-                    <Input.Search
-                        placeholder="Từ khóa..."
-                        allowClear
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                        onSearch={handleSearch}
-                    />
-                </div>
-
-                <div className="news-links">
-                    <a href="#">Tin khuyến mãi</a>
-                    <span>|</span>
-                    <a href="#">Tin tức công nghệ</a>
-                </div>
-
-                <div className="call-phone">
-                    <div>Gọi mua hàng</div>
-                    <div className="phone-number">1900.8946</div>
-                </div>
-
-                <div className="actions">
-                    {!isAuthenticated ? (
-                        <Link to="/login">
-                            <Button className="login-button" icon={<UserOutlined />}>
-                                Đăng nhập / Đăng ký
-                            </Button>
+                    <div className="logo">
+                        <Link to="/">
+                            <img src={logo} alt="LaptopNew" />
                         </Link>
-                    ) : (
-                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                            <Space style={{ cursor: "pointer" }}>
-                                <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
-                                <span>{user?.name}</span>
-                            </Space>
-                        </Dropdown>
-                    )}
+                    </div>
 
-                    {/* ✅ Giỏ hàng dùng Badge */}
-                    <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
-                        <Button
-                            shape="circle"
-                            icon={<ShoppingCartOutlined />}
-                            className="cart-button"
-                            onClick={() => navigate('/gio-hang')}
+                    <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
+
+                    <div className="search-bar">
+                        <Input.Search
+                            placeholder="Từ khóa..."
+                            allowClear
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            onSearch={handleSearch}
                         />
-                    </Badge>
-                </div>
-            </div>
+                    </div>
 
-            <div className="header-menu">
-                <ul>
-                    <li
-                        className={`category-dropdown ${showCategory ? 'open' : ''}`}
-                        onClick={() => setShowCategory(!showCategory)}
-                    >
-                        <span className="dropdown-link">Lọc sản phẩm</span>
-                        <div className="dropdown-menu">
-                            <ul>
-                                <li>
-                                    <NavLink to="/?sort=price_asc">Giá tăng dần</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/?sort=price_desc">Giá giảm dần</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li><NavLink to="/">Trang chủ</NavLink></li>
-                    <li><IntroduceDropDown /></li>
-                    <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
-                    <li><NavLink to="/tin-tuc">Tin tức</NavLink></li>
-                    <li><NavLink to="/tuyen-dung">Tuyển dụng</NavLink></li>
-                    <li><NavLink to="/nhuong-quyen">Nhượng quyền</NavLink></li>
-                    <li><NavLink to="/lien-he">Liên hệ</NavLink></li>
-                    <li><NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink></li>
-                </ul>
+                    <div className="news-links">
+                        <a href="#">Tin khuyến mãi</a>
+                        <span>|</span>
+                        <a href="#">Tin tức công nghệ</a>
+                    </div>
+
+                    <div className="call-phone">
+                        <div>Gọi mua hàng</div>
+                        <div className="phone-number">1900.8946</div>
+                    </div>
+
+                    <div className="actions">
+                        {!isAuthenticated ? (
+                            <Link to="/login">
+                                <Button className="login-button" icon={<UserOutlined />}>
+                                    Đăng nhập / Đăng ký
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                                <Space style={{ cursor: "pointer" }}>
+                                    <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
+                                    <span>{user?.name}</span>
+                                </Space>
+                            </Dropdown>
+                        )}
+
+                        {/* ✅ Giỏ hàng dùng Badge */}
+                        <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
+                            <Button
+                                shape="circle"
+                                icon={<ShoppingCartOutlined />}
+                                className="cart-button"
+                                onClick={() => navigate('/gio-hang')}
+                            />
+                        </Badge>
+                    </div>
+                </div>
+
+                <div className="header-menu">
+                    <ul>
+                        <li
+                            className={`category-dropdown ${showCategory ? 'open' : ''}`}
+                            onClick={() => setShowCategory(!showCategory)}
+                        >
+                            <span className="dropdown-link">Lọc sản phẩm</span>
+                            <div className="dropdown-menu">
+                                <ul>
+                                    <li>
+                                        <NavLink to="/?sort=price_asc">Giá tăng dần</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/?sort=price_desc">Giá giảm dần</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><NavLink to="/">Trang chủ</NavLink></li>
+                        <li><IntroduceDropDown /></li>
+                        <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
+                        <li><NavLink to="/tin-tuc">Tin tức</NavLink></li>
+                        <li><NavLink to="/tuyen-dung">Tuyển dụng</NavLink></li>
+                        <li><NavLink to="/nhuong-quyen">Nhượng quyền</NavLink></li>
+                        <li><NavLink to="/lien-he">Liên hệ</NavLink></li>
+                        <li><NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink></li>
+                    </ul>
+                </div>
             </div>
         </div>
     );
