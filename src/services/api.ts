@@ -270,8 +270,11 @@ export const getDashboardAPI = () => {
         countOrder: number;
         countUser: number;
         countProduct: number;
+        totalRevenue: number;
+        totalCanceledQuantity: number;
     }>>("/api/v1/dashboard");
 };
+
 // export const addToCartAPI = (data: {
 //     quantity: number;
 //     price: number;
