@@ -6,7 +6,7 @@ interface IProps {
     openViewDetail: boolean;
     setOpenViewDetail: (v: boolean) => void;
     dataViewDetail: IProductTable | null;
-    setDataViewDetail: (v: IUserTable | null) => void;
+    setDataViewDetail: (v: IProductTable | null) => void;
 }
 
 const DetailProduct = (props: IProps) => {
