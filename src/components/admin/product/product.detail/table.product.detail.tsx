@@ -7,17 +7,20 @@ import DetailOfProduct from './detail.of.product';
 import { Button, message, notification, Popconfirm } from 'antd';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import CreateProductDetail from './create.product.detail';
+import UpdateProductDetail from './update.product.detail';
 const TableProductDetail = () => {
     const actionRef = useRef<ActionType>();
 
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
-    const [dataViewDetail, setDataViewDetail] = useState<IProductTable | null>(null);
+    const [dataViewDetail, setDataViewDetail] = useState<ProductDetail | null>(null);
 
     const [openViewDetailSpecification, setOpenViewDetailSpecification] = useState<boolean>(false);
     const [dataViewDetailSpecification, setDataViewDetailSpecification] = useState<ProductDetail | null>(null);
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<ProductDetail | null>(null);
 
     const [isDeleteProduct, setIsDeleteProduct] = useState<boolean>(false);
 
@@ -148,13 +151,13 @@ const TableProductDetail = () => {
             render(dom, entity, index, action, schema) {
                 return (
                     <>
-                        {/* <EditTwoTone
+                        <EditTwoTone
                             twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 10px" }}
                             onClick={() => {
                                 setOpenModalUpdate(true);
                                 setDataUpdate(entity);
                             }}
-                        /> */}
+                        />
 
                         <Popconfirm
                             placement="leftTop"
@@ -253,6 +256,14 @@ const TableProductDetail = () => {
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
+            />
+
+            <UpdateProductDetail
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
             />
         </>
     );
