@@ -39,6 +39,7 @@ import CartResponsive from './pages/home/cart/cartmobile/cart.responsive';
 import PaymentReturn from './pages/home/checkoutpage/payment.return';
 import OrderSuccess from './pages/home/checkoutpage/orderstatus/order.success';
 import OrderFail from './pages/home/checkoutpage/orderstatus/orderfail';
+import TableProductDetail from './components/admin/product/product.detail/table.product.detail';
 
 const router = createBrowserRouter([
   {
@@ -143,6 +144,10 @@ const router = createBrowserRouter([
       {
         path: "product",
         element: <ProductPage />,
+      },
+      {
+        path: "product/detail",
+        element: <TableProductDetail />,
       },
       {
         path: "order",

@@ -113,6 +113,26 @@ declare global {
         sell: string;
     }
 
+    // product_detail
+    // src/types/productDetail.d.ts
+
+    export interface ProductDetail {
+        id?: number;
+        cpu: string;
+        ram: string;
+        storage: string;
+        gpu: string;
+        screen: string;
+        battery: string;
+        weight: string;
+        material: string;
+        os: string;
+        specialFeatures: string;
+        ports: string;
+        productId: string;
+    }
+
+
     // cart
     interface ICart {
         quantity: number;

@@ -173,6 +173,33 @@ export const deleteProductAPI = (id: string) => {
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
+// product detail
+
+export const getAllProductDetailsAPI = () => {
+    return axios.get<IBackendRes<ProductDetail[]>>("/api/v1/product-details");
+};
+
+export const getProductDetailByIdAPI = (id: number) => {
+    return axios.get<IBackendRes<ProductDetail>>(`/api/v1/product-details/${id}`);
+};
+
+export const getProductDetailByProductIdAPI = (productId: number) => {
+    return axios.get<IBackendRes<ProductDetail>>(`/api/v1/product-details/by-product/${productId}`);
+};
+
+export const createProductDetailAPI = (data: ProductDetail) => {
+    return axios.post<IBackendRes<ProductDetail>>("/api/v1/product-details", data);
+};
+
+export const updateProductDetailAPI = (id: number, data: ProductDetail) => {
+    return axios.put<IBackendRes<ProductDetail>>(`/api/v1/product-details/${id}`, data);
+};
+
+export const deleteProductDetailAPI = (id: number) => {
+    return axios.delete<IBackendRes<any>>(`/api/v1/product-details/${id}`);
+};
+
+
 //cart
 export const getCart = (userId: string) => {
     const urlBackend = `/api/v1/carts/users/${userId}`;
