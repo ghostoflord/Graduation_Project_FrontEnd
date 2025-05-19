@@ -5,6 +5,7 @@ import { ShoppingCartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/i
 import { message } from 'antd';
 import './product.detail.scss';
 import { useCurrentApp } from '@/components/context/app.context';
+import CommentSection from '@/components/client/comment/comment.section';
 
 const ProductDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -117,6 +118,8 @@ const ProductDetail = () => {
                     <ShoppingCartOutlined style={{ marginRight: 8 }} />
                     {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
                 </button>
+
+                <CommentSection productId={product.id} />
 
             </div>
         </div>

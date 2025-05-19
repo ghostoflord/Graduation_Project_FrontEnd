@@ -325,3 +325,19 @@ export const createVNPayURL = (data: VNPayRequestData) => {
     return axios.post('/api/v1/payment/vnpay', data);
 };
 
+//comment 
+// Lấy danh sách comment theo productId
+export const getCommentsByProductAPI = (productId: number) => {
+    return axios.get(`/api/v1/comments/product/${productId}`);
+};
+
+// Gửi bình luận mới
+export const postCommentAPI = (comment: {
+    userId: number;
+    productId: number;
+    content: string;
+}) => {
+    return axios.post(`/api/v1/comments`, comment);
+};
+
+
