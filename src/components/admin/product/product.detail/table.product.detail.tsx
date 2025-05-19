@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { getAllProductDetailsAPI, getProductDetailAPI } from '@/services/api';
+import { deleteProductDetailAPI, getAllProductDetailsAPI, getProductDetailAPI } from '@/services/api';
 import DetailProduct from '../detail.product';
 import DetailOfProduct from './detail.of.product';
-import { Button } from 'antd';
+import { Button, message, notification, Popconfirm } from 'antd';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import CreateProductDetail from './create.product.detail';
 const TableProductDetail = () => {
@@ -18,11 +18,39 @@ const TableProductDetail = () => {
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
+
+    const [isDeleteProduct, setIsDeleteProduct] = useState<boolean>(false);
+
     const [meta, setMeta] = useState({
         current: 1,
         pageSize: 5,
         total: 0,
     });
+
+    const handleDeleteProduct = async (id: string) => {
+        setIsDeleteProduct(true)
+        try {
+            const res = await deleteProductDetailAPI(id);
+            console.log("API response: ", res.data);
+            // Kiểm tra status code hoặc flag success từ API
+            if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
+                message.success(res.message || 'Xóa user thành công');
+                refreshTable();
+            } else {
+                notification.error({
+                    message: res.error || 'Đã có lỗi xảy ra',
+                    description: res.message || 'Không thể xóa user'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi hệ thống',
+                description: 'Đã có lỗi xảy ra khi xóa user'
+            });
+        } finally {
+            setIsDeleteProduct(false);
+        }
+    }
 
 
     const refreshTable = () => {
@@ -112,6 +140,41 @@ const TableProductDetail = () => {
                     </a>
                 );
             },
+        },
+
+        {
+            title: 'Action',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        {/* <EditTwoTone
+                            twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 10px" }}
+                            onClick={() => {
+                                setOpenModalUpdate(true);
+                                setDataUpdate(entity);
+                            }}
+                        /> */}
+
+                        <Popconfirm
+                            placement="leftTop"
+                            title={"Xác nhận xóa book"}
+                            description={"Bạn có chắc chắn muốn xóa book này ?"}
+                            onConfirm={() => handleDeleteProduct(entity.id)}
+                            okText="Xác nhận"
+                            cancelText="Hủy"
+                            okButtonProps={{ loading: isDeleteProduct }}
+                        >
+                            <span style={{ cursor: "pointer" }}>
+                                <DeleteTwoTone twoToneColor="#ff4d4f" />
+                            </span>
+                        </Popconfirm>
+
+
+                    </>
+
+                )
+            }
         }
 
     ];

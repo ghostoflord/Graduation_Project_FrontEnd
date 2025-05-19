@@ -195,7 +195,7 @@ export const updateProductDetailAPI = (id: number, data: ProductDetail) => {
     return axios.put<IBackendRes<ProductDetail>>(`/api/v1/product-details/${id}`, data);
 };
 
-export const deleteProductDetailAPI = (id: number) => {
+export const deleteProductDetailAPI = (id: string) => {
     return axios.delete<IBackendRes<any>>(`/api/v1/product-details/${id}`);
 };
 
