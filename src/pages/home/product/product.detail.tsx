@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getProductDetailSlugAPI, addToCartAPI, getCart } from '@/services/api';
+import { getProductDetailSlugAPI, addToCartAPI, getCart, useCartStore } from '@/services/api';
 import { ShoppingCartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { message } from 'antd';
+import { message, Tag } from 'antd';
 import './product.detail.scss';
 import { useCurrentApp } from '@/components/context/app.context';
 import ProductInfo from '@/components/client/product.info/product.info';
@@ -13,6 +13,7 @@ const ProductDetail = () => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const { setCartSummary } = useCurrentApp();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProductDetail = async () => {
@@ -83,6 +84,46 @@ const ProductDetail = () => {
         }
     };
 
+    const handleBuyNow = async () => {
+        if (!product) return;
+
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) {
+            message.warning('Vui lòng đăng nhập để tiếp tục');
+            navigate('/login');
+            return;
+        }
+
+        try {
+            const user = JSON.parse(storedUser);
+            const userId = user.id;
+
+            const buyItem = {
+                productId: product.id,
+                quantity: 1,
+                price: product.price,
+                userId
+            };
+
+            await addToCartAPI(buyItem);
+
+            useCartStore.getState().addItem({
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1,
+                image: product.image,
+                shortDescription: product.shortDescription,
+                detailDescription: product.detailDescription,
+            });
+
+            navigate('/thanh-toan');
+        } catch (error) {
+            console.error(error);
+            message.error('Không thể mua ngay');
+        }
+    };
+
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
 
@@ -98,10 +139,20 @@ const ProductDetail = () => {
 
             <div className="product-info">
                 <h1>{product.name}</h1>
-                <p>Giá: {formatPrice(product.price)}</p>
-                <p>Mô tả: {product.shortDescription || 'Đang cập nhật mô tả.'}</p>
-                <p>Cấu hình: {product.detailDescription || 'Đang cập nhật.'}</p>
-                <p>Kho còn: {product.quantity ?? 'Đang cập nhật'} sản phẩm</p>
+                <div className="price-box">
+                    <div className="price-current">{formatPrice(product.price)}</div>
+                    {product.originalPrice && Number(product.originalPrice) > Number(product.price) && (
+                        <>
+                            <div className="price-old">{formatPrice(product.originalPrice)}</div>
+                            <Tag color="red">
+                                {Math.round(100 - (Number(product.price) / Number(product.originalPrice)) * 100)}%
+                            </Tag>
+                        </>
+                    )}
+                </div>
+                <p className="product-desc">{product.shortDescription || 'Đang cập nhật mô tả.'}</p>
+                <p className="product-config"><b>Cấu hình:</b> {product.detailDescription || 'Đang cập nhật.'}</p>
+                <p className="product-stock">Kho còn: {product.quantity ?? 'Đang cập nhật'} sản phẩm</p>
 
                 <div className="quantity-control">
                     <button onClick={decreaseQty}><MinusOutlined /></button>
@@ -109,15 +160,27 @@ const ProductDetail = () => {
                     <button onClick={increaseQty}><PlusOutlined /></button>
                 </div>
 
-                <button
-                    className="add-to-cart-btn"
-                    onClick={handleAddToCart}
-                    disabled={!product.quantity || Number(product.quantity) <= 0}
-                >
-                    <ShoppingCartOutlined style={{ marginRight: 8 }} />
-                    {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
-                </button>
+                <div className="action-buttons">
+                    <button
+                        className="add-to-cart-btn"
+                        onClick={handleAddToCart}
+                        disabled={!product.quantity || Number(product.quantity) <= 0}
+                    >
+                        <ShoppingCartOutlined style={{ marginRight: 8 }} />
+                        {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
+                    </button>
+
+                    <button
+                        className="buy-now-btn"
+                        disabled={!product.quantity || Number(product.quantity) <= 0}
+                        onClick={handleBuyNow}
+                    >
+                        Mua ngay
+                    </button>
+                </div>
+
             </div>
+
             <div className="product-info-wrapper">
                 <ProductInfo productId={product.id} />
             </div>

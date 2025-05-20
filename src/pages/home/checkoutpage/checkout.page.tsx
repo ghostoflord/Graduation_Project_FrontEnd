@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './checkout.page.scss';
-import { Input, Button, Radio, Row, Col, Typography, Card, Divider, message } from 'antd';
+import {
+    Input,
+    Button,
+    Radio,
+    Row,
+    Col,
+    Typography,
+    Card,
+    Divider,
+    message
+} from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { checkoutOrder, getCart, placeOrderAPI, createVNPayURL } from '@/services/api';
+import {
+    checkoutOrder,
+    getCart,
+    placeOrderAPI,
+    createVNPayURL
+} from '@/services/api';
 
 const { Title, Text } = Typography;
 
@@ -43,10 +58,10 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
+        const storedUser = localStorage.getItem('user');
         if (!storedUser) {
-            message.error("Không tìm thấy thông tin người dùng");
-            navigate("/login");
+            message.error('Không tìm thấy thông tin người dùng');
+            navigate('/login');
             return;
         }
 
@@ -58,32 +73,37 @@ const CheckoutPage = () => {
             setAddress(user.address || '');
             setPhone(user.phone || '');
 
-            getCart(uid).then(cartRes => {
-                if (cartRes?.data?.items) {
-                    const rawItems: CartItem[] = cartRes.data.items;
-                    const mergedItems = mergeDuplicateItems(rawItems);
-                    setCartItems(mergedItems);
-                    const total = mergedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-                    setTotalPrice(total);
-                } else {
-                    message.warning("Giỏ hàng trống");
-                }
-            }).catch(err => {
-                console.error("Lỗi khi lấy giỏ hàng:", err);
-                message.error("Không thể lấy giỏ hàng");
-            });
+            getCart(uid)
+                .then(cartRes => {
+                    if (cartRes?.data?.items) {
+                        const rawItems: CartItem[] = cartRes.data.items;
+                        const mergedItems = mergeDuplicateItems(rawItems);
+                        setCartItems(mergedItems);
+                        const total = mergedItems.reduce(
+                            (sum, item) => sum + item.price * item.quantity,
+                            0
+                        );
+                        setTotalPrice(total);
+                    } else {
+                        message.warning('Giỏ hàng trống');
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi khi lấy giỏ hàng:', err);
+                    message.error('Không thể lấy giỏ hàng');
+                });
         } catch (e) {
-            console.error("Lỗi khi phân tích user từ localStorage:", e);
-            message.error("Dữ liệu người dùng không hợp lệ");
+            console.error('Lỗi khi phân tích user từ localStorage:', e);
+            message.error('Dữ liệu người dùng không hợp lệ');
         }
     }, []);
 
     const handlePlaceOrder = async () => {
-        if (!userId) return message.error("Thiếu thông tin người dùng");
+        if (!userId) return message.error('Thiếu thông tin người dùng');
 
         const itemsToCheckout = cartItems.map(item => ({
             productId: item.productId,
-            quantity: item.quantity,
+            quantity: item.quantity
         }));
 
         const orderPayload = {
@@ -91,7 +111,7 @@ const CheckoutPage = () => {
             name,
             address,
             phone,
-            items: itemsToCheckout,
+            items: itemsToCheckout
         };
 
         if (paymentMethod === 'cod') {
@@ -99,14 +119,14 @@ const CheckoutPage = () => {
                 const res = await placeOrderAPI(orderPayload);
                 if (res?.statusCode === 201) {
                     await checkoutOrder(itemsToCheckout);
-                    message.success("Đặt hàng thành công!");
-                    setTimeout(() => navigate("/"), 1000);
+                    message.success('Đặt hàng thành công!');
+                    setTimeout(() => navigate('/'), 1000);
                 } else {
-                    message.error(res?.message || "Đặt hàng thất bại");
+                    message.error(res?.message || 'Đặt hàng thất bại');
                 }
             } catch (err) {
                 console.error(err);
-                message.error("Lỗi khi xử lý đơn hàng");
+                message.error('Lỗi khi xử lý đơn hàng');
             }
         } else if (paymentMethod === 'vnpay') {
             try {
@@ -114,16 +134,16 @@ const CheckoutPage = () => {
                 const res = await createVNPayURL({
                     ...orderPayload,
                     amount: totalPrice,
-                    paymentRef,
+                    paymentRef
                 });
                 if (res?.data) {
                     window.location.href = res.data;
                 } else {
-                    message.error("Không thể tạo URL thanh toán");
+                    message.error('Không thể tạo URL thanh toán');
                 }
             } catch (err) {
                 console.error(err);
-                message.error("Lỗi khi tạo thanh toán VNPAY");
+                message.error('Lỗi khi tạo thanh toán VNPAY');
             }
         }
     };
@@ -133,17 +153,35 @@ const CheckoutPage = () => {
             <Row gutter={32}>
                 <Col span={14} className="checkout-left">
                     <Title level={4}>Thông tin nhận hàng</Title>
-                    <Input value={name} onChange={e => setName(e.target.value)} placeholder="Họ và tên" className="mb-3" />
-                    <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Số điện thoại" className="mb-3" />
-                    <Input value={address} onChange={e => setAddress(e.target.value)} placeholder="Địa chỉ" className="mb-3" />
+                    <Input
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        placeholder="Họ và tên"
+                        className="mb-3"
+                    />
+                    <Input
+                        value={phone}
+                        onChange={e => setPhone(e.target.value)}
+                        placeholder="Số điện thoại"
+                        className="mb-3"
+                    />
+                    <Input
+                        value={address}
+                        onChange={e => setAddress(e.target.value)}
+                        placeholder="Địa chỉ"
+                        className="mb-3"
+                    />
+
                     <Title level={4}>Thanh toán</Title>
                     <Radio.Group
                         className="payment-methods"
                         value={paymentMethod}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        onChange={e => setPaymentMethod(e.target.value)}
                     >
                         <Radio.Button value="vnpay">Thanh toán qua VNPAY</Radio.Button>
-                        <Radio.Button value="cod">Thanh toán khi giao hàng (COD)</Radio.Button>
+                        <Radio.Button value="cod">
+                            Thanh toán khi giao hàng (COD)
+                        </Radio.Button>
                     </Radio.Group>
                 </Col>
 
@@ -151,7 +189,9 @@ const CheckoutPage = () => {
                     <Card className="order-summary">
                         <Title level={5}>Đơn hàng</Title>
                         {cartItems.length === 0 ? (
-                            <Text type="secondary">Không có sản phẩm trong giỏ hàng</Text>
+                            <Text type="secondary">
+                                Không có sản phẩm trong giỏ hàng
+                            </Text>
                         ) : (
                             <>
                                 {cartItems.map(item => (
@@ -175,7 +215,9 @@ const CheckoutPage = () => {
                                 <Divider />
                                 <div className="summary-total">
                                     <Text strong>Tổng cộng</Text>
-                                    <Text strong className="total-amount">{totalPrice.toLocaleString('vi-VN')}₫</Text>
+                                    <Text strong className="total-amount">
+                                        {totalPrice.toLocaleString('vi-VN')}₫
+                                    </Text>
                                 </div>
                             </>
                         )}
@@ -187,9 +229,13 @@ const CheckoutPage = () => {
                             onClick={handlePlaceOrder}
                             disabled={cartItems.length === 0}
                         >
-                            {paymentMethod === 'cod' ? 'ĐẶT HÀNG' : 'THANH TOÁN VNPAY'}
+                            {paymentMethod === 'cod'
+                                ? 'ĐẶT HÀNG'
+                                : 'THANH TOÁN VNPAY'}
                         </Button>
-                        <Button type="link" block onClick={() => navigate('/')}>← Quay về trang chủ</Button>
+                        <Button type="link" block onClick={() => navigate('/')}>
+                            ← Quay về trang chủ
+                        </Button>
                     </Card>
                 </Col>
             </Row>
