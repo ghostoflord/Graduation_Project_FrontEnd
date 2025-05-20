@@ -234,3 +234,39 @@
     border-radius: 5px;
     z-index: 1;
 }
+
+///
+.product-rating-like {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+
+    .product-rating {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+        .ant-rate {
+            font-size: 12px;
+        }
+    }
+
+    .product-like {
+        display: flex;
+        align-items: center;
+        color: #f5222d;
+        font-size: 12px;
+        cursor: pointer;
+
+        i {
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

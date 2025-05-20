@@ -111,6 +111,8 @@ declare global {
         updatedAt: Date;
         bestsell: string;
         sell: string;
+        averageRating: number; // thêm
+        totalReviews: number;
     }
 
     // product_detail

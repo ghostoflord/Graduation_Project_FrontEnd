@@ -4,6 +4,8 @@ import './product.list.home.scss';
 import { Link, useLocation } from 'react-router-dom';
 import { slugify } from '@/utils/slugify';
 import { PropagateLoader } from 'react-spinners';
+import { Rate } from 'antd';
+import { HeartOutlined } from '@ant-design/icons';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProductTable[]>([]);
@@ -131,6 +133,18 @@ const ProductList = () => {
                                                 </span>
                                             </div>
                                             <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
+                                            <div className="product-rating-like">
+                                                {(product.averageRating ?? 0) > 0 && (
+                                                    <div className="product-rating">
+                                                        <Rate disabled defaultValue={product.averageRating} allowHalf />
+                                                        <span>({product.totalReviews || 0})</span>
+                                                    </div>
+                                                )}
+                                                <div className="product-like">
+                                                    <HeartOutlined style={{ fontSize: 14 }} />
+                                                    <span style={{ marginLeft: 4 }}>Yêu thích</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </Link>
                                 </div>
