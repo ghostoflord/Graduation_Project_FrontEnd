@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { List, Form, Input, Button, message } from 'antd'; // ✅ Import Comment từ Ant Design
 import { getCommentsByProductAPI, postCommentAPI } from '@/services/api';
 // import Comment from 'antd/lib/comment'; // ✅ dùng được với Webpack và Vite
-
+import './comment.section.scss'
 const { TextArea } = Input;
 
 interface CommentProps {

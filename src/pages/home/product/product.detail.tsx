@@ -5,7 +5,7 @@ import { ShoppingCartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/i
 import { message } from 'antd';
 import './product.detail.scss';
 import { useCurrentApp } from '@/components/context/app.context';
-import CommentSection from '@/components/client/comment/comment.section';
+import ProductInfo from '@/components/client/product.info/product.info';
 
 const ProductDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -13,6 +13,7 @@ const ProductDetail = () => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const { setCartSummary } = useCurrentApp();
+
     useEffect(() => {
         const fetchProductDetail = async () => {
             if (!slug) {
@@ -71,10 +72,9 @@ const ProductDetail = () => {
             await addToCartAPI(cartData);
             message.success("Đã thêm vào giỏ hàng!");
 
-            // ✅ Sau khi thêm xong, gọi lại getCart để cập nhật cartSummary trong context
             const res = await getCart(userId);
             if (res?.data) {
-                setCartSummary(res.data); // Cập nhật để Header thấy sự thay đổi
+                setCartSummary(res.data);
             }
 
         } catch (err) {
@@ -82,8 +82,6 @@ const ProductDetail = () => {
             message.error("Thêm vào giỏ hàng thất bại.");
         }
     };
-
-
 
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
@@ -97,6 +95,7 @@ const ProductDetail = () => {
                     onError={(e) => (e.currentTarget.src = '/default-product.jpg')}
                 />
             </div>
+
             <div className="product-info">
                 <h1>{product.name}</h1>
                 <p>Giá: {formatPrice(product.price)}</p>
@@ -118,9 +117,9 @@ const ProductDetail = () => {
                     <ShoppingCartOutlined style={{ marginRight: 8 }} />
                     {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
                 </button>
-
-                <CommentSection productId={product.id} />
-
+            </div>
+            <div className="product-info-wrapper">
+                <ProductInfo productId={product.id} />
             </div>
         </div>
     );

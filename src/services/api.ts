@@ -179,11 +179,11 @@ export const getAllProductDetailsAPI = () => {
     return axios.get<IBackendRes<ProductDetail[]>>("/api/v1/product-details");
 };
 
-export const getProductDetailByIdAPI = (id: number) => {
+export const getProductDetailByIdAPI = (id: string) => {
     return axios.get<IBackendRes<ProductDetail>>(`/api/v1/product-details/${id}`);
 };
 
-export const getProductDetailByProductIdAPI = (productId: number) => {
+export const getProductDetailByProductIdAPI = (productId: string) => {
     return axios.get<IBackendRes<ProductDetail>>(`/api/v1/product-details/by-product/${productId}`);
 };
 
@@ -191,7 +191,7 @@ export const createProductDetailAPI = (data: ProductDetail) => {
     return axios.post<IBackendRes<ProductDetail>>("/api/v1/product-details", data);
 };
 
-export const updateProductDetailAPI = (id: number, data: ProductDetail) => {
+export const updateProductDetailAPI = (id: string, data: ProductDetail) => {
     return axios.put<IBackendRes<ProductDetail>>(`/api/v1/product-details/${id}`, data);
 };
 
