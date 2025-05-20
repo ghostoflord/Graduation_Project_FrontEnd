@@ -43,7 +43,18 @@ const ProductDetail = () => {
     };
 
     const decreaseQty = () => setQuantity((prev) => Math.max(prev - 1, 1));
-    const increaseQty = () => setQuantity((prev) => prev + 1);
+
+    // FIX: Giới hạn số lượng tăng tối đa bằng product.quantity
+    const increaseQty = () => {
+        if (!product) return;
+        setQuantity((prev) => {
+            if (prev >= Number(product.quantity)) {
+                message.warning(`Sản phẩm chỉ còn ${product.quantity} trong kho.`);
+                return prev;
+            }
+            return prev + 1;
+        });
+    };
 
     const handleAddToCart = async () => {
         if (!product) return;
@@ -51,6 +62,12 @@ const ProductDetail = () => {
         const availableQuantity = Number(product.quantity);
         if (isNaN(availableQuantity) || availableQuantity <= 0) {
             message.error("Sản phẩm này đã hết hàng.");
+            return;
+        }
+
+        // FIX: Kiểm tra nếu quantity chọn vượt quá tồn kho
+        if (quantity > availableQuantity) {
+            message.error(`Số lượng bạn chọn vượt quá số lượng tồn kho (${availableQuantity}).`);
             return;
         }
 
@@ -131,7 +148,6 @@ const ProductDetail = () => {
             message.error('Không thể mua ngay');
         }
     };
-
 
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
