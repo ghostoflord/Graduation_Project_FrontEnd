@@ -134,7 +134,6 @@ export default function Header() {
                             </Dropdown>
                         )}
 
-                        {/* ✅ Giỏ hàng dùng Badge */}
                         <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
                             <Button
                                 shape="circle"

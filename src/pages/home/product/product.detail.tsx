@@ -107,6 +107,7 @@ const ProductDetail = () => {
 
             await addToCartAPI(buyItem);
 
+            // Cập nhật giỏ hàng local store nếu có
             useCartStore.getState().addItem({
                 productId: product.id,
                 name: product.name,
@@ -117,12 +118,20 @@ const ProductDetail = () => {
                 detailDescription: product.detailDescription,
             });
 
+            // GỌI API để lấy lại giỏ hàng và cập nhật context => cập nhật Header
+            const res = await getCart(userId);
+            if (res?.data) {
+                setCartSummary(res.data);
+            }
+
+            // Chuyển đến trang thanh toán
             navigate('/thanh-toan');
         } catch (error) {
             console.error(error);
             message.error('Không thể mua ngay');
         }
     };
+
 
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
