@@ -351,5 +351,14 @@ export const getLikedProductsAPI = (userId: number) => {
     return axios.get(`/api/v1/likes/user/${userId}`);
 };
 
+// review 
+export const addOrUpdateReviewAPI = (productId: number, userId: number, rating: number) => {
+    return axios.post('/api/v1/reviews', {
+        productId,
+        userId,
+        rating
+    });
+};
+
 
 

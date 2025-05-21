@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getLikedProductsAPI, getProductsAPI, toggleLikeAPI } from '@/services/api';
+import { addOrUpdateReviewAPI, getLikedProductsAPI, getProductsAPI, toggleLikeAPI } from '@/services/api';
 import './product.list.home.scss';
 import { Link, useLocation } from 'react-router-dom';
 import { slugify } from '@/utils/slugify';
@@ -165,12 +165,32 @@ const ProductList = () => {
                                                 </div>
                                                 <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
                                                 <div className="product-rating-like">
-                                                    <div className="product-rating">
+                                                    <div
+                                                        className="product-rating"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // Ngăn click nổi lên thẻ Link
+                                                            e.preventDefault(); // Ngăn Link chuyển trang
+                                                        }}
+                                                    >
                                                         <Rate
-                                                            disabled
-                                                            defaultValue={product.averageRating && product.averageRating > 0 ? product.averageRating : 5}
                                                             allowHalf
+                                                            defaultValue={product.averageRating && product.averageRating > 0 ? product.averageRating : 5}
+                                                            onChange={async (value) => {
+                                                                if (!userId || isNaN(userId)) {
+                                                                    message.warning('Bạn cần đăng nhập để đánh giá sản phẩm');
+                                                                    return;
+                                                                }
+
+                                                                try {
+                                                                    await addOrUpdateReviewAPI(product.id, userId, value);
+                                                                    message.success(`Bạn đã đánh giá sản phẩm ${value} sao.`);
+                                                                } catch (err) {
+                                                                    console.error(err);
+                                                                    message.error('Đánh giá thất bại');
+                                                                }
+                                                            }}
                                                         />
+
                                                         <span>
                                                             {product.totalReviews && product.totalReviews > 0
                                                                 ? `(${product.totalReviews})`
