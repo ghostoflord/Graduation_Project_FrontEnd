@@ -72,7 +72,6 @@ const ProductList = () => {
             }
         };
 
-
         fetchProducts();
         fetchLikedProducts();
     }, [current, pageSize, search, sort, priceFrom, priceTo, userId]);
@@ -166,12 +165,19 @@ const ProductList = () => {
                                                 </div>
                                                 <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
                                                 <div className="product-rating-like">
-                                                    {(product.averageRating ?? 0) > 0 && (
-                                                        <div className="product-rating">
-                                                            <Rate disabled defaultValue={product.averageRating} allowHalf />
-                                                            <span>({product.totalReviews || 0})</span>
-                                                        </div>
-                                                    )}
+                                                    <div className="product-rating">
+                                                        <Rate
+                                                            disabled
+                                                            defaultValue={product.averageRating && product.averageRating > 0 ? product.averageRating : 5}
+                                                            allowHalf
+                                                        />
+                                                        <span>
+                                                            {product.totalReviews && product.totalReviews > 0
+                                                                ? `(${product.totalReviews})`
+                                                                : '(0)'}
+                                                        </span>
+                                                    </div>
+
                                                     <div
                                                         className="product-like"
                                                         onClick={(e) => {
