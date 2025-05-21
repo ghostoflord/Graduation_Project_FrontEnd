@@ -239,14 +239,14 @@
 .product-rating-like {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 12px; // thêm khoảng cách phù hợp giữa rating và like
     margin-top: 6px;
 
     .product-rating {
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
 
         .ant-rate {
             font-size: 12px;

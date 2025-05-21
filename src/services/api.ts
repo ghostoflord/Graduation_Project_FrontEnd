@@ -340,4 +340,16 @@ export const postCommentAPI = (comment: {
     return axios.post(`/api/v1/comments`, comment);
 };
 
+/// like
+export const toggleLikeAPI = (productId: number, userId: number) => {
+    return axios.post('/api/v1/likes/toggle', null, {
+        params: { productId, userId }
+    });
+};
+
+export const getLikedProductsAPI = (userId: number) => {
+    return axios.get(`/api/v1/likes/user/${userId}`);
+};
+
+
 

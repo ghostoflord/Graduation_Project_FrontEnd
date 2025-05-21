@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
-import { getProductsAPI } from '@/services/api';
+import { getLikedProductsAPI, getProductsAPI, toggleLikeAPI } from '@/services/api';
 import './product.list.home.scss';
 import { Link, useLocation } from 'react-router-dom';
 import { slugify } from '@/utils/slugify';
 import { PropagateLoader } from 'react-spinners';
-import { Rate } from 'antd';
-import { HeartOutlined } from '@ant-design/icons';
+import { Rate, message } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProductTable[]>([]);
+    const [likedProductIds, setLikedProductIds] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState(1);
     const [pageSize] = useState(10);
     const [total, setTotal] = useState(0);
-
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user?.id;
+    console.log('currentUserId', userId);
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const search = query.get('search') || '';
-
-    const sort = query.get('sort'); // 'price_asc', 'price_desc'
+    const sort = query.get('sort');
     const priceFrom = query.get('priceFrom');
     const priceTo = query.get('priceTo');
 
@@ -28,17 +30,16 @@ const ProductList = () => {
             try {
                 let queryParams = `current=${current}&pageSize=${pageSize}`;
                 let filters: string[] = [];
+
                 if (search) {
-                    const filterStr = `name~'${search}'`; // giả sử chỉ filter theo tên
-                    queryParams += `&filter=${encodeURIComponent(filterStr)}`;
+                    filters.push(`name~'${search}'`);
                 }
 
-                if (priceTo) {
-                    filters.push(`price<=${priceTo}`);
-                }
+                if (priceFrom) filters.push(`price>=${priceFrom}`);
+                if (priceTo) filters.push(`price<=${priceTo}`);
 
                 if (filters.length > 0) {
-                    const filterStr = filters.join(';'); // AND conditions
+                    const filterStr = filters.join(';');
                     queryParams += `&filter=${encodeURIComponent(filterStr)}`;
                 }
 
@@ -47,25 +48,54 @@ const ProductList = () => {
                 } else if (sort === 'price_desc') {
                     queryParams += `&sort=price,desc`;
                 }
-                const response = await getProductsAPI(queryParams);
-                const productList = response.data?.result ?? [];
-                const totalProducts = response.data?.meta?.total || 0;
 
-                setTimeout(() => {
-                    setProducts(productList);
-                    setTotal(totalProducts);
-                    setLoading(false);
-                }, 500); // giảm delay lại hợp lý hơn
+                const response = await getProductsAPI(queryParams);
+                setProducts(response.data?.result ?? []);
+                setTotal(response.data?.meta?.total || 0);
             } catch (error) {
                 console.error('Lỗi khi lấy sản phẩm:', error);
                 setProducts([]);
                 setTotal(0);
+            } finally {
                 setLoading(false);
             }
         };
 
+        const fetchLikedProducts = async () => {
+            try {
+                if (!userId) return;
+                const res = await getLikedProductsAPI(userId);
+                const likedIds = res.data.map((like: any) => like.productId);
+                setLikedProductIds(likedIds);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách yêu thích:', error);
+            }
+        };
+
+
         fetchProducts();
-    }, [current, pageSize, search, sort, priceFrom, priceTo]);
+        fetchLikedProducts();
+    }, [current, pageSize, search, sort, priceFrom, priceTo, userId]);
+
+    const handleToggleLike = async (productId: number,) => {
+        if (!userId || isNaN(userId) || userId <= 0) {
+            message.warning('Bạn cần đăng nhập để yêu thích sản phẩm');
+            return;
+        }
+
+        try {
+            const res = await toggleLikeAPI(productId, userId);
+            const { liked } = res.data;
+
+            message.success(liked ? 'Đã thêm vào yêu thích' : 'Đã bỏ khỏi yêu thích');
+
+            setLikedProductIds((prev) =>
+                liked ? [...prev, productId] : prev.filter((id) => id !== productId)
+            );
+        } catch (error) {
+            message.error('Lỗi khi xử lý yêu thích');
+        }
+    };
 
     const formatPrice = (price: any) => {
         if (!price) return 'Đang cập nhật';
@@ -109,50 +139,62 @@ const ProductList = () => {
                             </div>
                         )}
                         <div className={`product-list ${loading ? 'loading' : ''}`}>
-                            {products.map((product) => (
-                                <div className="product-card" key={product.id}>
-                                    <Link to={`/product/${slugify(product.name)}-${product.id}`}>
-                                        {renderBestsellBadge(product.bestsell)}
-                                        {renderSellBadge(product.sell)}
-                                        <div className="product-image">
-                                            <img
-                                                src={
-                                                    product.image
-                                                        ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
-                                                        : '/default-product.jpg'
-                                                }
-                                                alt={product.name}
-                                            />
-                                        </div>
-                                        <div className="product-info">
-                                            <div className="product-name">{product.name}</div>
-                                            <div className="product-price">
-                                                <span className="price-current">{formatPrice(product.price)}</span>
-                                                <span className="price-old">
-                                                    {product.priceOld ? formatPrice(product.priceOld) : ''}
-                                                </span>
+                            {products.map((product) => {
+                                const isLiked = likedProductIds.includes(product.id);
+                                return (
+                                    <div className="product-card" key={product.id}>
+                                        <Link to={`/product/${slugify(product.name)}-${product.id}`}>
+                                            {renderBestsellBadge(product.bestsell)}
+                                            {renderSellBadge(product.sell)}
+                                            <div className="product-image">
+                                                <img
+                                                    src={
+                                                        product.image
+                                                            ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
+                                                            : '/default-product.jpg'
+                                                    }
+                                                    alt={product.name}
+                                                />
                                             </div>
-                                            <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
-                                            <div className="product-rating-like">
-                                                {(product.averageRating ?? 0) > 0 && (
-                                                    <div className="product-rating">
-                                                        <Rate disabled defaultValue={product.averageRating} allowHalf />
-                                                        <span>({product.totalReviews || 0})</span>
+                                            <div className="product-info">
+                                                <div className="product-name">{product.name}</div>
+                                                <div className="product-price">
+                                                    <span className="price-current">{formatPrice(product.price)}</span>
+                                                    <span className="price-old">
+                                                        {product.priceOld ? formatPrice(product.priceOld) : ''}
+                                                    </span>
+                                                </div>
+                                                <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
+                                                <div className="product-rating-like">
+                                                    {(product.averageRating ?? 0) > 0 && (
+                                                        <div className="product-rating">
+                                                            <Rate disabled defaultValue={product.averageRating} allowHalf />
+                                                            <span>({product.totalReviews || 0})</span>
+                                                        </div>
+                                                    )}
+                                                    <div
+                                                        className="product-like"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            handleToggleLike(product.id,);
+                                                        }}
+                                                    >
+                                                        {isLiked ? (
+                                                            <HeartFilled style={{ fontSize: 14, color: 'red' }} />
+                                                        ) : (
+                                                            <HeartOutlined style={{ fontSize: 14, color: 'gray' }} />
+                                                        )}
+                                                        <span style={{ marginLeft: 4 }}>Yêu thích</span>
                                                     </div>
-                                                )}
-                                                <div className="product-like">
-                                                    <HeartOutlined style={{ fontSize: 14 }} />
-                                                    <span style={{ marginLeft: 4 }}>Yêu thích</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                            ))}
+                                        </Link>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 
-                    {/* Pagination Controls */}
                     <div className="pagination">
                         <button onClick={() => setCurrent((prev) => Math.max(prev - 1, 1))} disabled={current === 1}>
                             Trang trước
