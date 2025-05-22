@@ -8,6 +8,7 @@ import {
     placeOrderAPI,
     createVNPayURL
 } from '@/services/api';
+import { useCurrentApp } from '@/components/context/app.context';
 
 const { Title, Text } = Typography;
 
@@ -46,6 +47,7 @@ const CheckoutPage = () => {
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<string>('cod');
     const navigate = useNavigate();
+    const { setCartSummary } = useCurrentApp();
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -104,6 +106,7 @@ const CheckoutPage = () => {
                 if (res?.statusCode === 201) {
                     await checkoutOrder(itemsToCheckout);
                     message.success('Đặt hàng thành công!');
+                    setCartSummary({ sum: 0 }); // Cập nhật cart ở Header
                     setTimeout(() => navigate('/'), 1000);
                 } else {
                     message.error(res?.message || 'Đặt hàng thất bại');
