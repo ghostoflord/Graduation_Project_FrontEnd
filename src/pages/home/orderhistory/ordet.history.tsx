@@ -11,6 +11,7 @@ interface OrderSummary {
     createdAt: string;
     receiverName: string;
     receiverPhone: string;
+    totalQuantity: number;
 }
 
 const OrderHistory = () => {
@@ -98,8 +99,8 @@ const OrderHistory = () => {
         },
         {
             title: 'Tổng Sản Phẩm',
-            dataIndex: 'totalPrice',
-            render: (totalPrice: number) => `${totalPrice.toLocaleString()}`,
+            dataIndex: 'totalQuantity',
+            render: (totalQuantity: number) => `${totalQuantity.toLocaleString()}`,
         },
         {
             title: 'Ngày tạo',

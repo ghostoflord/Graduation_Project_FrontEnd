@@ -212,6 +212,16 @@ declare global {
         items: itemsToCheckout,
     }
 
+    interface IOrderTable {
+        id: number;
+        receiverName: string;
+        receiverPhone: string;
+        status: string;
+        createdAt: string;
+        totalPrice: number;
+        totalQuantity: number; // thêm dòng này
+    }
+
     // now not user
     interface IHistory {
         _id: string;
@@ -231,8 +241,8 @@ declare global {
         updatedAt: Date;
     }
 
-    interface IOrderTable extends IHistory {
+    // interface IOrderTable extends IHistory {
 
-    }
+    // }
 
 }
