@@ -1,19 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-    Card,
-    Col,
-    Row,
-    Typography,
-    Space,
-    Button,
-    message
-} from "antd";
-import {
-    UserOutlined,
-    LogoutOutlined,
-    LockOutlined,
-    EnvironmentOutlined
-} from "@ant-design/icons";
+import { Card, Col, Row, Typography, Space, Button, message } from "antd";
+import { UserOutlined, LogoutOutlined, LockOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import "./account.page.scss";
 import { getAccountInfoAPI, logoutAPI } from "@/services/api";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +27,7 @@ const AccountPage = () => {
         const fetchAccountInfo = async () => {
             try {
                 const res = await getAccountInfoAPI();
-                setUserData(res.data); // res.data là object user
+                setUserData(res.data);
             } catch (error) {
                 console.error("Lỗi khi gọi API tài khoản:", error);
                 message.error("Đã xảy ra lỗi khi tải thông tin tài khoản.");
@@ -55,8 +42,6 @@ const AccountPage = () => {
     const handleLogout = async () => {
         try {
             await logoutAPI();
-
-            // Xoá localStorage và reset context
             localStorage.removeItem("access_token");
             localStorage.removeItem("user");
             localStorage.removeItem("carts");
@@ -68,10 +53,8 @@ const AccountPage = () => {
 
             message.success("Đăng xuất thành công!");
 
-            // Tạo cảm giác chuyên nghiệp bằng cách delay chuyển trang
             setTimeout(() => {
                 navigate("/");
-                // hoặc: window.location.href = "/";
             }, 500);
         } catch (err) {
             console.error("Logout failed:", err);
@@ -146,9 +129,7 @@ const AccountPage = () => {
                     setIsAuthenticated(false);
                     setCarts([]);
                     setCartSummary({ sum: 0 });
-
                     message.success("Vui lòng đăng nhập lại.");
-
                     setTimeout(() => {
                         navigate("/login");
                     }, 800);

@@ -16,7 +16,6 @@ const TableProductMobile = () => {
     const [dataViewDetail, setDataViewDetail] = useState<IProductTable | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Pagination
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(5);
     const [total, setTotal] = useState(0);
@@ -139,7 +138,6 @@ const TableProductMobile = () => {
                     )}
                 />
 
-                {/* Pagination Controls */}
                 <div style={{ textAlign: 'center', marginTop: 16 }}>
                     <Pagination
                         current={currentPage}
@@ -152,14 +150,12 @@ const TableProductMobile = () => {
                 </div>
             </div>
 
-            {/* Modal thêm mới */}
             <CreateProduct
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={() => fetchProducts(currentPage)}
             />
 
-            {/* Modal cập nhật */}
             <UpdateProduct
                 openModalUpdate={openModalUpdate}
                 setOpenModalUpdate={setOpenModalUpdate}
@@ -168,7 +164,6 @@ const TableProductMobile = () => {
                 setDataUpdate={setDataUpdate}
             />
 
-            {/* Modal xem chi tiết */}
             <DetailProduct
                 openViewDetail={openViewDetail}
                 setOpenViewDetail={setOpenViewDetail}

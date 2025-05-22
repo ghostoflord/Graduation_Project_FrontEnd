@@ -1,15 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    App,
-    Divider,
-    Form,
-    Input,
-    Modal,
-    Select,
-    Upload,
-    Button,
-    Image
-} from 'antd';
+import { App, Divider, Form, Input, Modal, Select, Upload, Button, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { updateUserAPI, uploadFileAPI } from '@/services/api';
@@ -238,5 +228,4 @@ const UpdateUser = (props: IProps) => {
         </Modal>
     );
 };
-
 export default UpdateUser;

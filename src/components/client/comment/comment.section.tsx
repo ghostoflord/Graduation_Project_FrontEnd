@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { List, Form, Input, Button, message } from 'antd'; // ✅ Import Comment từ Ant Design
+import { List, Form, Input, Button, message } from 'antd';
 import { getCommentsByProductAPI, postCommentAPI } from '@/services/api';
-// import Comment from 'antd/lib/comment'; // ✅ dùng được với Webpack và Vite
 import './comment.section.scss'
 const { TextArea } = Input;
 
@@ -29,9 +28,7 @@ const CommentSection = ({ productId }: CommentProps) => {
     const fetchComments = async () => {
         try {
             const res = await getCommentsByProductAPI(productId);
-            console.log('Kết quả từ API:', res);
             if (res?.data) {
-                console.log('Danh sách bình luận:', res.data);
                 setComments(res.data.reverse());
             }
         } catch (error) {
@@ -109,5 +106,4 @@ const CommentSection = ({ productId }: CommentProps) => {
         </div >
     );
 };
-
 export default CommentSection;

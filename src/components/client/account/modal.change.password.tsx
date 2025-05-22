@@ -6,7 +6,7 @@ import { sendRequest } from "@/services/api";
 interface ModalChangePasswordProps {
     isModalOpen: boolean;
     setIsModalOpen: (open: boolean) => void;
-    onSuccess?: () => void; // 👈 Thêm callback
+    onSuccess?: () => void;
 }
 
 const ModalChangePassword = (props: ModalChangePasswordProps) => {
@@ -63,11 +63,10 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
 
             setCurrent(2);
 
-            // Gọi callback để chuyển trang và xóa dữ liệu
             if (onSuccess) {
                 setTimeout(() => {
                     onSuccess();
-                }, 1000); // Cho phép user thấy màn hình "Hoàn thành"
+                }, 1000);
             }
 
         } else {
@@ -149,5 +148,4 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
         </Modal>
     );
 };
-
 export default ModalChangePassword;

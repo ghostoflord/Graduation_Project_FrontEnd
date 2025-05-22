@@ -16,11 +16,9 @@ const Oauth2Redirect = () => {
             try {
                 const user = JSON.parse(decodeURIComponent(userStr));
 
-                // Lưu vào localStorage
                 localStorage.setItem("access_token", accessToken);
                 localStorage.setItem("user", JSON.stringify(user));
 
-                // Cập nhật context
                 setIsAuthenticated(true);
                 setUser(user);
 
@@ -36,5 +34,4 @@ const Oauth2Redirect = () => {
 
     return <div>Đang đăng nhập...</div>;
 };
-
 export default Oauth2Redirect;

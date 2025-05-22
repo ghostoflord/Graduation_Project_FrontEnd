@@ -8,7 +8,6 @@ const AdminPage = () => {
                 <LayoutAdmin />
             </div>
         </>
-
     )
 }
 export default AdminPage;

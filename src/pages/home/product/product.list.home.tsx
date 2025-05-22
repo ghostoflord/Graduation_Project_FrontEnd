@@ -168,8 +168,8 @@ const ProductList = () => {
                                                     <div
                                                         className="product-rating"
                                                         onClick={(e) => {
-                                                            e.stopPropagation(); // Ngăn click nổi lên thẻ Link
-                                                            e.preventDefault(); // Ngăn Link chuyển trang
+                                                            e.stopPropagation(); 
+                                                            e.preventDefault(); 
                                                         }}
                                                     >
                                                         <Rate

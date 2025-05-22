@@ -1,7 +1,6 @@
-import React from 'react';
 import './privacy.policy.scss';
 
-const PrivacyPolicy: React.FC = () => {
+const PrivacyPolicy = () => {
     return (
         <div className="privacy-policy">
             <h1>CHÍNH SÁCH BẢO VỆ THÔNG TIN CÁ NHÂN CỦA NGƯỜI TIÊU DÙNG</h1>

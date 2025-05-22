@@ -1,5 +1,4 @@
-import React from "react";
-import "./core.values.scss"; // nhớ import SCSS
+import "./core.values.scss";
 type CoreValue = {
     title: string;
     content: string[];

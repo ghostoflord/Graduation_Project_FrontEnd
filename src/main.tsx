@@ -1,9 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './styles/global.scss';
 import { ConfigProvider, App as AntdApp } from 'antd';
 
@@ -154,7 +151,7 @@ const router = createBrowserRouter([
         element: <OrderPage />,
       },
       {
-        path: "*", // Cần có để bắt tất cả path con không đúng trong /admin
+        path: "*",
         element: <ErrorPage />,
       }
     ],
@@ -186,7 +183,7 @@ const router = createBrowserRouter([
     element: <OrderFail />
   },
   {
-    path: "*", // Catch-all cho route ngoài admin
+    path: "*",
     element: <ErrorPage />,
   },
 ]);

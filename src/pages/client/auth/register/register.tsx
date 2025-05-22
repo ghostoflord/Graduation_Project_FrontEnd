@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import './register.scss';
 import { registerAPI } from '@/services/api';
 
-
 type FieldType = {
     name: string;
     email: string;
@@ -25,13 +24,11 @@ const RegisterPage = () => {
 
         const res = await registerAPI(name, email, password, address, age);
         if (res.data) {
-            //success
             message.success("Đăng ký user thành công. Vui lòng kiểm tra email để xác thực!")
             setTimeout(() => {
                 navigate("/login");
             }, 1200);
         } else {
-            //error
             message.error(res.message)
         }
         setIsSubmit(false);
@@ -52,7 +49,7 @@ const RegisterPage = () => {
                             autoComplete="off"
                         >
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }} //whole column
+                                labelCol={{ span: 24 }}
                                 label="Họ tên"
                                 name="name"
                                 rules={[{ required: true, message: 'Họ tên không được để trống!' }]}
@@ -62,7 +59,7 @@ const RegisterPage = () => {
 
 
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }} //whole column
+                                labelCol={{ span: 24 }}
                                 label="Email"
                                 name="email"
                                 rules={[
@@ -74,7 +71,7 @@ const RegisterPage = () => {
                             </Form.Item>
 
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }} //whole column
+                                labelCol={{ span: 24 }}
                                 label="Mật khẩu"
                                 name="password"
                                 rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
@@ -82,7 +79,7 @@ const RegisterPage = () => {
                                 <Input.Password />
                             </Form.Item>
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }} //whole column
+                                labelCol={{ span: 24 }}
                                 label="Địa chỉ"
                                 name="address"
                                 rules={[{ required: true, message: 'Địa chỉ không được để trống!' }]}
@@ -91,7 +88,7 @@ const RegisterPage = () => {
                             </Form.Item>
 
                             <Form.Item<FieldType>
-                                labelCol={{ span: 24 }} //whole column
+                                labelCol={{ span: 24 }}
                                 label="Tuổi"
                                 name="age"
                                 rules={[{ required: true, message: 'Tuổi không được để trống!' }]}
@@ -118,5 +115,4 @@ const RegisterPage = () => {
         </div>
     )
 }
-
 export default RegisterPage;

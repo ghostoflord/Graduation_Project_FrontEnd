@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-    App,
-    Button,
-    Divider,
-    Form,
-    Input,
-    Modal
-} from "antd";
+import { App, Divider, Form, Input, Modal } from "antd";
 import type { FormProps } from "antd";
 import { updateProductDetailAPI } from "@/services/api";
-import type { ProductDetail } from "@/types/global"; // Đường dẫn import có thể cần điều chỉnh theo dự án của bạn
 
 interface IProps {
     openModalUpdate: boolean;

@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './checkout.page.scss';
-import {
-    Input,
-    Button,
-    Radio,
-    Row,
-    Col,
-    Typography,
-    Card,
-    Divider,
-    message
-} from 'antd';
+import { Input, Button, Radio, Row, Col, Typography, Card, Divider, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import {
     checkoutOrder,
@@ -106,13 +96,7 @@ const CheckoutPage = () => {
             quantity: item.quantity
         }));
 
-        const orderPayload = {
-            userId,
-            name,
-            address,
-            phone,
-            items: itemsToCheckout
-        };
+        const orderPayload = { userId, name, address, phone, items: itemsToCheckout };
 
         if (paymentMethod === 'cod') {
             try {

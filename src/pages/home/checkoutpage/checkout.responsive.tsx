@@ -7,11 +7,11 @@ const CheckoutResponsive = () => {
     const [isMobile, setIsMobile] = useState(false);
 
     const handleResize = () => {
-        setIsMobile(window.innerWidth < 1000); // Ngưỡng có thể điều chỉnh
+        setIsMobile(window.innerWidth < 1000);
     };
 
     useEffect(() => {
-        handleResize(); // gọi khi load lần đầu
+        handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);

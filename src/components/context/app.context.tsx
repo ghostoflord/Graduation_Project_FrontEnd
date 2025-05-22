@@ -11,7 +11,6 @@ interface IAppContext {
     setIsAppLoading: (v: boolean) => void;
     carts: ICart[];
     setCarts: (v: ICart[]) => void;
-
     cartSummary: { sum: number } | null;
     setCartSummary: (v: { sum: number } | null) => void;
 }

@@ -1,4 +1,3 @@
-import React from "react";
 import "./return.policy.scss";
 
 const ReturnPolicy = () => {

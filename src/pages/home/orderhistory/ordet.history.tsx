@@ -17,7 +17,6 @@ const OrderHistory = () => {
     const [orders, setOrders] = useState<OrderSummary[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    // view orderId 
     const [selectedOrder, setSelectedOrder] = useState<OrderHistory | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -25,8 +24,8 @@ const OrderHistory = () => {
         setLoading(true);
         try {
             const data = await fetchMyOrders();
-            console.log(data);  // Kiểm tra dữ liệu trả về
-            setOrders(data);  // Gán vào state
+            console.log(data);
+            setOrders(data);
         } catch (err) {
             message.error('Không thể tải danh sách đơn hàng');
         } finally {
@@ -38,7 +37,7 @@ const OrderHistory = () => {
         try {
             await axios.post(`/api/v1/orders/${orderId}/cancel`);
             message.success('Đơn hàng đã được hủy');
-            fetchOrders(); // cập nhật lại danh sách
+            fetchOrders();
         } catch (err: any) {
             if (err.response?.data?.message) {
                 message.error(err.response.data.message);

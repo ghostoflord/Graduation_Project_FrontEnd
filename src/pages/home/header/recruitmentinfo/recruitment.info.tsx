@@ -1,4 +1,3 @@
-import React from "react";
 import "./recruitment.info.scss";
 
 const RecruitmentInfo = () => {

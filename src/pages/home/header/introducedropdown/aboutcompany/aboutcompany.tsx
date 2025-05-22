@@ -1,5 +1,4 @@
-import React from "react";
-import "./about.company.scss"; // nhớ import file SCSS
+import "./about.company.scss";
 
 type AboutSection = {
     title: string;

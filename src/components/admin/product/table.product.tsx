@@ -44,9 +44,7 @@ const TableProduct = () => {
         setIsDeleteProduct(true)
         try {
             const res = await deleteProductAPI(id);
-            console.log("API response: ", res.data);
-            // Kiểm tra status code hoặc flag success từ API
-            if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
+            if (res && res.statusCode === 200) {
                 message.success(res.message || 'Xóa user thành công');
                 refreshTable();
             } else {
@@ -118,7 +116,7 @@ const TableProduct = () => {
             dataIndex: 'image',
             render: (_, entity) => {
                 const avatarUrl = entity.image?.startsWith('http')
-                    ? entity.image // nếu đã là full URL thì dùng luôn
+                    ? entity.image
                     : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${entity.image}`;
                 return avatarUrl ? (
                     <img
@@ -153,7 +151,6 @@ const TableProduct = () => {
                                 setDataUpdate(entity);
                             }}
                         />
-
                         <Popconfirm
                             placement="leftTop"
                             title={"Xác nhận xóa book"}
@@ -167,10 +164,7 @@ const TableProduct = () => {
                                 <DeleteTwoTone twoToneColor="#ff4d4f" />
                             </span>
                         </Popconfirm>
-
-
                     </>
-
                 )
             }
         }
@@ -194,7 +188,6 @@ const TableProduct = () => {
                         }
                     }
 
-
                     if (sort && sort.name) {
                         query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
                     }
@@ -213,7 +206,6 @@ const TableProduct = () => {
                         success: true,
                         total: res.data?.meta.total
                     }
-
                 }}
                 rowKey="_id"
                 pagination={
@@ -225,7 +217,6 @@ const TableProduct = () => {
                         showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
                     }
                 }
-
                 headerTitle="Table Product"
                 toolBarRender={() => [
                     <CSVLink
@@ -238,9 +229,7 @@ const TableProduct = () => {
                         >
                             Export
                         </Button>
-                    </CSVLink >
-                    ,
-
+                    </CSVLink >,
                     <Button
                         key="button"
                         icon={<PlusOutlined />}
@@ -254,12 +243,12 @@ const TableProduct = () => {
                 ]}
             />
 
-
             <CreateProduct
                 openModalCreate={openModalCreate}
                 setOpenModalCreate={setOpenModalCreate}
                 refreshTable={refreshTable}
             />
+
             <UpdateProduct
                 openModalUpdate={openModalUpdate}
                 setOpenModalUpdate={setOpenModalUpdate}
@@ -274,11 +263,7 @@ const TableProduct = () => {
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
             />
-
-
         </>
     )
 }
-
-
 export default TableProduct;

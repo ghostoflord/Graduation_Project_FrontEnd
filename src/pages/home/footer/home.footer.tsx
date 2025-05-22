@@ -1,10 +1,4 @@
-import {
-    FacebookOutlined,
-    YoutubeOutlined,
-    TikTokOutlined,
-    InstagramOutlined,
-    ShoppingCartOutlined,
-} from '@ant-design/icons';
+import { FacebookOutlined, YoutubeOutlined, TikTokOutlined, InstagramOutlined, ShoppingCartOutlined, } from '@ant-design/icons';
 import "./home.footer.scss";
 import logo from '@/assets/logo.png';
 import { Link } from 'react-router-dom';

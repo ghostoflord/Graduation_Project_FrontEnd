@@ -3,7 +3,7 @@
     grid-template-columns: repeat(5, 1fr);
     gap: 24px;
     padding: 20px;
-    min-height: 300px; //  thêm dòng này
+    min-height: 300px;
 }
 
 .product-card {
@@ -103,7 +103,7 @@
     color: #999;
 }
 
-// rep
+
 @media (max-width: 1200px) {
     .product-list {
         grid-template-columns: repeat(4, 1fr);
@@ -128,7 +128,6 @@
     }
 }
 
-// pagination
 .pagination {
     display: flex;
     justify-content: center;
@@ -158,7 +157,7 @@
     }
 }
 
-// 
+
 .product-list-wrapper {
     position: relative;
 }
@@ -181,10 +180,10 @@
     pointer-events: none;
 }
 
-//
+
 .product-image {
     width: 100%;
-    aspect-ratio: 1 / 1; // giữ khung hình vuông linh hoạt theo chiều ngang
+    aspect-ratio: 1 / 1;
     background: #f7f7f7;
     display: flex;
     align-items: center;
@@ -194,7 +193,7 @@
     img {
         width: 100%;
         height: 100%;
-        object-fit: contain; // giữ tỉ lệ, không méo hình
+        object-fit: contain;
         display: block;
     }
 }
@@ -235,11 +234,10 @@
     z-index: 1;
 }
 
-///
 .product-rating-like {
     display: flex;
     align-items: center;
-    gap: 12px; // thêm khoảng cách phù hợp giữa rating và like
+    gap: 12px;
     margin-top: 6px;
 
     .product-rating {

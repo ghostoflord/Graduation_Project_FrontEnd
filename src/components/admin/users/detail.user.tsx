@@ -1,5 +1,3 @@
-
-
 import { FORMATE_DATE_VN } from "@/services/helper";
 import { Avatar, Badge, Descriptions, Drawer } from "antd";
 import dayjs from 'dayjs';
@@ -48,7 +46,7 @@ const DetailUser = (props: IProps) => {
                             size={40}
                             src={avatarURL}
                             alt="avatar"
-                            onError={() => false} // để avatar hiện fallback mặc định của Ant
+                            onError={() => false}
                         />
                     </Descriptions.Item>
                     <Descriptions.Item label="Created At">

@@ -1,16 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    App,
-    Button,
-    Divider,
-    Form,
-    Image,
-    Input,
-    InputNumber,
-    Modal,
-    Select,
-    Upload
-} from "antd";
+import { App, Button, Divider, Form, Image, Input, InputNumber, Modal, Select, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { RcFile, UploadFile } from "antd/es/upload/interface";
 import type { FormProps } from "antd";
@@ -57,7 +46,6 @@ const UpdateProduct = ({
 
     const normFile = (e: any) => Array.isArray(e) ? e : e?.fileList;
 
-    // Đọc file thành base64
     const getBase64 = (file: RcFile): Promise<string> =>
         new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -73,14 +61,12 @@ const UpdateProduct = ({
         setPreviewImage(file.url || (file.preview as string) || "");
     };
 
-    // Thay vì upload file lên server, ta chỉ đọc base64 và lưu state
     const handleUploadImage = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options;
         try {
             const base64 = await getBase64(file as RcFile);
             setImageBase64(base64);
 
-            // Tạo fake UploadFile để hiển thị preview
             const uploadedFile: UploadFile = {
                 uid: (file as RcFile).uid,
                 name: (file as RcFile).name,
@@ -101,7 +87,6 @@ const UpdateProduct = ({
         if (dataUpdate) {
             form.setFieldsValue({ ...dataUpdate });
             if (dataUpdate.image) {
-                // Ảnh cũ thì lấy url backend
                 const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/products/${dataUpdate.image}`;
                 const file: UploadFile = {
                     uid: "-1",
@@ -113,8 +98,6 @@ const UpdateProduct = ({
                 setImageFile(file);
                 setPreviewImage(imageUrl);
                 form.setFieldsValue({ image: [file] });
-
-                // Ảnh cũ, chưa đổi, nên imageBase64 rỗng
                 setImageBase64("");
             } else {
                 form.setFieldsValue({ image: [] });
@@ -151,8 +134,6 @@ const UpdateProduct = ({
         } = values;
 
         setIsSubmit(true);
-
-        // Gửi base64 ảnh nếu có, hoặc chuỗi rỗng nếu không đổi ảnh
         const imageToSend = imageBase64;
 
         const res = await updateProductAPI(
@@ -280,7 +261,6 @@ const UpdateProduct = ({
                         <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
                     </Upload>
                 </Form.Item>
-
                 {previewImage && (
                     <Image
                         width={100}
@@ -293,5 +273,4 @@ const UpdateProduct = ({
         </Modal>
     );
 };
-
 export default UpdateProduct;

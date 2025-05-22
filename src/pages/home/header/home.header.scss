@@ -118,7 +118,6 @@
     }
   }
 
-  // Responsive
   @media (max-width: 999px) {
     .header-top {
       flex-wrap: wrap;
@@ -218,13 +217,11 @@
     text-align: center;
     z-index: 1;
 
-    // Thêm max-width hoặc xử lý số lớn
     max-width: 40px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    // Ẩn khi dưới 1000px
     @media (max-width: 999px) {
       display: none;
     }
@@ -247,7 +244,7 @@
       left: 0;
       background: #fff;
       color: #000;
-      width: 220px; //  Co lại chiều ngang
+      width: 220px; 
       display: none;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       border-radius: 4px;
@@ -256,7 +253,7 @@
       ul {
         list-style: none;
         margin: 0;
-        padding: 6px 0; //  Co padding top-bottom
+        padding: 6px 0;
 
         display: flex;
         flex-direction: column;
@@ -267,8 +264,8 @@
           a {
             display: flex;
             align-items: center;
-            padding: 8px 16px; //  Ít padding hơn
-            font-size: 13px; //  Nhỏ hơn một chút
+            padding: 8px 16px; 
+            font-size: 13px; 
             line-height: 1.4;
             gap: 6px;
             color: #333;

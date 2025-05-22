@@ -5,7 +5,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 const PaymentReturn = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const hasSentRef = useRef(false); // Dùng useRef để giữ trạng thái qua các lần render
+    const hasSentRef = useRef(false);
 
     useEffect(() => {
         const vnp_ResponseCode = searchParams.get('vnp_ResponseCode');
@@ -22,7 +22,7 @@ const PaymentReturn = () => {
         }
 
         const sendPaymentResult = async () => {
-            if (hasSentRef.current) return; // Tránh gửi request lần 2
+            if (hasSentRef.current) return;
             hasSentRef.current = true;
 
             try {

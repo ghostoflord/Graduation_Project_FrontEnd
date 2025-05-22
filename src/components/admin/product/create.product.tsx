@@ -57,7 +57,6 @@ const CreateProduct = (props: IProps) => {
     const handleUploadImage = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options;
         try {
-            // Upload product image to backend and get file name
             const res = await uploadFileAPI(file as File, "products");
 
             if (res && res.data) {
@@ -86,10 +85,8 @@ const CreateProduct = (props: IProps) => {
     };
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        console.log('🎯 Form values:', values);
         setIsSubmit(true);
         const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity, bestsell, sell, sold } = values;
-        // Lấy base64 từ avatar file
         const imageUrl = imageFile
             ? await getBase64(imageFile.originFileObj as RcFile)
             : '';
@@ -99,7 +96,7 @@ const CreateProduct = (props: IProps) => {
                 productCode,
                 detailDescription,
                 guarantee,
-                imageUrl,         // ảnh đúng vị trí
+                imageUrl,
                 factory,
                 price,
                 sold,
@@ -262,9 +259,6 @@ const CreateProduct = (props: IProps) => {
                         step={1}
                         precision={0}
                         style={{ width: '100%' }}
-                    // formatter={(value) => `${value}%`}
-                    // parser={(value) => value?.replace(/[^\d]/g, '') || ''}
-                    // addonAfter="%"
                     />
                 </Form.Item>
                 <Form.Item

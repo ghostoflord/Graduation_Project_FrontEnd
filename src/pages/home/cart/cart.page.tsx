@@ -1,19 +1,9 @@
-import {
-    Card,
-    Button,
-    InputNumber,
-    List,
-    Typography,
-    Row,
-    Col,
-    message,
-    Empty,
-} from 'antd';
+import { Card, Button, InputNumber, List, Typography, Row, Col, message, Empty, } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { clearCartAPI, getCart, removeCartItemAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
-import { useCurrentApp } from '@/components/context/app.context'; // import context
+import { useCurrentApp } from '@/components/context/app.context';
 
 const { Title, Text } = Typography;
 
@@ -27,7 +17,6 @@ interface CartItem {
     shortDescription: string;
 }
 
-// Hàm gộp các sản phẩm trùng nhau (cùng productId)
 const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
     const map = new Map<number, CartItem>();
     items.forEach(item => {
@@ -85,7 +74,6 @@ const CartPage = () => {
         setTotalQuantity(totalQty);
         setTotalPrice(items.reduce((sum, item) => sum + item.price * item.quantity, 0));
 
-        // Đồng bộ lên Context cartSummary luôn
         setCartSummary(prev => ({
             ...prev,
             sum: totalQty,

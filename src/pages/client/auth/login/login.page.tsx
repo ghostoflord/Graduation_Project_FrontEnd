@@ -7,11 +7,11 @@ import { useCurrentApp } from '@/components/context/app.context';
 import { loginAPI, resendVerificationAPI } from '@/services/api';
 import ModalChangePassword from '../../../../components/client/account/modal.change.password';
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons';
+
 type FieldType = {
     username: string;
     password: string;
 };
-
 const LoginPage = () => {
     const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
@@ -24,12 +24,8 @@ const LoginPage = () => {
 
         try {
             const res = await loginAPI(username, password);
-            console.log('Response from login API:', res); // Log to check response
             if (res?.data) {
                 const user = res.data.user;
-                console.log('User info: ', user);  // Log to check user data
-
-                // Kiểm tra email có tồn tại hay không
                 if (!user.email) {
                     notification.warning({
                         message: 'Không có email từ GitHub',
@@ -39,7 +35,6 @@ const LoginPage = () => {
                     return;
                 }
 
-                // Kiểm tra active
                 if (!user.active) {
                     notification.warning({
                         message: 'Tài khoản chưa được xác thực, vui lòng xác thực tài khoản',
@@ -50,7 +45,7 @@ const LoginPage = () => {
                                     type="link"
                                     onClick={async () => {
                                         try {
-                                            console.log('Email cần gửi lại mã xác thực:', user.email); // 👉 Thêm dòng này
+                                            console.log('Email cần gửi lại mã xác thực:', user.email);
                                             await resendVerificationAPI(user.email);
                                             notification.success({
                                                 message: 'Gửi lại thành công',
@@ -73,8 +68,6 @@ const LoginPage = () => {
                     setIsSubmit(false);
                     return;
                 }
-
-                // Lưu user vào context và localStorage
                 setIsAuthenticated(true);
                 setUser(user);
                 localStorage.setItem('access_token', res.data.access_token);
@@ -135,51 +128,6 @@ const LoginPage = () => {
                                     <Input.Password />
                                 </Form.Item>
 
-                                {/* <Form.Item>
-                                    <div style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center"
-                                    }}>
-                                        <Button type="primary" htmlType="submit" loading={isSubmit}>
-                                            Đăng Nhập
-                                        </Button> */}
-                                {/* <Button
-                                            onClick={() =>
-                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
-                                            }
-                                        >
-                                            Đăng nhập với GitHub
-                                        </Button>
-                                        <Button
-                                            onClick={() =>
-                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`
-                                            }
-                                        >
-                                            Đăng nhập với Google
-                                        </Button> */}
-                                {/* <Button
-                                            icon={<GithubOutlined />}
-                                            className="oauth-button github"
-                                            onClick={() =>
-                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
-                                            }
-                                        >
-                                            <span className="btn-text">Đăng nhập với GitHub</span>
-                                        </Button>
-                                        <Button
-                                            icon={<GoogleOutlined />}
-                                            className="oauth-button google"
-                                            onClick={() =>
-                                                window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`
-                                            }
-                                        >
-                                            <span className="btn-text">Đăng nhập với Google</span>
-                                        </Button>
-
-                                        <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>
-                                    </div>
-                                </Form.Item> */}
                                 <Form.Item>
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Button type="primary" htmlType="submit" loading={isSubmit}>
@@ -210,7 +158,6 @@ const LoginPage = () => {
                                     </Button>
                                 </div>
 
-
                                 <Divider>Or</Divider>
                                 <p className="text text-normal" style={{ textAlign: 'center' }}>
                                     Chưa có tài khoản?
@@ -231,5 +178,4 @@ const LoginPage = () => {
         </>
     );
 };
-
 export default LoginPage;

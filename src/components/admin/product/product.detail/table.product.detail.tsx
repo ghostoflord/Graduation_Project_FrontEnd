@@ -34,9 +34,7 @@ const TableProductDetail = () => {
         setIsDeleteProduct(true)
         try {
             const res = await deleteProductDetailAPI(id);
-            console.log("API response: ", res.data);
-            // Kiểm tra status code hoặc flag success từ API
-            if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
+            if (res && res.statusCode === 200) {
                 message.success(res.message || 'Xóa user thành công');
                 refreshTable();
             } else {
@@ -198,34 +196,12 @@ const TableProductDetail = () => {
                     return {
                         data: res.data || [],
                         success: true,
-                        // total: res.data?.meta.total,
                     };
                 }}
                 rowKey="_id"
-                // pagination={{
-                //     current: meta.current,
-                //     pageSize: meta.pageSize,
-                //     total: meta.total,
-                //     showSizeChanger: true,
-                //     showTotal: (total, range) =>
-                //         `${range[0]}-${range[1]} trên tổng ${total} sản phẩm`,
-                // }}
                 search={false}
                 headerTitle="Chi tiết kỹ thuật sản phẩm"
                 toolBarRender={() => [
-                    // <CSVLink
-                    //     data={currentDataTable}
-                    //     filename='export-book.csv'
-                    // >
-                    //     <Button
-                    //         icon={<ExportOutlined />}
-                    //         type="primary"
-                    //     >
-                    //         Export
-                    //     </Button>
-                    // </CSVLink >
-                    // ,
-
                     <Button
                         key="button"
                         icon={<PlusOutlined />}

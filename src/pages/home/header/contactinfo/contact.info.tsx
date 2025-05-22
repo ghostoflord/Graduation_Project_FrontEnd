@@ -1,4 +1,3 @@
-import React from "react";
 import "./contact.info.scss";
 
 const ContactInfo = () => {

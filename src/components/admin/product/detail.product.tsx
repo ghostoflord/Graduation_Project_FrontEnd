@@ -11,14 +11,11 @@ interface IProps {
 
 const DetailProduct = (props: IProps) => {
     const { openViewDetail, setOpenViewDetail, dataViewDetail, setDataViewDetail } = props;
-
     const onClose = () => {
         setOpenViewDetail(false);
         setDataViewDetail(null);
     }
-
     const imageURL = `${import.meta.env.VITE_BACKEND_URL}/upload/products/${dataViewDetail?.image}`
-    console.log("CHECK", imageURL)
 
     return (
         <>

@@ -5,8 +5,6 @@ import { useState } from "react";
 import ExcelJS from "exceljs";
 import { importUserExcelAPI } from "@/services/api";
 
-const { Dragger } = Upload;
-
 interface IProps {
     openModalImport: boolean;
     setOpenModalImport: (v: boolean) => void;
@@ -14,7 +12,7 @@ interface IProps {
 
 const ImportUser = ({ openModalImport, setOpenModalImport }: IProps) => {
     const [dataExcel, setDataExcel] = useState<any[]>([]);
-
+    const { Dragger } = Upload;
     const propsUpload: UploadProps = {
         name: 'file',
         multiple: false,
@@ -39,7 +37,6 @@ const ImportUser = ({ openModalImport, setOpenModalImport }: IProps) => {
                     data.push(item);
                 });
 
-                // ✅ Gửi dữ liệu lên backend thông qua axios service
                 await importUserExcelAPI(data);
 
                 message.success("Import dữ liệu thành công!");
@@ -86,5 +83,4 @@ const ImportUser = ({ openModalImport, setOpenModalImport }: IProps) => {
         </Modal>
     );
 };
-
 export default ImportUser;

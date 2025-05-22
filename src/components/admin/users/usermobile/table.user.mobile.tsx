@@ -1,14 +1,11 @@
 import { getUsersAPI, deleteUserAPI } from '@/services/api';
-import {
-    Card, Button, Tag, Avatar, Spin, Space, Popconfirm, App, Row, Col, Pagination,
-} from 'antd';
+import { Card, Button, Tag, Avatar, Spin, Space, Popconfirm, App, Row, Col, Pagination, } from 'antd';
 import { useEffect, useState } from 'react';
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 import CreateUser from '../create.user';
 import UpdateUser from '../update.user';
 import { CSVLink } from "react-csv";
 import { ExportOutlined } from "@ant-design/icons";
-const pageSize = 5;
 
 const TableUserMobile = () => {
     const [users, setUsers] = useState<IUserTable[]>([]);
@@ -173,5 +170,4 @@ const TableUserMobile = () => {
         </div>
     );
 };
-
 export default TableUserMobile;

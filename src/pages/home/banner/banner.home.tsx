@@ -1,6 +1,5 @@
-// src/components/Banner/index.tsx
 import './banner.home.scss';
-import bannerImg from '@/assets/banner.png'; //   banner hình ảnh bạn dùng
+import bannerImg from '@/assets/banner.png';
 
 const Banner = () => {
     return (

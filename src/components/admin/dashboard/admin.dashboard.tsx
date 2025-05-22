@@ -4,26 +4,19 @@ import { useEffect, useState } from "react";
 import CountUp from 'react-countup';
 
 const AdminDashboard = () => {
-    const [dataDashboard, setDataDashboard] = useState({
-        countOrder: 0,
-        countUser: 0,
-        countProduct: 0,
-        totalRevenue: 0,
-        totalCanceledQuantity: 0
-    });
+    const [dataDashboard, setDataDashboard] = useState({ countOrder: 0, countUser: 0, countProduct: 0, totalRevenue: 0, totalCanceledQuantity: 0 });
+
+    const formatter = (value: number) => <CountUp end={value} separator="," />;
 
     useEffect(() => {
         const initDashboard = async () => {
             const res = await getDashboardAPI();
-            console.log("Dashboard API response:", res);
             if (res && res.data) {
                 setDataDashboard(res.data);
             }
         };
         initDashboard();
     }, []);
-
-    const formatter = (value: number) => <CountUp end={value} separator="," />;
 
     return (
         <Row gutter={[24, 24]}>

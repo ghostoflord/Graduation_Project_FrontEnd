@@ -1,5 +1,4 @@
-import React from "react";
-import "./sales.policy.scss"; // nhớ import SCSS
+import "./sales.policy.scss";
 
 type Section = {
     title: string;

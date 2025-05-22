@@ -7,13 +7,13 @@ const CartResponsive = () => {
     const [isMobile, setIsMobile] = useState(false);
 
     const handleResize = () => {
-        setIsMobile(window.innerWidth < 1000); // Điều kiện xác định thiết bị di động
+        setIsMobile(window.innerWidth < 1000);
     };
 
     useEffect(() => {
-        handleResize(); // Kiểm tra ngay khi component mount
-        window.addEventListener('resize', handleResize); // Lắng nghe thay đổi kích thước
-        return () => window.removeEventListener('resize', handleResize); // Dọn dẹp khi unmount
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     return isMobile ? <CartMobile /> : <CartPage />;

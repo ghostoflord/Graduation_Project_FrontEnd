@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-    App,
-    Divider,
-    Form,
-    Input,
-    Modal,
-    Select,
-    Upload,
-    Button,
-    Image
-} from 'antd';
+import { App, Divider, Form, Input, Modal, Select, Upload, Button, Image } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { createUserAPI, uploadFileAPI } from '@/services/api';
@@ -29,7 +19,7 @@ type FieldType = {
     gender: string;
     address: string;
     age: string;
-    avatar: UploadFile[];  // Chứa thông tin avatar
+    avatar: UploadFile[];
 };
 
 const CreateUser = (props: IProps) => {
@@ -63,7 +53,6 @@ const CreateUser = (props: IProps) => {
         const { file, onSuccess, onError } = options;
 
         try {
-            // Upload avatar image to backend and get file name
             const res = await uploadFileAPI(file as File, "avatars");
 
             if (res && res.data) {
@@ -95,7 +84,6 @@ const CreateUser = (props: IProps) => {
         setIsSubmit(true);
         const { name, email, password, gender, address, age } = values;
 
-        // Lấy base64 từ avatar file
         const avatarBase64 = avatarFile
             ? await getBase64(avatarFile.originFileObj as RcFile)
             : '';
@@ -106,7 +94,7 @@ const CreateUser = (props: IProps) => {
                 email,
                 password,
                 gender,
-                avatarBase64, // Gửi base64 chứ không phải URL
+                avatarBase64,
                 address,
                 age
             );
@@ -237,5 +225,4 @@ const CreateUser = (props: IProps) => {
         </Modal>
     );
 };
-
 export default CreateUser;

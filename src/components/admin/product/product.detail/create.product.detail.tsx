@@ -38,10 +38,7 @@ const CreateProductDetail = ({ openModalCreate, setOpenModalCreate, refreshTable
         const fetchProducts = async () => {
             try {
                 const res = await getProductsAPI();
-                console.log('API response from getProductsAPI:', res);
                 const products = res?.data.result;
-                console.log('Extracted products:', products);
-
                 if (Array.isArray(products)) {
                     setProductOptions(
                         products.map((p: any) => ({
@@ -69,7 +66,6 @@ const CreateProductDetail = ({ openModalCreate, setOpenModalCreate, refreshTable
     }, [openModalCreate]);
 
     const onFinish = async (values: ProductDetail) => {
-        console.log('Form values on submit:', values); // <-- log form data trước khi gửi API
         setIsSubmit(true);
         try {
             const res = await createProductDetailAPI(values);

@@ -75,7 +75,6 @@ const TableOrderMobile = () => {
                                     simple={window.innerWidth < 1000}
                                 />
                             </div>
-
                         </Card>
                     )}
                 />

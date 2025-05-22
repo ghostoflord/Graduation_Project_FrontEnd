@@ -1,5 +1,4 @@
-import React from "react";
-import "./vision.mission.scss"; // nhớ import file SCSS
+import "./vision.mission.scss";
 
 type Section = {
     title: string;

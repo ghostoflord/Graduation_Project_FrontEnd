@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Table, Descriptions, Tag } from 'antd';
 
 interface OrderItem {

@@ -46,9 +46,7 @@ const TableUser = () => {
         setIsDeleteUser(true);
         try {
             const res = await deleteUserAPI(id);
-
-            // Kiểm tra status code hoặc flag success từ API
-            if (res && res.statusCode === 200) { // Hoặc điều kiện success khác tùy API
+            if (res && res.statusCode === 200) {
                 message.success(res.message || 'Xóa user thành công');
                 refreshTable();
             } else {
@@ -208,10 +206,6 @@ const TableUser = () => {
                             query += `&name=/${params.name}/i`
                         }
                     }
-
-                    // if (sort && sort.name) {
-                    //     query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
-                    // } else query += `&sort=-name`;
 
                     const res = await getUsersAPI(query);
                     if (res.data) {

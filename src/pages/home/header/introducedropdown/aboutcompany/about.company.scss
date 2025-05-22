@@ -39,10 +39,10 @@
 
             li {
                 margin-bottom: 0.5rem;
-                transition: color 0.3s ease; // thêm hiệu ứng mượt
+                transition: color 0.3s ease;
 
                 &:hover {
-                    color: #2563eb; // đổi màu xanh khi hover
+                    color: #2563eb;
                     cursor: pointer;
                 }
             }

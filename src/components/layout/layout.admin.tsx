@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    AppstoreOutlined,
-    ExceptionOutlined,
-    HeartTwoTone,
-    TeamOutlined,
-    UserOutlined,
-    DollarCircleOutlined,
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    ProductOutlined
-} from '@ant-design/icons';
+import { AppstoreOutlined, ExceptionOutlined, HeartTwoTone, TeamOutlined, UserOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ProductOutlined } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, Avatar } from 'antd';
 import { Outlet, useLocation, useNavigate, Navigate, Link } from "react-router-dom";
 import { useCurrentApp } from '../context/app.context';
@@ -55,7 +45,7 @@ const LayoutAdmin = () => {
                 {
                     label: <Link to='/admin/product/detail'>Product Detail</Link>,
                     key: '/admin/product/detail',
-                    icon: <ProductOutlined />,  
+                    icon: <ProductOutlined />,
                 },
             ]
         },
@@ -86,7 +76,7 @@ const LayoutAdmin = () => {
             setIsAuthenticated(false);
             localStorage.removeItem("access_token");
             localStorage.removeItem("carts");
-            message.success('Đăng xuất thành công!', 2); // Thêm dòng này
+            message.success('Đăng xuất thành công!', 2);
             navigate('/login', { replace: true });
         }
     };
@@ -114,9 +104,7 @@ const LayoutAdmin = () => {
     ];
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`;
-    console.log("user", user);
 
-    // FIX Ở ĐÂY: chuyển <Outlet /> thành <Navigate/>
     if (isAuthenticated === false) {
         return <Navigate to="/login" replace />;
     }
@@ -136,9 +124,9 @@ const LayoutAdmin = () => {
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
-                breakpoint="lg" // tương ứng ~ 992px (gần 1000px)
-                collapsedWidth={80} // chỉ hiển thị icon khi collapsed
-                onBreakpoint={(broken) => setCollapsed(broken)} // tự collapse khi xuống dưới breakpoint
+                breakpoint="lg"
+                collapsedWidth={80}
+                onBreakpoint={(broken) => setCollapsed(broken)}
             >
                 <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
                     Admin

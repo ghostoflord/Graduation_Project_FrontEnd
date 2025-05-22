@@ -11,21 +11,20 @@ const ProductInfo = ({ productId }: ProductInfo) => {
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
     const [loading, setLoading] = useState(false);
 
- const fetchProductDetail = async () => {
-    setLoading(true);
-    try {
-        const res = await getProductDetailByProductIdAPI(productId);
-        if (res?.data) {
-            console.log('👉 Product Detail:', res.data); //  In ra console
-            setProductDetail(res.data);
+    const fetchProductDetail = async () => {
+        setLoading(true);
+        try {
+            const res = await getProductDetailByProductIdAPI(productId);
+            if (res?.data) {
+                console.log('👉 Product Detail:', res.data); //  In ra console
+                setProductDetail(res.data);
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy chi tiết sản phẩm:', error);
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error('Lỗi khi lấy chi tiết sản phẩm:', error);
-    } finally {
-        setLoading(false);
-    }
-};
-
+    };
 
     useEffect(() => {
         if (productId) {
@@ -35,12 +34,10 @@ const ProductInfo = ({ productId }: ProductInfo) => {
 
     return (
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', padding: 24 }}>
-            {/* Comment Section - Left Side (2/3) */}
             <div style={{ flex: 2, minWidth: 300 }}>
                 <CommentSection productId={productId} />
             </div>
 
-            {/* Product Detail - Right Side (1/3) */}
             <div style={{ flex: 1, minWidth: 300 }}>
                 <h3 style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 8 }}>Thông số kỹ thuật</h3>
                 {loading ? (
@@ -66,5 +63,4 @@ const ProductInfo = ({ productId }: ProductInfo) => {
         </div>
     );
 };
-
 export default ProductInfo;
