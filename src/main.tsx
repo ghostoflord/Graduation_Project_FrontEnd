@@ -37,6 +37,7 @@ import PaymentReturn from './pages/home/checkoutpage/payment.return';
 import OrderSuccess from './pages/home/checkoutpage/orderstatus/order.success';
 import OrderFail from './pages/home/checkoutpage/orderstatus/orderfail';
 import TableProductDetail from './components/admin/product/product.detail/table.product.detail';
+import PermissionPage from './pages/admin/permisson/permisson.page';
 
 const router = createBrowserRouter([
   {
@@ -149,6 +150,10 @@ const router = createBrowserRouter([
       {
         path: "order",
         element: <OrderPage />,
+      },
+      {
+        path: "permission",
+        element: <PermissionPage />,
       },
       {
         path: "*",

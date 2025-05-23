@@ -310,5 +310,24 @@ export const addOrUpdateReviewAPI = (productId: number, userId: number, rating: 
     return axios.post('/api/v1/reviews', { productId, userId, rating });
 };
 
+/**
+ * Module Permission
+ */
+export const callCreatePermission = (permission: IPermission) => {
+    return axios.post<IBackendRes<IPermission>>("/api/v1/permissions", permission);
+};
+
+export const callUpdatePermission = (permission: IPermission) => {
+    return axios.put<IBackendRes<IPermission>>("/api/v1/permissions", permission);
+};
+
+export const callDeletePermission = (id: number | string) => {
+    return axios.delete<IBackendRes<IPermission>>(`/api/v1/permissions/${id}`);
+};
+
+export const callFetchPermissions = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IPermission>>>(`/api/v1/permissions?${query}`);
+};
+
 
 

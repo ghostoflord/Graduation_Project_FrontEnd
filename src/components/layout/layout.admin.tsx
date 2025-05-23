@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppstoreOutlined, ExceptionOutlined, HeartTwoTone, TeamOutlined, UserOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ProductOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ExceptionOutlined, HeartTwoTone, TeamOutlined, UserOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ProductOutlined, ApiOutlined } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, Avatar } from 'antd';
 import { Outlet, useLocation, useNavigate, Navigate, Link } from "react-router-dom";
 import { useCurrentApp } from '../context/app.context';
@@ -53,6 +53,11 @@ const LayoutAdmin = () => {
             label: <Link to='/admin/order'>Manage Orders</Link>,
             key: '/admin/order',
             icon: <DollarCircleOutlined />
+        },
+        {
+            label: <Link to='/admin/permission'>Manage Permission</Link>,
+            key: '/admin/permission',
+            icon: <ApiOutlined />
         },
     ];
 

@@ -222,6 +222,21 @@ declare global {
         totalQuantity: number; // thêm dòng này
     }
 
+    interface IPermission {
+        id?: string;
+        name?: string;
+        apiPath?: string;
+        method?: string;
+        module?: string;
+
+        createdBy?: string;
+        isDeleted?: boolean;
+        deletedAt?: boolean | null;
+        createdAt?: string;
+        updatedAt?: string;
+
+    }
+
     // now not user
     interface IHistory {
         _id: string;
