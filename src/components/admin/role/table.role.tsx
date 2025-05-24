@@ -1,222 +1,143 @@
-import {
-    FooterToolbar,
-    ProCard,
-    ProTable,
-} from "@ant-design/pro-components";
-import { ActionType } from "@ant-design/pro-components";
-import {
-    Col,
-    Form,
-    Input,
-    InputNumber,
-    Modal,
-    Row,
-    message,
-    notification,
-    Button,
-} from "antd";
-import { isMobile } from 'react-device-detect';
-import { CheckSquareOutlined } from "@ant-design/icons";
-import { useRef, useState } from "react";
-import ModuleApi from "./module.api";
-import { callCreateRole, callFetchRoles, callUpdateRole } from "@/services/api";
 
-interface IProps {
-    listPermissions: {
-        module: string;
-        permissions: IPermission[]
-    }[];
-}
 
-const TableRole = ({ listPermissions }: IProps) => {
-    const [openModal, setOpenModal] = useState(false);
-    const [singleRole, setSingleRole] = useState<IRole | null>(null);
-    const [form] = Form.useForm();
+import { useEffect, useRef, useState } from 'react';
+import { callFetchPermissions, callFetchRoles } from '@/services/api';
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
+import { Popconfirm } from 'antd';
+import UpdateRole from './update.role';
+
+const TableRole = () => {
     const actionRef = useRef<ActionType>();
-    console.log("listPermissions", listPermissions)
-    const reloadTable = () => {
-        actionRef.current?.reload();
-    };
+    const [meta, setMeta] = useState({
+        current: 1,
+        pageSize: 5,
+        total: 0,
+    });
 
-    const submitRole = async () => {
-        const valuesForm = await form.validateFields();
-        const { description, name, permissions } = valuesForm;
-        const checkedPermissions = [];
+    //update user
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IRole | null>(null);
 
-        if (permissions) {
-            for (const key in permissions) {
-                if (key.match(/^[1-9][0-9]*$/) && permissions[key] === true) {
-                    checkedPermissions.push({ id: key });
-                }
+    const [permissions, setPermissions] = useState<IPermission[]>([]);
+
+    useEffect(() => {
+        const fetchPermissions = async () => {
+            const res = await callFetchPermissions();
+            if (res && res.data) {
+                setPermissions(res.data);
             }
-        }
-
-        const role = {
-            name,
-            description,
-            permissions: checkedPermissions,
         };
+        fetchPermissions();
+    }, []);
 
-        let res;
-        if (singleRole?.id) {
-            res = await callUpdateRole(role, singleRole.id);
-        } else {
-            res = await callCreateRole(role);
-        }
+    const columns: ProColumns<IRole>[] = [
+        {
+            dataIndex: 'index',
+            valueType: 'indexBorder',
+            width: 48,
+        },
+        {
+            title: 'ID',
+            dataIndex: 'id',
+            hideInSearch: true,
+        },
+        {
+            title: 'Tên vai trò',
+            dataIndex: 'name',
+            sorter: true,
+        },
+        {
+            title: 'Mô tả',
+            dataIndex: 'description',
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+            valueType: 'date',
+        },
+        {
+            title: 'Cập nhật gần nhất',
+            dataIndex: 'updatedAt',
+            valueType: 'date',
+        },
+        {
+            title: 'Action',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        <EditTwoTone
+                            twoToneColor="#f57800"
+                            style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
+                            }}
+                        />
+                        <Popconfirm
+                            placement="leftTop"
+                            title={"Xác nhận xóa user"}
+                            description={"Bạn có chắc chắn muốn xóa user này ?"}
+                            // onConfirm={() => handleDeleteUser(entity.id)}
+                            okText="Xác nhận"
+                            cancelText="Hủy"
+                        // okButtonProps={{ loading: isDeleteUser }}
+                        >
+                            <span style={{ cursor: "pointer", marginLeft: 20 }}>
+                                <DeleteTwoTone
+                                    twoToneColor="#ff4d4f"
+                                    style={{ cursor: "pointer" }}
+                                />
+                            </span>
+                        </Popconfirm>
+                    </>
+                )
+            }
+        },
+    ];
 
-        if (res?.data) {
-            message.success(`${singleRole?.id ? "Cập nhật" : "Thêm mới"} role thành công`);
-            handleReset();
-            reloadTable();
-        } else {
-            notification.error({
-                message: 'Có lỗi xảy ra',
-                description: res.message,
-            });
-        }
-    };
-
-    const handleReset = () => {
-        form.resetFields();
-        setOpenModal(false);
-        setSingleRole(null);
-    };
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
 
     return (
         <>
             <ProTable<IRole>
-                rowKey="id"
+                columns={columns}
                 actionRef={actionRef}
-                columns={[
-                    {
-                        title: 'Id',
-                        dataIndex: 'id',
-                        width: 80,
-                        render: (text, record, index, action) => {
-                            return (
-                                <span>
-                                    {record.id}
-                                </span>
-                            )
-                        },
-                        hideInSearch: true,
-                    },
-                    {
-                        title: "Tên vai trò",
-                        dataIndex: "name",
-                    },
-                    {
-                        title: "Mô tả",
-                        dataIndex: "description",
-                    },
-                    {
-                        title: "Ngày tạo",
-                        dataIndex: "createdAt",
-                    },
-                    {
-                        title: "Hành động",
-                        valueType: "option",
-                        render: (_, record) => [
-                            <a
-                                key="edit"
-                                onClick={() => {
-                                    setSingleRole(record);
-                                    form.setFieldsValue(record);
-                                    setOpenModal(true);
-                                }}
-                            >
-                                Cập nhật
-                            </a>,
-                        ],
-                    },
-                ]}
+                cardBordered
                 request={async (params) => {
-                    const query = `page=${params.current - 1}&size=${params.pageSize}`;
+                    let query = `current=${params.current}&pageSize=${params.pageSize}`;
                     const res = await callFetchRoles(query);
-                    if (res?.data) {
-                        return {
-                            data: res.data.result,
-                            total: res.data.meta.total,
-                            success: true,
-                        };
+                    if (res.data) {
+                        setMeta(res.data.meta);
                     }
                     return {
-                        data: [],
-                        success: false,
+                        data: res.data?.result ?? [],
+                        success: true,
+                        total: res.data?.meta.total,
                     };
                 }}
+                rowKey="id"
                 pagination={{
-                    pageSize: 5,
+                    current: meta.current,
+                    pageSize: meta.pageSize,
+                    total: meta.total,
+                    showSizeChanger: true,
+                    showTotal: (total, range) => `Hiển thị ${range[0]}-${range[1]} trên tổng ${total}`,
                 }}
-                search={false}
+            />
+            <UpdateRole
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
+                allPermissions={permissions}
             />
 
-            <Modal
-                title={<>{singleRole?.id ? "Cập nhật Role" : "Tạo mới Role"}</>}
-                open={openModal}
-                onCancel={handleReset}
-                afterClose={handleReset}
-                width={isMobile ? "100%" : 900}
-                destroyOnClose
-                footer={
-                    <div style={{ textAlign: "right" }}>
-                        <Button onClick={handleReset} style={{ marginRight: 8 }}>
-                            Hủy
-                        </Button>
-                        <Button
-                            type="primary"
-                            icon={<CheckSquareOutlined />}
-                            onClick={submitRole}
-                        >
-                            {singleRole?.id ? "Cập nhật" : "Tạo mới"}
-                        </Button>
-                    </div>
-                }
-
-            >
-                <Form form={form} layout="vertical">
-                    <Row gutter={16}>
-                        <Col lg={12} md={12} sm={24} xs={24}>
-                            <Form.Item
-                                label="Tên Role"
-                                name="name"
-                                rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            >
-                                <Input placeholder="Nhập name" />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={24}>
-                            <Form.Item
-                                label="Miêu tả"
-                                name="description"
-                                rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            >
-                                <Input.TextArea placeholder="Nhập miêu tả role" autoSize={{ minRows: 2 }} />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={24}>
-                            <ProCard
-                                title="Quyền hạn"
-                                subTitle="Các quyền hạn được phép cho vai trò này"
-                                headStyle={{ color: '#d81921' }}
-                                style={{ marginBottom: 20 }}
-                                headerBordered
-                                size="small"
-                                bordered
-                            >
-                                <ModuleApi
-                                    form={form}
-                                    listPermissions={listPermissions}
-                                    singleRole={singleRole}
-                                    openModal={openModal}
-                                />
-                            </ProCard>
-                        </Col>
-                    </Row>
-                </Form>
-            </Modal>
         </>
     );
 };
