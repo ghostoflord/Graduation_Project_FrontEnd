@@ -59,6 +59,12 @@ const LayoutAdmin = () => {
             key: '/admin/permission',
             icon: <ApiOutlined />
         },
+
+        {
+            label: <Link to='/admin/role'>Role</Link>,
+            key: '/admin/role',
+            icon: <ExceptionOutlined />
+        }
     ];
 
     useEffect(() => {

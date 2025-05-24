@@ -38,6 +38,7 @@ import OrderSuccess from './pages/home/checkoutpage/orderstatus/order.success';
 import OrderFail from './pages/home/checkoutpage/orderstatus/orderfail';
 import TableProductDetail from './components/admin/product/product.detail/table.product.detail';
 import PermissionPage from './pages/admin/permisson/permisson.page';
+import RolePage from './pages/role/role.page';
 
 const router = createBrowserRouter([
   {
@@ -154,6 +155,10 @@ const router = createBrowserRouter([
       {
         path: "permission",
         element: <PermissionPage />,
+      },
+      {
+        path: "role",
+        element: <RolePage />,
       },
       {
         path: "*",

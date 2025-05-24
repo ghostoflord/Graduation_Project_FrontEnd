@@ -329,5 +329,28 @@ export const callFetchPermissions = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<IPermission>>>(`/api/v1/permissions?${query}`);
 };
 
+/**
+ *Module Role
+ */
+export const callCreateRole = (role: IRole) => {
+    return axios.post<IBackendRes<IRole>>('/api/v1/roles', role);
+};
+
+export const callUpdateRole = (role: IRole) => {
+    return axios.put<IBackendRes<IRole>>('/api/v1/roles', role);
+};
+
+export const callDeleteRole = (id: number | string) => {
+    return axios.delete<IBackendRes<void>>(`/api/v1/roles/${id}`);
+};
+
+export const callFetchRoles = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IRole>>>(`/api/v1/roles?${query}`);
+};
+
+export const callGetRoleById = (id: number | string) => {
+    return axios.get<IBackendRes<IRole>>(`/api/v1/roles/${id}`);
+};
+
 
 

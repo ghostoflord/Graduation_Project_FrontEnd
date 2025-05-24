@@ -237,6 +237,19 @@ declare global {
 
     }
 
+    export interface IRole {
+        id?: string;
+        name: string;
+        description: string;
+        permissions: IPermission[] | string[];
+
+        createdBy?: string;
+        isDeleted?: boolean;
+        deletedAt?: boolean | null;
+        createdAt?: string;
+        updatedAt?: string;
+    }
+
     // now not user
     interface IHistory {
         _id: string;
