@@ -1,11 +1,11 @@
 
 
 import { useEffect, useRef, useState } from 'react';
-import { callFetchPermissions, callFetchRoles } from '@/services/api';
+import { callDeleteRole, callFetchPermissions, callFetchRoles } from '@/services/api';
 import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Popconfirm } from 'antd';
+import { message, notification, Popconfirm } from 'antd';
 import UpdateRole from './update.role';
 
 const TableRole = () => {
@@ -21,6 +21,32 @@ const TableRole = () => {
     const [dataUpdate, setDataUpdate] = useState<IRole | null>(null);
 
     const [permissions, setPermissions] = useState<IPermission[]>([]);
+
+    //delete user
+    const [isDeleteRole, setIsDeleteRole] = useState<boolean>(false);
+
+    const handleDeleteUser = async (id: string) => {
+        setIsDeleteRole(true);
+        try {
+            const res = await callDeleteRole(id);
+            if (res && res.statusCode === 200) {
+                message.success(res.message || 'Xóa user thành công');
+                refreshTable();
+            } else {
+                notification.error({
+                    message: res.error || 'Đã có lỗi xảy ra',
+                    description: res.message || 'Không thể xóa user'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi hệ thống',
+                description: 'Đã có lỗi xảy ra khi xóa user'
+            });
+        } finally {
+            setIsDeleteRole(false);
+        }
+    };
 
     useEffect(() => {
         const fetchPermissions = async () => {
@@ -78,12 +104,12 @@ const TableRole = () => {
                         />
                         <Popconfirm
                             placement="leftTop"
-                            title={"Xác nhận xóa user"}
-                            description={"Bạn có chắc chắn muốn xóa user này ?"}
-                            // onConfirm={() => handleDeleteUser(entity.id)}
+                            title={"Xác nhận xóa role"}
+                            description={"Bạn có chắc chắn muốn xóa role này ?"}
+                            onConfirm={() => handleDeleteUser(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
-                        // okButtonProps={{ loading: isDeleteUser }}
+                            okButtonProps={{ loading: isDeleteRole }}
                         >
                             <span style={{ cursor: "pointer", marginLeft: 20 }}>
                                 <DeleteTwoTone

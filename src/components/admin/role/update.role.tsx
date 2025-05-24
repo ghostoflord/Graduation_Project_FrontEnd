@@ -31,11 +31,11 @@ const UpdateRole = (props: IProps) => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
 
-    // 👇 State mới: danh sách quyền
+    // State mới: danh sách quyền
     const [permissionOptions, setPermissionOptions] = useState<IPermission[]>([]);
     const [loadingPermissions, setLoadingPermissions] = useState(false);
 
-    // 👇 Gọi API lấy danh sách quyền khi mở modal
+    // Gọi API lấy danh sách quyền khi mở modal
     useEffect(() => {
         if (openModalUpdate) {
             fetchPermissions();
