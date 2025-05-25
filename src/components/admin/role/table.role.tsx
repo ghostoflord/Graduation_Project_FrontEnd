@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { callDeleteRole, callFetchPermissions, callFetchRoles } from '@/services/api';
-import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { message, notification, Popconfirm } from 'antd';
+import { Button, message, notification, Popconfirm } from 'antd';
 import UpdateRole from './update.role';
+import CreateRole from './create.role';
+import DetailRole from './detail.role';
 
 const TableRole = () => {
     const actionRef = useRef<ActionType>();
@@ -16,14 +18,22 @@ const TableRole = () => {
         total: 0,
     });
 
-    //update user
+    //update role
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IRole | null>(null);
 
     const [permissions, setPermissions] = useState<IPermission[]>([]);
 
-    //delete user
+    //delete role
     const [isDeleteRole, setIsDeleteRole] = useState<boolean>(false);
+
+    //create role
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+
+
+    //detail role
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IRole | null>(null);
 
     const handleDeleteUser = async (id: string) => {
         setIsDeleteRole(true);
@@ -60,14 +70,19 @@ const TableRole = () => {
 
     const columns: ProColumns<IRole>[] = [
         {
-            dataIndex: 'index',
-            valueType: 'indexBorder',
-            width: 48,
-        },
-        {
-            title: 'ID',
+            title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(entity);
+                            setOpenViewDetail(true);
+                        }}
+                        href='#'>{entity.id}</a>
+                )
+            },
         },
         {
             title: 'Tên vai trò',
@@ -154,6 +169,41 @@ const TableRole = () => {
                     showSizeChanger: true,
                     showTotal: (total, range) => `Hiển thị ${range[0]}-${range[1]} trên tổng ${total}`,
                 }}
+
+                toolBarRender={() => [
+                    // <CSVLink
+                    //     data={currentDataTable}
+                    //     filename='export-user.csv'
+                    // >
+                    //     <Button
+                    //         icon={<ExportOutlined />}
+                    //         type="primary"
+                    //     >
+                    //         Export
+                    //     </Button>
+                    // </CSVLink>
+                    // ,
+
+                    // <Button
+                    //     icon={<CloudUploadOutlined />}
+                    //     type="primary"
+                    //     onClick={() => setOpenModalImport(true)}
+                    // >
+                    //     Import
+                    // </Button>,
+
+                    <Button
+                        key="button"
+                        icon={<PlusOutlined />}
+                        onClick={() => {
+                            setOpenModalCreate(true);
+                        }}
+                        type="primary"
+                    >
+                        Add new
+                    </Button>
+
+                ]}
             />
             <UpdateRole
                 openModalUpdate={openModalUpdate}
@@ -164,6 +214,18 @@ const TableRole = () => {
                 allPermissions={permissions}
             />
 
+            <CreateRole
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
+
+            <DetailRole
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
         </>
     );
 };

@@ -45,7 +45,7 @@ const UpdateRole = (props: IProps) => {
     const fetchPermissions = async () => {
         setLoadingPermissions(true);
         try {
-            const res = await callFetchPermissions('page=1&limit=100'); // tùy chỉnh query
+            const res = await callFetchPermissions('page=1&pageSize=100'); // tùy chỉnh query
             if (res?.data?.result) {
                 setPermissionOptions(res.data.result);
             }
