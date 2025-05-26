@@ -168,8 +168,8 @@ const ProductList = () => {
                                                     <div
                                                         className="product-rating"
                                                         onClick={(e) => {
-                                                            e.stopPropagation(); 
-                                                            e.preventDefault(); 
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
                                                         }}
                                                     >
                                                         <Rate
@@ -222,14 +222,43 @@ const ProductList = () => {
                     </div>
 
                     <div className="pagination">
-                        <button onClick={() => setCurrent((prev) => Math.max(prev - 1, 1))} disabled={current === 1}>
-                            Trang trước
+                        <button
+                            className="page-btn"
+                            onClick={() => setCurrent((prev) => Math.max(prev - 1, 1))}
+                            disabled={current === 1}
+                        >
+                            «
                         </button>
-                        <span>Trang {current} / {totalPages}</span>
-                        <button onClick={() => setCurrent((prev) => Math.min(prev + 1, totalPages))} disabled={current === totalPages}>
-                            Trang sau
+
+                        {Array.from({ length: 5 }, (_, i) => {
+                            const startPage = Math.min(
+                                Math.max(current - 2, 1),
+                                Math.max(totalPages - 4, 1)
+                            );
+                            const pageNumber = startPage + i;
+                            if (pageNumber > totalPages) return null;
+
+                            return (
+                                <button
+                                    key={pageNumber}
+                                    className={`page-number ${current === pageNumber ? 'active' : ''}`}
+                                    onClick={() => setCurrent(pageNumber)}
+                                >
+                                    {pageNumber}
+                                </button>
+                            );
+                        })}
+
+                        <button
+                            className="page-btn"
+                            onClick={() => setCurrent((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={current === totalPages}
+                        >
+                            »
                         </button>
                     </div>
+
+
                 </>
             ) : loading ? (
                 <div className="product-list-loading">Đang tải sản phẩm...</div>

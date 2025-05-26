@@ -128,15 +128,35 @@ const CartPage = () => {
 
     return (
         <div className="p-6 max-w-screen-lg mx-auto cart-container">
-            <Title level={3}>Giỏ Hàng</Title>
-
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <Title level={3}>Giỏ Hàng</Title>
+            </div>
             {cartItems.length === 0 ? (
-                <div className="text-center my-10">
+                <div
+                    style={{
+                        height: 300,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                    }}
+                >
                     <Empty description="Giỏ hàng trống, vui lòng quay lại trang chủ." />
-                    <Button type="primary" onClick={() => navigate('/')}>
+
+                    <Button
+                        type="primary"
+                        onClick={() => navigate('/')}
+                        style={{ marginTop: 16 }}
+                    >
                         Về trang chủ
                     </Button>
                 </div>
+
             ) : (
                 <>
                     <List
