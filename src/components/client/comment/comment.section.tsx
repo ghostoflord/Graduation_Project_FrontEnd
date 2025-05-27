@@ -14,6 +14,7 @@ interface CommentItem {
     createdAt: string;
     user: {
         name: string;
+        avatar: string;
     };
 }
 
@@ -24,6 +25,7 @@ const CommentSection = ({ productId }: CommentProps) => {
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user?.id;
+    console.log("check avavar", user?.avatar)
 
     const fetchComments = async () => {
         try {
@@ -69,22 +71,41 @@ const CommentSection = ({ productId }: CommentProps) => {
             <List
                 dataSource={comments}
                 itemLayout="horizontal"
-                renderItem={(item, index) => (
-                    <List.Item style={{ borderBottom: index !== comments.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                        <List.Item.Meta
-                            title={item.user?.name || 'Ẩn danh'}
-                            description={
-                                <>
-                                    <div>{item.content}</div>
-                                    <div style={{ fontSize: 12, color: '#999' }}>
-                                        {new Date(item.createdAt).toLocaleString('vi-VN')}
-                                    </div>
-                                </>
-                            }
-                        />
-                    </List.Item>
-                )}
+                renderItem={(item, index) => {
+                    console.log('Comment item:', item); // ← log toàn bộ comment
+                    return (
+                        <List.Item style={{ borderBottom: index !== comments.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
+                            <List.Item.Meta
+                                avatar={
+                                    <img
+                                        src={
+                                            item.user?.avatar
+                                                ? item.user.avatar.startsWith('http')
+                                                    ? item.user.avatar
+                                                    : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${item.user.avatar}`
+                                                : '/default-avatar.png'
+                                        }
+                                        alt={item.user?.name || 'User'}
+                                        className="comment-avatar"
+                                    />
+                                }
+
+
+                                title={item.user?.name || 'Ẩn danh'}
+                                description={
+                                    <>
+                                        <div>{item.content}</div>
+                                        <div style={{ fontSize: 12, color: '#999' }}>
+                                            {new Date(item.createdAt).toLocaleString('vi-VN')}
+                                        </div>
+                                    </>
+                                }
+                            />
+                        </List.Item>
+                    );
+                }}
             />
+
 
 
             <Form.Item style={{ marginTop: 16 }}>
