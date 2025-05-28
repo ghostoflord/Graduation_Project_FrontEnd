@@ -262,6 +262,16 @@ export const checkoutOrder = async (items: { productId: number; quantity: number
     return res.data;
 };
 
+export const updateOrderAPI = async (orderId: number, data: UpdateOrderRequest) => {
+    const response = await axios.post(`/api/v1/orders/${orderId}/update`, data);
+    return response;
+};
+
+export const deleteOrderAPI = async (orderId: string) => {
+    const res = await axios.delete(`/api/v1/orders/${orderId}`);
+    return res;
+};
+
 /**
  * 
 Module Dashboard

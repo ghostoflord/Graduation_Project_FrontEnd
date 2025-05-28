@@ -222,6 +222,22 @@ declare global {
         totalQuantity: number; // thêm dòng này
     }
 
+    export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPING' | 'COMPLETED' | 'CANCELLED';
+    export type PaymentStatus = 'PAID' | 'UNPAID';
+    export type PaymentMethod = 'COD' | 'VNPAY';
+
+    export interface UpdateOrderRequest {
+        receiverName?: string;
+        receiverAddress?: string;
+        receiverPhone?: string;
+        status?: OrderStatus;
+        paymentStatus?: PaymentStatus;
+        paymentMethod?: PaymentMethod;
+        shippingMethod?: string;
+        trackingCode?: string;
+        estimatedDeliveryTime?: string;
+    }
+
     interface IPermission {
         id?: string;
         name?: string;

@@ -1,78 +1,211 @@
-import React, { useRef } from 'react';
-import { ProTable, ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
-import { fetchAllOrders } from '@/services/api';
-
+import { deleteOrderAPI, fetchAllOrders } from '@/services/api';
+import { ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { App, Popconfirm, Tag } from 'antd';
+import { useRef, useState } from 'react';
+import DetailOrder from './order.detail';
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
+import UpdateOrder from './order.update';
 
 const TableOrder = () => {
     const actionRef = useRef<ActionType>();
+    const [dataSource, setDataSource] = useState<IOrderTable[]>([]);
+    const { message, notification } = App.useApp();
 
-    const handleExport = async () => {
+    //detail order
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IOrderTable | null>(null);
+
+    //update order
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IOrderTable | null>(null);
+
+
+    //delete orders
+    const [isDeleteOrder, setIsDeleteOrder] = useState<boolean>(false);
+
+
+    const handleDeleteOrder = async (id: string) => {
+        setIsDeleteOrder(true);
         try {
-            const orders = await fetchAllOrders();
-
-            const csvHeader = 'ID,Receiver Name,Receiver Address,Receiver Phone,Total Price,Status,User ID\n';
-            const csvRows = orders.map(order =>
-                `${order.id},"${order.receiverName}","${order.receiverAddress}","${order.receiverPhone}",${order.totalPrice},"${order.status}",${order.userId}`
-            );
-            const csvContent = csvHeader + csvRows.join('\n');
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'orders.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const res = await deleteOrderAPI(id);
+            if (res && (res.statusCode === 200 || res.statusCode === 204)) {
+                message.success(res.message || 'Xóa order thành công');
+                refreshTable();
+            } else {
+                notification.error({
+                    message: res.error || 'Đã có lỗi xảy ra',
+                    description: res.message || 'Không thể xóa order'
+                });
+            }
         } catch (error) {
-            console.error('Export failed:', error);
+            notification.error({
+                message: 'Lỗi hệ thống',
+                description: 'Đã có lỗi xảy ra khi xóa order'
+            })
+        } finally {
+            setIsDeleteOrder(false);
         }
     };
 
     const columns: ProColumns<IOrderTable>[] = [
-        { title: 'ID', dataIndex: 'id' },
-        { title: 'Receiver Name', dataIndex: 'receiverName' },
-        { title: 'Receiver Address', dataIndex: 'receiverAddress' },
-        { title: 'Receiver Phone', dataIndex: 'receiverPhone' },
         {
-            title: 'Tổng Số Lượng',
+            title: 'Id',
+            dataIndex: 'id',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(entity);
+                            setOpenViewDetail(true);
+                        }}
+                        href='#'>{entity.id}</a>
+                )
+            },
+        },
+        {
+            title: 'Receiver Name',
+            dataIndex: 'receiverName',
+            sorter: true,
+        },
+        {
+            title: 'Receiver Phone',
+            dataIndex: 'receiverPhone',
+        },
+        {
+            title: 'Total Quantity',
+            dataIndex: 'totalQuantity',
+            valueType: 'digit',
+            sorter: true,
+        },
+        {
+            title: 'Total Price',
             dataIndex: 'totalPrice',
-            render: (_, record) => record.totalPrice,
+            sorter: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>{new Intl.NumberFormat(
+                        'vi-VN',
+                        { style: 'currency', currency: 'VND' }).format(entity.totalPrice)}
+                    </>
+                )
+            }
         },
         {
             title: 'Status',
             dataIndex: 'status',
-            valueType: 'select',
-            valueEnum: {
-                PENDING: { text: 'Pending' },
-                PROCESSING: { text: 'Processing' },
-                DELIVERED: { text: 'Delivered' },
-                CANCELLED: { text: 'Cancelled' },
+            render: (value) => {
+                let color = 'blue';
+                if (value === 'CANCELLED') color = 'red';
+                else if (value === 'COMPLETED') color = 'green';
+                else if (value === 'PENDING') color = 'orange';
+
+                return <Tag color={color}>{value}</Tag>;
             },
         },
-        { title: 'User ID', dataIndex: 'userId' },
+        {
+            title: 'Created At',
+            dataIndex: 'createdAt',
+            valueType: 'dateTime',
+            sorter: true,
+        },
+        {
+            title: 'User ID',
+            dataIndex: 'userId'
+        },
+        {
+            title: 'Action',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        <EditTwoTone
+                            twoToneColor="#f57800"
+                            style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
+                            }}
+                        />
+                        <Popconfirm
+                            placement="leftTop"
+                            title={"Xác nhận xóa order"}
+                            description={"Bạn có chắc chắn muốn xóa order này ?"}
+                            onConfirm={() => handleDeleteOrder(entity.id)}
+                            okText="Xác nhận"
+                            cancelText="Hủy"
+                            okButtonProps={{ loading: isDeleteOrder }}
+                        >
+                            <span style={{ cursor: "pointer", marginLeft: 20 }}>
+                                <DeleteTwoTone
+                                    twoToneColor="#ff4d4f"
+                                    style={{ cursor: "pointer" }}
+                                />
+                            </span>
+                        </Popconfirm>
+                    </>
+                )
+            }
+        }
     ];
 
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
+
     return (
-        <ProTable<IOrderTable>
-            headerTitle="Order List"
-            actionRef={actionRef}
-            columns={columns}
-            request={async () => {
-                const data = await fetchAllOrders();
-                return { data, success: true };
-            }}
-            rowKey="id"
-            search={false}
-            toolBarRender={() => [
-                <Button key="export" icon={<DownloadOutlined />} onClick={handleExport}>
-                    Export CSV
-                </Button>,
-            ]}
-        />
+        <>
+            <ProTable<IOrderTable>
+                columns={columns}
+                actionRef={actionRef}
+                cardBordered
+                rowKey="id"
+                headerTitle="Table Orders"
+                pagination={{
+                    showSizeChanger: true,
+                    showTotal: (total, range) => (
+                        <div>{range[0]}-{range[1]} trên {total} đơn hàng</div>
+                    ),
+                }}
+                request={async () => {
+                    try {
+                        const data = await fetchAllOrders();
+                        setDataSource(data);
+                        return {
+                            data: data,
+                            success: true,
+                            total: data.length,
+                        };
+                    } catch (error) {
+                        notification.error({
+                            message: 'Lỗi tải đơn hàng',
+                            description: 'Không thể lấy danh sách đơn hàng',
+                        });
+                        return {
+                            data: [],
+                            success: false,
+                            total: 0,
+                        };
+                    }
+                }}
+            />
+
+            <DetailOrder
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
+
+            <UpdateOrder
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
+            />
+        </>
     );
 };
 
