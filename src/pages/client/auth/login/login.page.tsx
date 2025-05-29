@@ -77,7 +77,10 @@ const LoginPage = () => {
 
                 if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
                     navigate('/admin/dashboard');
-                } else {
+                } else if (user.role === 'SHIPPER') {
+                    navigate('/shipper');
+                }
+                else {
                     navigate('/');
                 }
             } else {

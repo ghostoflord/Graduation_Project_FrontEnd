@@ -39,6 +39,7 @@ import OrderFail from './pages/home/checkoutpage/orderstatus/orderfail';
 import TableProductDetail from './components/admin/product/product.detail/table.product.detail';
 import PermissionPage from './pages/admin/permisson/permisson.page';
 import RolePage from './pages/role/role.page';
+import ShipperPage from './pages/shipper/shipper.page';
 
 const router = createBrowserRouter([
   {
@@ -193,9 +194,14 @@ const router = createBrowserRouter([
     element: <OrderFail />
   },
   {
+    path: "shipper",
+    element: < ShipperPage />
+  },
+  {
     path: "*",
     element: <ErrorPage />,
   },
+
 ]);
 
 createRoot(document.getElementById('root')!).render(

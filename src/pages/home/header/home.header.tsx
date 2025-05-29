@@ -48,11 +48,18 @@ export default function Header() {
 
         const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
         const items: MenuProps['items'] = [];
-
+        const isShipper = user?.role === 'SHIPPER';
         if (isAdmin) {
             items.push({
                 label: <Link to="/admin/dashboard">Quản trị hệ thống</Link>,
                 key: 'admin',
+            });
+        }
+
+        if (isShipper) {
+            items.push({
+                label: <Link to="/shipper">Nhận Đơn Hàng</Link>,
+                key: 'shipper',
             });
         }
 

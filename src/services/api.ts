@@ -272,6 +272,21 @@ export const deleteOrderAPI = async (orderId: string) => {
     return res;
 };
 
+// Lấy danh sách đơn hàng dành cho shipper
+export const getOrdersForShipperAPI = () => {
+    return axios.get('/api/v1/orders/shipper');
+};
+
+// Shipper nhận đơn hàng
+export const acceptOrderAPI = (orderId: number) => {
+    return axios.post(`/api/v1/orders/${orderId}/accept`);
+};
+
+// Shipper hoàn thành đơn hàng
+export const completeOrderAPI = (orderId: number) => {
+    return axios.post(`/api/v1/orders/${orderId}/complete`);
+};
+
 /**
  * 
 Module Dashboard

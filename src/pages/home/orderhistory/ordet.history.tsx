@@ -67,13 +67,13 @@ const OrderHistory = () => {
             case 'PENDING':
                 return <Tag color="orange">Chờ xác nhận</Tag>;
             case 'CONFIRMED':
-                return <Tag color="blue">Đã xác nhận</Tag>;
+                return <Tag color="green">Đã nhận hàng</Tag>;
             case 'CANCELED':
                 return <Tag color="red">Đã hủy</Tag>;
             case 'SHIPPED':
                 return <Tag color="cyan">Đang giao</Tag>;
             case 'DELIVERED':
-                return <Tag color="green">Đã giao</Tag>;
+                return <Tag color="blue">Đã giao</Tag>;
             default:
                 return <Tag>{status}</Tag>;
         }
@@ -115,7 +115,7 @@ const OrderHistory = () => {
         {
             title: 'Hành động',
             render: (_: any, record: OrderSummary) =>
-                (record.status === 'PENDING' || record.status === 'CONFIRMED') ? (
+                record.status === 'PENDING' ? (
                     <Popconfirm
                         title="Xác nhận hủy đơn hàng?"
                         onConfirm={() => handleCancelOrder(record.id)}
