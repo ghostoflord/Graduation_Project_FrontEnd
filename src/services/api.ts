@@ -287,6 +287,11 @@ export const completeOrderAPI = (orderId: number) => {
     return axios.post(`/api/v1/orders/${orderId}/complete`);
 };
 
+export const markOrderAsDeliveredAPI = (orderId: number) => {
+    return axios.put(`/api/v1/orders/${orderId}/delivered`);
+};
+
+
 /**
  * 
 Module Dashboard

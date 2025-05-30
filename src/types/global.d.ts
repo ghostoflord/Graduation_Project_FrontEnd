@@ -216,6 +216,7 @@ declare global {
         id: number;
         receiverName: string;
         receiverPhone: string;
+        receiverAddress: address,
         status: string;
         createdAt: string;
         totalPrice: number;

@@ -1,10 +1,11 @@
+import ShipperDashboard from "@/components/shipper/shipper.dashboard";
 import ShipperOrderList from "@/components/shipper/shipper.orde.list";
 
 const ShipperPage = () => {
     return (
         <>
             <div>
-                <ShipperOrderList />
+                <ShipperDashboard />
             </div>
         </>
 

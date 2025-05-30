@@ -4,7 +4,11 @@ import { acceptOrderAPI, completeOrderAPI, getOrdersForShipperAPI } from '@/serv
 import { useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '../context/app.context';
 
-const ShipperOrderList = () => {
+interface Props {
+    selectedKey: 'pending' | 'delivered';
+}
+
+const ShipperOrderList = ({ selectedKey }: Props) => {
     const [orders, setOrders] = useState([]);
     const navigate = useNavigate();
     const { user } = useCurrentApp();
@@ -14,7 +18,15 @@ const ShipperOrderList = () => {
     const fetchOrders = async () => {
         try {
             const res = await getOrdersForShipperAPI();
-            setOrders(res.data);
+            const allOrders = res.data;
+
+            const filteredOrders = allOrders.filter((order: any) => {
+                if (selectedKey === 'pending') return order.status === 'PENDING';
+                if (selectedKey === 'delivered') return order.status === 'SHIPPING';
+                return false;
+            });
+
+            setOrders(filteredOrders);
         } catch (err) {
             message.error('Không thể tải danh sách đơn hàng.');
         }
@@ -44,7 +56,7 @@ const ShipperOrderList = () => {
         if (isShipper) {
             fetchOrders();
         }
-    }, [isShipper]);
+    }, [isShipper, selectedKey]);
 
     if (!isShipper) {
         return (
@@ -72,8 +84,8 @@ const ShipperOrderList = () => {
                                 Nhận đơn
                             </Button>
                         )}
-                        {order.status === 'DELIVERING' && (
-                            <Button danger onClick={() => handleComplete(order.id)}>
+                        {order.status === 'SHIPPING' && (
+                            <Button type="primary" danger onClick={() => handleComplete(order.id)}>
                                 Hoàn tất
                             </Button>
                         )}
