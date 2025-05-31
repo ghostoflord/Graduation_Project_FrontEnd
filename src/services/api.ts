@@ -291,6 +291,9 @@ export const markOrderAsDeliveredAPI = (orderId: number) => {
     return axios.put(`/api/v1/orders/${orderId}/delivered`);
 };
 
+export const getDeliveredOrders = () => {
+    return axios.get(`/api/v1/orders/shipper/delivered`);
+};
 
 /**
  * 
