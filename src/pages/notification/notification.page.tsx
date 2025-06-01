@@ -1,15 +1,10 @@
-import NotificationBell from "@/components/notification/notification.bell";
+import NotificationTable from "@/components/admin/notification/notification.table";
 
 const NotificationPage = () => {
-    const userId = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!userId) {
-        return <div>Vui lòng đăng nhập để xem thông báo.</div>;
-    }
 
     return (
         <div>
-            <NotificationBell userId={userId} />
+            <NotificationTable />
         </div>
     );
 }

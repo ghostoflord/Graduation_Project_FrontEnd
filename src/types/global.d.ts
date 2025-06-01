@@ -267,6 +267,15 @@ declare global {
         updatedAt?: string;
     }
 
+    export interface INotification {
+        id: number;
+        title: string;
+        content: string;
+        isRead: boolean;
+        createdAt: string;
+        forAll: boolean;
+    }
+
     // now not user
     interface IHistory {
         _id: string;

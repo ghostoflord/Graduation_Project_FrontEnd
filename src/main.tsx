@@ -163,6 +163,10 @@ const router = createBrowserRouter([
         element: <RolePage />,
       },
       {
+        path: "notification",
+        element: <NotificationPage />,
+      },
+      {
         path: "*",
         element: <ErrorPage />,
       }
@@ -171,11 +175,6 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/notification",
-    element: <NotificationPage />,
     errorElement: <ErrorPage />,
   },
   {

@@ -238,15 +238,22 @@ export const clearCartAPI = (userId: number) => {
 Module Notifications
  */
 export const createNotificationAPI = (
-    userId: number,
     title: string,
-    content: string
+    content: string,
+    userId?: number // optional
 ) => {
     const urlBackend = `/api/v1/notifications/create`;
+
+    const params: Record<string, any> = { title, content };
+    if (userId !== undefined) {
+        params.userId = userId;
+    }
+
     return axios.post<IBackendRes<any>>(urlBackend, null, {
-        params: { userId, title, content },
+        params,
     });
 };
+
 
 export const getNotificationsAPI = (userId: number) => {
     const urlBackend = `/api/v1/notifications`;
@@ -254,6 +261,11 @@ export const getNotificationsAPI = (userId: number) => {
         params: { userId },
     });
 };
+
+export const callFetchNotifications = async (query: string) => {
+    return await axios.get(`/api/v1/notifications?${query}`);
+};
+
 
 export const markNotificationAsReadAPI = (notificationId: number) => {
     const urlBackend = `/api/v1/notifications/${notificationId}/read`;
