@@ -33,7 +33,7 @@ const CreateNotification = (props: IProps) => {
                 isBroadcast ? undefined : userId // nếu isBroadcast thì không truyền userId
             );
 
-            if (res?.statusCode === 201) {
+            if (res?.statusCode === 200) {
                 message.success('Tạo thông báo thành công');
                 form.resetFields();
                 setOpenModalCreate(false);
