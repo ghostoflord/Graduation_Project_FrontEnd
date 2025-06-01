@@ -1,5 +1,5 @@
 import { Badge, Button, Input, Avatar, Space, Dropdown, message } from 'antd';
-import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import './home.header.scss';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 import logo from '@/assets/logo.png';
+import NotificationBell from '@/components/notification/notification.bell';
 
 export default function Header() {
     const {
@@ -133,14 +134,20 @@ export default function Header() {
                                 </Button>
                             </Link>
                         ) : (
-                            <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                                <Space style={{ cursor: "pointer" }}>
-                                    <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
-                                    <span>{user?.name}</span>
-                                </Space>
-                            </Dropdown>
+                            <>
+                                <NotificationBell userId={user?.id} />
+
+                                {/* Avatar + Dropdown */}
+                                <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                                    <Space style={{ cursor: "pointer" }}>
+                                        <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
+                                        <span>{user?.name}</span>
+                                    </Space>
+                                </Dropdown>
+                            </>
                         )}
 
+                        {/* Cart icon */}
                         <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
                             <Button
                                 shape="circle"
@@ -150,6 +157,7 @@ export default function Header() {
                             />
                         </Badge>
                     </div>
+
                 </div>
 
                 <div className="header-menu">

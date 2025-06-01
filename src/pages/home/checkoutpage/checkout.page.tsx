@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './checkout.page.scss';
-import { Input, Button, Radio, Row, Col, Typography, Card, Divider, message } from 'antd';
+import {
+    Form,
+    Input,
+    Button,
+    Radio,
+    Row,
+    Col,
+    Typography,
+    Card,
+    Divider,
+    message,
+} from 'antd';
 import { useNavigate } from 'react-router-dom';
 import {
     checkoutOrder,
     getCart,
     placeOrderAPI,
-    createVNPayURL
+    createVNPayURL,
 } from '@/services/api';
 import { useCurrentApp } from '@/components/context/app.context';
 
@@ -24,12 +35,12 @@ interface CartItem {
 
 const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
     const map = new Map<number, CartItem>();
-    items.forEach(item => {
+    items.forEach((item) => {
         if (map.has(item.productId)) {
             const existing = map.get(item.productId)!;
             map.set(item.productId, {
                 ...existing,
-                quantity: existing.quantity + item.quantity
+                quantity: existing.quantity + item.quantity,
             });
         } else {
             map.set(item.productId, { ...item });
@@ -39,10 +50,8 @@ const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
 };
 
 const CheckoutPage = () => {
+    const [form] = Form.useForm();
     const [userId, setUserId] = useState<number | null>(null);
-    const [name, setName] = useState('');
-    const [address, setAddress] = useState('');
-    const [phone, setPhone] = useState('');
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<string>('cod');
@@ -61,12 +70,14 @@ const CheckoutPage = () => {
             const user = JSON.parse(storedUser);
             const uid = Number(user.id);
             setUserId(uid);
-            setName(user.name || '');
-            setAddress(user.address || '');
-            setPhone(user.phone || '');
+            form.setFieldsValue({
+                name: user.name || '',
+                address: user.address || '',
+                phone: user.phone || '',
+            });
 
             getCart(uid)
-                .then(cartRes => {
+                .then((cartRes) => {
                     if (cartRes?.data?.items) {
                         const rawItems: CartItem[] = cartRes.data.items;
                         const mergedItems = mergeDuplicateItems(rawItems);
@@ -80,7 +91,7 @@ const CheckoutPage = () => {
                         message.warning('Giỏ hàng trống');
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.error('Lỗi khi lấy giỏ hàng:', err);
                     message.error('Không thể lấy giỏ hàng');
                 });
@@ -90,15 +101,21 @@ const CheckoutPage = () => {
         }
     }, []);
 
-    const handlePlaceOrder = async () => {
+    const handlePlaceOrder = async (values: any) => {
         if (!userId) return message.error('Thiếu thông tin người dùng');
 
-        const itemsToCheckout = cartItems.map(item => ({
+        const itemsToCheckout = cartItems.map((item) => ({
             productId: item.productId,
-            quantity: item.quantity
+            quantity: item.quantity,
         }));
 
-        const orderPayload = { userId, name, address, phone, items: itemsToCheckout };
+        const orderPayload = {
+            userId,
+            name: values.name,
+            address: values.address,
+            phone: values.phone,
+            items: itemsToCheckout,
+        };
 
         if (paymentMethod === 'cod') {
             try {
@@ -106,7 +123,7 @@ const CheckoutPage = () => {
                 if (res?.statusCode === 201) {
                     await checkoutOrder(itemsToCheckout);
                     message.success('Đặt hàng thành công!');
-                    setCartSummary({ sum: 0 }); // Cập nhật cart ở Header
+                    setCartSummary({ sum: 0 });
                     setTimeout(() => navigate('/'), 1000);
                 } else {
                     message.error(res?.message || 'Đặt hàng thất bại');
@@ -121,7 +138,7 @@ const CheckoutPage = () => {
                 const res = await createVNPayURL({
                     ...orderPayload,
                     amount: totalPrice,
-                    paymentRef
+                    paymentRef,
                 });
                 if (res?.data) {
                     window.location.href = res.data;
@@ -140,48 +157,72 @@ const CheckoutPage = () => {
             <Row gutter={32}>
                 <Col span={14} className="checkout-left">
                     <Title level={4}>Thông tin nhận hàng</Title>
-                    <Input
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        placeholder="Họ và tên"
-                        className="mb-3"
-                    />
-                    <Input
-                        value={phone}
-                        onChange={e => setPhone(e.target.value)}
-                        placeholder="Số điện thoại"
-                        className="mb-3"
-                    />
-                    <Input
-                        value={address}
-                        onChange={e => setAddress(e.target.value)}
-                        placeholder="Địa chỉ"
-                        className="mb-3"
-                    />
-
-                    <Title level={4}>Thanh toán</Title>
-                    <Radio.Group
-                        className="payment-methods"
-                        value={paymentMethod}
-                        onChange={e => setPaymentMethod(e.target.value)}
+                    <Form
+                        layout="vertical"
+                        form={form}
+                        onFinish={handlePlaceOrder}
+                        initialValues={{ paymentMethod: 'cod' }}
                     >
-                        <Radio.Button value="vnpay">Thanh toán qua VNPAY</Radio.Button>
-                        <Radio.Button value="cod">
-                            Thanh toán khi giao hàng (COD)
-                        </Radio.Button>
-                    </Radio.Group>
+                        <Form.Item
+                            name="name"
+                            label="Họ và tên"
+                            rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+                        >
+                            <Input placeholder="Họ và tên" />
+                        </Form.Item>
+                        <Form.Item
+                            name="phone"
+                            label="Số điện thoại"
+                            rules={[
+                                { required: true, message: 'Vui lòng nhập số điện thoại' },
+
+                            ]}
+                        >
+                            <Input placeholder="Số điện thoại" />
+                        </Form.Item>
+                        <Form.Item
+                            name="address"
+                            label="Địa chỉ"
+                            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+                        >
+                            <Input placeholder="Địa chỉ" />
+                        </Form.Item>
+
+                        <Title level={4}>Thanh toán</Title>
+                        <Form.Item name="paymentMethod">
+                            <Radio.Group
+                                className="payment-methods"
+                                value={paymentMethod}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                            >
+                                <Radio.Button value="vnpay">Thanh toán qua VNPAY</Radio.Button>
+                                <Radio.Button value="cod">
+                                    Thanh toán khi giao hàng (COD)
+                                </Radio.Button>
+                            </Radio.Group>
+                        </Form.Item>
+
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            block
+                            size="large"
+                            className="place-order-btn"
+                            disabled={cartItems.length === 0}
+                        >
+                            {paymentMethod === 'cod' ? 'ĐẶT HÀNG' : 'THANH TOÁN VNPAY'}
+                        </Button>
+                    </Form>
                 </Col>
 
                 <Col span={10} className="checkout-right">
                     <Card className="order-summary">
                         <Title level={5}>Đơn hàng</Title>
                         {cartItems.length === 0 ? (
-                            <Text type="secondary">
-                                Không có sản phẩm trong giỏ hàng
-                            </Text>
+                            <Text type="secondary">Không có sản phẩm trong giỏ hàng</Text>
                         ) : (
                             <>
-                                {cartItems.map(item => (
+                                {cartItems.map((item) => (
                                     <div className="product-row" key={item.productId}>
                                         <img
                                             src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`}
@@ -208,18 +249,6 @@ const CheckoutPage = () => {
                                 </div>
                             </>
                         )}
-                        <Button
-                            type="primary"
-                            block
-                            size="large"
-                            className="place-order-btn"
-                            onClick={handlePlaceOrder}
-                            disabled={cartItems.length === 0}
-                        >
-                            {paymentMethod === 'cod'
-                                ? 'ĐẶT HÀNG'
-                                : 'THANH TOÁN VNPAY'}
-                        </Button>
                         <Button type="link" block onClick={() => navigate('/')}>
                             ← Quay về trang chủ
                         </Button>

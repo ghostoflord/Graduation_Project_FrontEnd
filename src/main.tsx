@@ -40,6 +40,7 @@ import TableProductDetail from './components/admin/product/product.detail/table.
 import PermissionPage from './pages/admin/permisson/permisson.page';
 import RolePage from './pages/role/role.page';
 import ShipperPage from './pages/shipper/shipper.page';
+import NotificationPage from './pages/notification/notification.page';
 
 const router = createBrowserRouter([
   {
@@ -170,6 +171,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/notification",
+    element: <NotificationPage />,
     errorElement: <ErrorPage />,
   },
   {
