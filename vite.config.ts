@@ -10,14 +10,8 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
+    // host: '0.0.0.0', cấu hình mạng lan
     port: 3000, //5173
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:8080', // backend Spring Boot
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, '')
-    //   }
-    // }
   },
   css: {
     preprocessorOptions: {

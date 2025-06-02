@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getNotificationsAPI, markNotificationAsReadAPI } from '@/services/api';
 import './notification.scss';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = Number(import.meta.env.VITE_NOTIFICATION_PAGE_SIZE) || 5; 
 
 const NotificationBell = ({ userId }: { userId: number }) => {
     const [notifications, setNotifications] = useState<any[]>([]);
