@@ -254,24 +254,27 @@ export const createNotificationAPI = (
     });
 };
 
+export const getNotificationsAPI = async (
+    params: { userId: number; current?: number; pageSize?: number }
+) => {
+    const { userId, current = 1, pageSize = 5 } = params;
 
-export const getNotificationsAPI = (userId: number) => {
-    const urlBackend = `/api/v1/notifications`;
-    return axios.get<IBackendRes<any>>(urlBackend, {
-        params: { userId },
+    const queryParams = new URLSearchParams({
+        userId: userId.toString(),
+        page: current.toString(),
+        pageSize: pageSize.toString(),
     });
+    return await axios.get(`/api/v1/notifications/user?${queryParams.toString()}`);
 };
 
 export const callFetchNotifications = async (query: string) => {
     return await axios.get(`/api/v1/notifications?${query}`);
 };
 
-
 export const markNotificationAsReadAPI = (notificationId: number) => {
     const urlBackend = `/api/v1/notifications/${notificationId}/read`;
     return axios.post<IBackendRes<any>>(urlBackend);
 };
-
 
 /**
  * 

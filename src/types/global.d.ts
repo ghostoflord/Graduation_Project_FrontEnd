@@ -4,7 +4,10 @@ export { };
 
 declare global {
 
-    // Auth
+    /**
+     * 
+    Module Auth
+     */
     interface IBackendRes<T> {
         error?: string | string[];
         message: string | string[];
@@ -54,7 +57,10 @@ declare global {
         user: IUser
     }
 
-    // User
+    /**
+    * 
+    Module User
+    */
     interface IUser {
         email: string;
         phone: string;
@@ -93,7 +99,11 @@ declare global {
         orderCount: number;
         cartSum: number;
     }
-    // Product
+
+    /**
+    * 
+    Module Product
+    */
     interface IProductTable {
         id: string;
         image: string;
@@ -111,12 +121,9 @@ declare global {
         updatedAt: Date;
         bestsell: string;
         sell: string;
-        averageRating: number; // thêm
+        averageRating: number;
         totalReviews: number;
     }
-
-    // product_detail
-    // src/types/productDetail.d.ts
 
     export interface ProductDetail {
         id?: number;
@@ -135,7 +142,10 @@ declare global {
     }
 
 
-    // cart
+    /**
+    * 
+    Module Cart
+    */
     interface ICart {
         quantity: number;
         price: number;
@@ -176,14 +186,18 @@ declare global {
         clearCart: () => void;
     }
 
-
-
-    // order
-    interface IOrder {
-        userId: number;
-        receiverName: name,
-        receiverAddress: address,
-        receiverPhone: phone
+    /**
+    * 
+    Module VNPay
+    */
+    export interface VNPayRequestData {
+        amount: totalPrice,
+        paymentRef,
+        userId,
+        name,
+        address,
+        phone,
+        items: itemsToCheckout,
     }
 
     export interface VNPayRequestData {
@@ -200,18 +214,10 @@ declare global {
         }[];
     }
 
-
-    // vnpay
-    export interface VNPayRequestData {
-        amount: totalPrice,
-        paymentRef,
-        userId,
-        name,
-        address,
-        phone,
-        items: itemsToCheckout,
-    }
-
+    /**
+    * 
+    Module Order
+    */
     interface IOrderTable {
         id: number;
         receiverName: string;
@@ -221,6 +227,13 @@ declare global {
         createdAt: string;
         totalPrice: number;
         totalQuantity: number; // thêm dòng này
+    }
+
+    interface IOrder {
+        userId: number;
+        receiverName: name,
+        receiverAddress: address,
+        receiverPhone: phone
     }
 
     export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPING' | 'COMPLETED' | 'CANCELLED';
@@ -239,6 +252,10 @@ declare global {
         estimatedDeliveryTime?: string;
     }
 
+    /**
+    * 
+    Module Permission
+    */
     interface IPermission {
         id?: string;
         name?: string;
@@ -254,6 +271,10 @@ declare global {
 
     }
 
+    /**
+    * 
+    Module Role
+    */
     export interface IRole {
         id?: string;
         name: string;
@@ -267,6 +288,10 @@ declare global {
         updatedAt?: string;
     }
 
+    /**
+    * 
+    Module Notifications
+    */
     export interface INotification {
         id: number;
         title: string;
@@ -275,28 +300,4 @@ declare global {
         createdAt: string;
         forAll: boolean;
     }
-
-    // now not user
-    interface IHistory {
-        _id: string;
-        name: string;
-        type: string;
-        email: string;
-        phone: string;
-        userId: string;
-        detail:
-        {
-            bookName: string;
-            quantity: number;
-            _id: string;
-        }[];
-        totalPrice: number;
-        createdAt: Date;
-        updatedAt: Date;
-    }
-
-    // interface IOrderTable extends IHistory {
-
-    // }
-
 }
