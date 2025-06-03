@@ -114,17 +114,34 @@ const OrderHistory = () => {
         },
         {
             title: 'Hành động',
-            render: (_: any, record: OrderSummary) =>
-                record.status === 'PENDING' ? (
-                    <Popconfirm
-                        title="Xác nhận hủy đơn hàng?"
-                        onConfirm={() => handleCancelOrder(record.id)}
-                        okText="Đồng ý"
-                        cancelText="Hủy"
-                    >
-                        <Button danger>Hủy đơn</Button>
-                    </Popconfirm>
-                ) : null,
+            render: (_: any, record: OrderSummary) => {
+                if (record.status === 'PENDING') {
+                    return (
+                        <Popconfirm
+                            title="Xác nhận hủy đơn hàng?"
+                            onConfirm={() => handleCancelOrder(record.id)}
+                            okText="Đồng ý"
+                            cancelText="Hủy"
+                        >
+                            <Button danger>Hủy đơn</Button>
+                        </Popconfirm>
+                    );
+                }
+
+                if (record.status === 'CONFIRMED') {
+                    return (
+                        <a
+                            href={`http://localhost:8080/api/v1/invoice/${record.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Button type="primary">Lấy Hóa Đơn</Button>
+                        </a>
+                    );
+                }
+
+                return null;
+            },
         },
     ];
 

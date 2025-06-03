@@ -41,6 +41,7 @@ import PermissionPage from './pages/admin/permisson/permisson.page';
 import RolePage from './pages/role/role.page';
 import ShipperPage from './pages/shipper/shipper.page';
 import NotificationPage from './pages/notification/notification.page';
+import InvoiceView from './components/admin/order/orderqr/order.qr.view';
 
 const router = createBrowserRouter([
   {
@@ -201,6 +202,10 @@ const router = createBrowserRouter([
   {
     path: "shipper",
     element: < ShipperPage />
+  },
+  {
+    path: "orders/view/:id",
+    element: < InvoiceView />
   },
   {
     path: "*",
