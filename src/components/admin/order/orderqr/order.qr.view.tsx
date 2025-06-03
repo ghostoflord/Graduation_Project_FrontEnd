@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import './order.qr.view.scss';
-
-interface Order {
-    id: number;
-    receiverName: string;
-    totalPrice: number;
-    receiverAddress: string;
-    receiverPhone: string;
-    // Có thể mở rộng thêm trường ở đây
-}
+import { fetchOrderSummaryById } from '@/services/api';
 
 const InvoiceView = () => {
     const { id } = useParams<{ id: string }>();
-    const [order, setOrder] = useState<Order | null>(null);
+    const [order, setOrder] = useState<IOrderTable | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get(`/api/v1/orders/${id}/detail`)
-            .then(res => setOrder(res.data))
-            .catch(err => console.error('Error fetching order:', err));
+        if (!id) return;
+
+        fetchOrderSummaryById(id)
+            .then(data => setOrder(data))
+            .catch(err => console.error('Error fetching order:', err))
+            .finally(() => setLoading(false));
     }, [id]);
 
-    if (!order) {
+    if (loading) {
         return <div className="invoice-view">Đang tải hóa đơn...</div>;
+    }
+
+    if (!order) {
+        return <div className="invoice-view">Không tìm thấy đơn hàng.</div>;
     }
 
     return (
@@ -34,11 +33,10 @@ const InvoiceView = () => {
                 <p><strong>Khách hàng:</strong> {order.receiverName}</p>
                 <p><strong>Địa chỉ:</strong> {order.receiverAddress}</p>
                 <p><strong>Số điện thoại:</strong> {order.receiverPhone}</p>
-                <p><strong>Tổng tiền:</strong> {order.totalPrice ? order.totalPrice.toLocaleString() + 'đ' : 'N/A'}</p>
-
+                <p><strong>Tổng tiền:</strong> {order.totalPrice.toLocaleString()}đ</p>
             </div>
             <footer>
-                <p>Cảm ơn bạn đã mua hàng!</p>
+                <p>Cảm ơn quý khách đã mua hàng!</p>
             </footer>
         </div>
     );

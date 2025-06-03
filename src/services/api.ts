@@ -284,6 +284,11 @@ export const placeOrderAPI = (data: { userId: number; name: string, address: str
     return axios.post('/api/v1/orders/place', data);
 };
 
+export const fetchOrderSummaryById = async (id: string): Promise<IOrderTable> => {
+    const response = await axios.get<IOrderTable>(`/api/v1/orders/${id}`);
+    return response.data;
+};
+
 export const fetchAllOrders = async (): Promise<IOrderTable[]> => {
     const response = await axios.get<IOrderTable[]>('/api/v1/orders/all');
     return response.data;
