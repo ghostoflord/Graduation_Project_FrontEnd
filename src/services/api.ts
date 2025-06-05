@@ -433,5 +433,9 @@ export const callGetRoleById = (id: number | string) => {
     return axios.get<IBackendRes<IRole>>(`/api/v1/roles/${id}`);
 };
 
-
-
+/**
+ *Module Chat
+ */
+export const sendMessageToChatbot = async (prompt: string): Promise<string> => {
+    return await axios.post('http://localhost:8080/api/v1/chat', { prompt });
+};
