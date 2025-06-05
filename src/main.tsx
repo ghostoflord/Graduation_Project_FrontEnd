@@ -43,6 +43,7 @@ import ShipperPage from './pages/shipper/shipper.page';
 import NotificationPage from './pages/notification/notification.page';
 import InvoiceView from './components/admin/order/orderqr/order.qr.view';
 import ChatWithGPT from './pages/chat/chat.with.gpt';
+import { ChatBot } from './pages/chatbot/chat.bot';
 
 const router = createBrowserRouter([
   {
@@ -211,6 +212,10 @@ const router = createBrowserRouter([
   {
     path: "chat",
     element: < ChatWithGPT />
+  },
+  {
+    path: "chatbot",
+    element: < ChatBot />
   },
   {
     path: "*",
