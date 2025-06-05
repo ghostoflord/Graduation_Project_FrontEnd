@@ -1,123 +1,97 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Input, Button, List, Typography, Spin } from 'antd';
-import { sendMessageToChatBOT } from '@/services/api';
+import React, { useState } from 'react';
+import { Input, Button } from 'antd';
+import { CloseOutlined, SendOutlined, RobotOutlined } from '@ant-design/icons';
 import './chat.widget.scss';
+import ChatWithGPT from '../chat/chat.with.gpt';
+import { sendMessageToChatBOT } from '@/services/api';
 
-const { Text } = Typography;
-
-interface Message {
-    sender: 'user' | 'bot';
-    text: string;
-    isError?: boolean;
-}
+const ChatToggleIcon = ({ onClick }: { onClick: () => void }) => (
+    <div className="chat-toggle-icon" onClick={onClick} role="button" tabIndex={0}>
+        <RobotOutlined style={{ fontSize: '30px', color: '#1677ff' }} />
+    </div>
+);
 
 const ChatWidget = () => {
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [visible, setVisible] = useState(false);
+    const [isGPTMode, setIsGPTMode] = useState(false);
     const [input, setInput] = useState('');
+    const [messages, setMessages] = useState<{ sender: 'user' | 'bot'; text: string }[]>([]);
     const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false); // trạng thái mở/đóng chat form
 
-    const bodyRef = useRef<HTMLDivElement>(null);
+    const handleSend = async () => {
+        if (!input.trim()) return;
 
-    useEffect(() => {
-        if (bodyRef.current) {
-            bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-        }
-    }, [messages, open]);
-
-    const sendMessage = async () => {
-        const trimmedInput = input.trim();
-        if (!trimmedInput) return;
-
-        setMessages((prev) => [...prev, { sender: 'user', text: trimmedInput }]);
+        const userMessage = input.trim();
+        setMessages((prev) => [...prev, { sender: 'user', text: userMessage }]);
         setInput('');
         setLoading(true);
 
         try {
-            const botReply = await sendMessageToChatBOT(trimmedInput);
-            const isError = botReply.includes('Xin lỗi, tôi chưa hiểu yêu cầu của bạn');
-            setMessages((prev) => [...prev, { sender: 'bot', text: botReply, isError }]);
+            const res = await sendMessageToChatBOT(userMessage);
+            setMessages((prev) => [...prev, { sender: 'bot', text: res }]);
         } catch (error) {
-            setMessages((prev) => [
-                ...prev,
-                { sender: 'bot', text: '⚠️ Có lỗi xảy ra. Vui lòng thử lại sau.', isError: true },
-            ]);
-            console.error('ChatBot error:', error);
+            setMessages((prev) => [...prev, { sender: 'bot', text: 'Lỗi kết nối, vui lòng thử lại sau.' }]);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleChatGPT = () => alert('Chuyển sang chat GPT');
-    const handleChatAdmin = () => alert('Liên hệ admin');
-
     return (
         <>
-            {!open && (
-                <div className="chat-toggle-icon" onClick={() => setOpen(true)} title="Mở chat hỗ trợ">
-                    💬
-                </div>
-            )}
+            {!visible && <ChatToggleIcon onClick={() => setVisible(true)} />}
 
-            {open && (
+            {visible && (
                 <div className="chat-widget fadeInUp">
                     <div className="chat-header">
-                        💬 Chat hỗ trợ
-                        <button className="close-btn" onClick={() => setOpen(false)} aria-label="Đóng chat">
-                            ✕
-                        </button>
+                        <span>{isGPTMode ? 'Chat với AI 🤖' : 'Hỗ trợ trực tuyến'}</span>
+                        <CloseOutlined onClick={() => setVisible(false)} style={{ cursor: 'pointer' }} />
                     </div>
 
-                    <div className="chat-body" ref={bodyRef}>
-                        <List
-                            dataSource={messages}
-                            renderItem={(msg, idx) => (
-                                <List.Item
-                                    key={idx}
-                                    className={msg.sender === 'user' ? 'user-msg' : 'bot-msg'}
-                                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-                                >
-                                    <Text strong>{msg.sender === 'user' ? 'Bạn:' : 'Bot:'}</Text> {msg.text}
+                    <div className="chat-body">
+                        {isGPTMode ? (
+                            <ChatWithGPT onBack={() => setIsGPTMode(false)} />
+                        ) : (
+                            <>
+                                {messages.map((msg, idx) => (
+                                    <div key={idx} className={msg.sender === 'user' ? 'user-msg' : 'bot-msg'}>
+                                        {msg.text}
 
-                                    {msg.isError && (
-                                        <div className="error-options" style={{ marginTop: 8 }}>
-                                            <Button
-                                                type="primary"
-                                                size="small"
-                                                onClick={handleChatGPT}
-                                                style={{ marginRight: 8 }}
-                                            >
-                                                Chuyển sang Chat GPT
-                                            </Button>
-                                            <Button size="small" onClick={handleChatAdmin}>
-                                                Nói chuyện với Admin
-                                            </Button>
+                                        {msg.sender === 'bot' && msg.text === 'Xin lỗi, tôi chưa hiểu yêu cầu của bạn.' && (
+                                            <div className="error-options">
+                                                <button onClick={() => setIsGPTMode(true)}>Hỏi AI</button>
+                                                <button onClick={() => alert('Kết nối nhân viên')}>Gặp nhân viên</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+
+                                {!loading && messages.length === 0 && (
+                                    <div className="bot-msg">
+                                        Xin chào! Tôi có thể giúp gì cho bạn?
+                                        <div className="error-options">
+                                            <button onClick={() => setIsGPTMode(true)}>Hỏi AI</button>
+                                            <button onClick={() => alert('Kết nối nhân viên')}>Gặp nhân viên</button>
                                         </div>
-                                    )}
-                                </List.Item>
-                            )}
-                            locale={{ emptyText: loading ? <Spin /> : 'Chưa có tin nhắn' }}
-                        />
+                                    </div>
+                                )}
 
-                        {loading && (
-                            <div className="loading">
-                                <Spin />
-                            </div>
+                                {loading && <div className="bot-msg loading">Đang gửi...</div>}
+                            </>
                         )}
                     </div>
 
-                    <div className="chat-footer">
-                        <Input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onPressEnter={sendMessage}
-                            disabled={loading}
-                            placeholder="Nhập tin nhắn..."
-                        />
-                        <Button type="primary" onClick={sendMessage} loading={loading} disabled={loading}>
-                            Gửi
-                        </Button>
-                    </div>
+                    {!isGPTMode && (
+                        <div className="chat-footer">
+                            <Input
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onPressEnter={handleSend}
+                                placeholder="Nhập tin nhắn..."
+                                disabled={loading}
+                            />
+                            <Button icon={<SendOutlined />} type="primary" onClick={handleSend} disabled={loading} />
+                        </div>
+                    )}
                 </div>
             )}
         </>

@@ -214,10 +214,6 @@ const router = createBrowserRouter([
     element: < ChatWithGPT />
   },
   {
-    path: "chatbot",
-    element: < ChatBot />
-  },
-  {
     path: "*",
     element: <ErrorPage />,
   },

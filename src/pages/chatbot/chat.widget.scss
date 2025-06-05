@@ -4,19 +4,22 @@
     right: 20px;
     width: 60px;
     height: 60px;
-    background-color: #1677ff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 30px;
     cursor: pointer;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
     z-index: 10000;
 
     &:hover {
-        background-color: #105ecf;
+        background-color: rgba(22, 119, 255, 0.1);
+    }
+
+    svg {
+        margin: 0;
+        padding: 0;
+        background: transparent;
     }
 }
 
@@ -26,14 +29,13 @@
     right: 20px;
     z-index: 10000;
     font-family: Arial, sans-serif;
-
-    width: 340px; // ~50% so với 340px gốc
-    height: 320px; // giảm từ 450px
+    width: 340px;
+    height: 320px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
-    background: white;
+    background: rgb(243, 241, 241);
 
     &.fadeInUp {
         animation: fadeInUp 0.3s ease forwards;
@@ -51,7 +53,8 @@
         border-radius: 10px 10px 0 0;
         user-select: none;
 
-        .close-btn {
+        .close-btn,
+        svg {
             background: transparent;
             border: none;
             color: white;
@@ -96,7 +99,7 @@
             background: #f6ffed;
             color: #000;
 
-            &.error-options {
+            & .error-options {
                 margin-top: 6px;
                 display: flex;
                 gap: 6px;
