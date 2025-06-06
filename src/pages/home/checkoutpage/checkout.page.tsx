@@ -11,6 +11,7 @@ import {
     Card,
     Divider,
     message,
+    Modal,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -18,8 +19,10 @@ import {
     getCart,
     placeOrderAPI,
     createVNPayURL,
+    applyVoucherAPI,
 } from '@/services/api';
 import { useCurrentApp } from '@/components/context/app.context';
+import ApplyVoucherForm from '@/pages/admin/voucher/apply.voucher.form';
 
 const { Title, Text } = Typography;
 
@@ -55,6 +58,9 @@ const CheckoutPage = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<string>('cod');
+    const [voucherCode, setVoucherCode] = useState<string | null>(null);
+    const [voucherDiscount, setVoucherDiscount] = useState<number>(0);
+    const [voucherModalVisible, setVoucherModalVisible] = useState(false);
     const navigate = useNavigate();
     const { setCartSummary } = useCurrentApp();
 
@@ -115,6 +121,7 @@ const CheckoutPage = () => {
             address: values.address,
             phone: values.phone,
             items: itemsToCheckout,
+            voucherCode,
         };
 
         if (paymentMethod === 'cod') {
@@ -137,7 +144,7 @@ const CheckoutPage = () => {
                 const paymentRef = `ORDER_${Date.now()}`;
                 const res = await createVNPayURL({
                     ...orderPayload,
-                    amount: totalPrice,
+                    amount: totalPrice - voucherDiscount,
                     paymentRef,
                 });
                 if (res?.data) {
@@ -149,6 +156,31 @@ const CheckoutPage = () => {
                 console.error(err);
                 message.error('Lỗi khi tạo thanh toán VNPAY');
             }
+        }
+    };
+
+    const handleApplyVoucher = async (code: string) => {
+        if (!userId) return;
+
+        const orderTotal = totalPrice;
+        try {
+            const res = await applyVoucherAPI(userId, code, orderTotal);
+
+            const discount = res?.data?.discountAmount;
+            const messageFromBackend = res?.data?.message || res?.message;
+
+            if (discount !== undefined && discount >= 0) {
+                setVoucherCode(code);
+                setVoucherDiscount(discount);
+                message.success(`Đã áp dụng mã giảm giá: -${discount.toLocaleString('vi-VN')}₫`);
+                // Đóng modal ngay khi áp voucher thành công
+                setVoucherModalVisible(false);
+            } else {
+                message.error(messageFromBackend || 'Mã giảm giá không hợp lệ');
+            }
+        } catch (err) {
+            console.error('Lỗi khi gọi API áp voucher:', err);
+            message.error('Không thể áp dụng mã giảm giá');
         }
     };
 
@@ -173,10 +205,7 @@ const CheckoutPage = () => {
                         <Form.Item
                             name="phone"
                             label="Số điện thoại"
-                            rules={[
-                                { required: true, message: 'Vui lòng nhập số điện thoại' },
-
-                            ]}
+                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
                         >
                             <Input placeholder="Số điện thoại" />
                         </Form.Item>
@@ -196,9 +225,7 @@ const CheckoutPage = () => {
                                 onChange={(e) => setPaymentMethod(e.target.value)}
                             >
                                 <Radio.Button value="vnpay">Thanh toán qua VNPAY</Radio.Button>
-                                <Radio.Button value="cod">
-                                    Thanh toán khi giao hàng (COD)
-                                </Radio.Button>
+                                <Radio.Button value="cod">Thanh toán khi giao hàng (COD)</Radio.Button>
                             </Radio.Group>
                         </Form.Item>
 
@@ -241,12 +268,24 @@ const CheckoutPage = () => {
                                     </div>
                                 ))}
                                 <Divider />
+                                {voucherCode && (
+                                    <div className="summary-voucher">
+                                        <Text>Mã giảm giá: </Text>
+                                        <Text type="success">{voucherCode}</Text>
+                                        <br />
+                                        <Text>Giảm: </Text>
+                                        <Text type="danger">- {voucherDiscount.toLocaleString('vi-VN')}₫</Text>
+                                    </div>
+                                )}
                                 <div className="summary-total">
                                     <Text strong>Tổng cộng</Text>
                                     <Text strong className="total-amount">
-                                        {totalPrice.toLocaleString('vi-VN')}₫
+                                        {(totalPrice - voucherDiscount).toLocaleString('vi-VN')}₫
                                     </Text>
                                 </div>
+                                <Button type="dashed" block onClick={() => setVoucherModalVisible(true)}>
+                                    + Nhập mã giảm giá
+                                </Button>
                             </>
                         )}
                         <Button type="link" block onClick={() => navigate('/')}>
@@ -255,6 +294,17 @@ const CheckoutPage = () => {
                     </Card>
                 </Col>
             </Row>
+
+            {/* Modal voucher */}
+            <Modal
+                open={voucherModalVisible}
+                title="Áp dụng mã giảm giá"
+                onCancel={() => setVoucherModalVisible(false)}
+                footer={null}
+            >
+                {/* Truyền hàm apply voucher, modal sẽ tự đóng khi thành công */}
+                <ApplyVoucherForm onApply={handleApplyVoucher} />
+            </Modal>
         </div>
     );
 };

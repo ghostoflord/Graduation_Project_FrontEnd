@@ -473,11 +473,12 @@ export const assignVoucherToUserAPI = (voucherId: number, userId: number) => {
 };
 
 // Áp dụng voucher
-export const applyVoucherAPI = (code: string, userId: number, orderTotal: number) => {
+export const applyVoucherAPI = (userId: string, code: string, orderTotal: string) => {
     return axios.post<IBackendRes<number>>(`/api/v1/vouchers/apply`, null, {
         params: {
-            code,
+
             userId,
+            code,
             orderTotal,
         },
     });
@@ -493,3 +494,6 @@ export const deleteVoucherAPI = (id: number) => {
     return axios.delete<IBackendRes<string>>(`/api/v1/vouchers/${id}`);
 };
 
+export const getVouchersForUserAPI = (userId: number) => {
+    return axios.get<IBackendRes<IVoucher[]>>(`/api/v1/vouchers/user/${userId}`);
+};

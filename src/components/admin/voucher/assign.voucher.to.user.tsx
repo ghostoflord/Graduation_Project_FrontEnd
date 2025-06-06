@@ -56,7 +56,7 @@ const AssignVoucherToUser = ({ openModalAssign, setOpenModalAssign, refreshTable
         setIsSubmit(true);
         try {
             const res = await assignVoucherToUserAPI(values.voucherId, values.userId);
-            if (res?.data?.success) {
+            if (res?.data) {
                 message.success("Gán voucher thành công");
                 form.resetFields();
                 setOpenModalAssign(false);

@@ -325,4 +325,10 @@ declare global {
         updatedAt: string;
     }
 
+    export interface IAssignedUser {
+        id: number;
+        name: string;
+        email: string;
+    }
+
 }
