@@ -300,4 +300,29 @@ declare global {
         createdAt: string;
         forAll: boolean;
     }
+
+    /**
+    * 
+     Module Voucher
+    */
+    export interface IVoucher {
+        id: number;
+        code: string;
+        description: string;
+        discountValue: number;
+        isPercentage: boolean;
+        startDate: string; // ISO 8601 format
+        endDate: string;
+        isSingleUse: boolean;
+        isActive: boolean;
+        used: boolean;
+        assignedUser?: {
+            id: number;
+            name: string;
+            email: string;
+        } | null;
+        createdAt: string;
+        updatedAt: string;
+    }
+
 }

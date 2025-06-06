@@ -44,6 +44,7 @@ import NotificationPage from './pages/notification/notification.page';
 import InvoiceView from './components/admin/order/orderqr/order.qr.view';
 import ChatWithGPT from './pages/chat/chat.with.gpt';
 import { ChatBot } from './pages/chatbot/chat.bot';
+import VoucherPage from './pages/admin/voucher/voucher.page';
 
 const router = createBrowserRouter([
   {
@@ -168,6 +169,10 @@ const router = createBrowserRouter([
       {
         path: "notification",
         element: <NotificationPage />,
+      },
+      {
+        path: "voucher",
+        element: <VoucherPage />,
       },
       {
         path: "*",

@@ -443,3 +443,53 @@ export const sendMessageToChatbot = async (prompt: string): Promise<string> => {
 export const sendMessageToChatBOT = (message: string) => {
     return axios.post<string>('/api/v1/manual-chat', { message });
 };
+
+
+/**
+* 
+ Module Voucher
+*/
+// Tạo voucher
+export const createVoucherAPI = (voucher: {
+    code: string;
+    description: string;
+    discountValue: number;
+    isPercentage: boolean;
+    startDate: string; // ISO string
+    endDate: string;
+    isSingleUse: boolean;
+}) => {
+    return axios.post<IBackendRes<IVoucher>>("/api/v1/vouchers", voucher);
+};
+
+// Gán voucher cho user
+export const assignVoucherToUserAPI = (voucherId: number, userId: number) => {
+    return axios.post<IBackendRes<string>>(`/api/v1/vouchers/assign`, null, {
+        params: {
+            voucherId,
+            userId,
+        },
+    });
+};
+
+// Áp dụng voucher
+export const applyVoucherAPI = (code: string, userId: number, orderTotal: number) => {
+    return axios.post<IBackendRes<number>>(`/api/v1/vouchers/apply`, null, {
+        params: {
+            code,
+            userId,
+            orderTotal,
+        },
+    });
+};
+
+// Lấy tất cả voucher
+export const getAllVouchersAPI = () => {
+    return axios.get<IBackendRes<IVoucher[]>>("/api/v1/vouchers");
+};
+
+// Xoá voucher theo ID
+export const deleteVoucherAPI = (id: number) => {
+    return axios.delete<IBackendRes<string>>(`/api/v1/vouchers/${id}`);
+};
+
