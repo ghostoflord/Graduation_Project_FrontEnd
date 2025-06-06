@@ -24,49 +24,67 @@ const ChatWithGPT: React.FC<ChatWithGPTProps> = ({ onBack }) => {
         if (!input.trim()) return;
 
         const userMessage: ChatMessage = { role: 'user', content: input };
-        setChatHistory(prev => [...prev, userMessage]);
+        setChatHistory((prev) => [...prev, userMessage]);
         setInput('');
         setLoading(true);
 
         try {
             const response = await sendMessageToChatbot(input);
             const botMessage: ChatMessage = { role: 'assistant', content: response };
-            setChatHistory(prev => [...prev, botMessage]);
+            setChatHistory((prev) => [...prev, botMessage]);
         } catch {
-            setChatHistory(prev => [...prev, { role: 'assistant', content: 'Có lỗi xảy ra. Vui lòng thử lại sau.' }]);
+            setChatHistory((prev) => [
+                ...prev,
+                { role: 'assistant', content: 'Có lỗi xảy ra. Vui lòng thử lại sau.' },
+            ]);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="chat-with-gpt">
-            <div style={{ marginBottom: 8 }}>
-                <Button icon={<ArrowLeftOutlined />} size="small" onClick={onBack}>
-                    Quay lại
-                </Button>
-            </div>
+        <div className="chat-container">
+            <div className="chat-box">
+                <div style={{ marginBottom: 8 }}>
+                    <Button icon={<ArrowLeftOutlined />} size="small" onClick={onBack}>
+                        Quay lại
+                    </Button>
+                </div>
 
-            <List
-                size="small"
-                dataSource={chatHistory}
-                renderItem={(item, index) => (
-                    <List.Item key={index} className={item.role === 'user' ? 'user-message' : 'assistant-message'}>
-                        <Text>{item.role === 'user' ? '🧑‍💻' : '🤖'} {item.content}</Text>
-                    </List.Item>
-                )}
-            />
-
-            {loading && <div className="loading"><Spin /></div>}
-
-            <div className="chat-input">
-                <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                    placeholder="Nhập tin nhắn..."
+                <List
+                    size="small"
+                    dataSource={chatHistory}
+                    style={{ flexGrow: 1, overflowY: 'auto', maxHeight: '400px', marginBottom: 12 }}
+                    renderItem={(item, index) => (
+                        <List.Item
+                            key={index}
+                            className={item.role === 'user' ? 'user-message' : 'assistant-message'}
+                        >
+                            <Text>
+                                {item.role === 'user' ? '🧑‍💻' : '🤖'} {item.content}
+                            </Text>
+                        </List.Item>
+                    )}
                 />
-                <Button type="primary" icon={<SendOutlined />} onClick={handleSend}>Gửi</Button>
+
+                {loading && (
+                    <div className="loading">
+                        <Spin />
+                    </div>
+                )}
+
+                <div className="chat-input">
+                    <Input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                        placeholder="Nhập tin nhắn..."
+                        disabled={loading}
+                    />
+                    <Button type="primary" icon={<SendOutlined />} onClick={handleSend} disabled={loading}>
+                        Gửi
+                    </Button>
+                </div>
             </div>
         </div>
     );

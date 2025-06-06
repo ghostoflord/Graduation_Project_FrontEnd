@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Input, Button } from 'antd';
-import { CloseOutlined, SendOutlined, RobotOutlined } from '@ant-design/icons';
+import { CloseOutlined, SendOutlined, RobotOutlined, WechatOutlined } from '@ant-design/icons';
 import './chat.widget.scss';
 import ChatWithGPT from '../chat/chat.with.gpt';
 import { sendMessageToChatBOT } from '@/services/api';
 
 const ChatToggleIcon = ({ onClick }: { onClick: () => void }) => (
     <div className="chat-toggle-icon" onClick={onClick} role="button" tabIndex={0}>
-        <RobotOutlined style={{ fontSize: '30px', color: '#1677ff' }} />
+        <WechatOutlined style={{ fontSize: '30px', color: '#1677ff' }} />
     </div>
 );
 
