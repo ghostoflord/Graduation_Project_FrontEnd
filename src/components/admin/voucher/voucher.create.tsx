@@ -14,10 +14,10 @@ type FieldType = {
     code: string;
     description: string;
     discountValue: number;
-    isPercentage: boolean;
+    percentage: boolean;
     startDate: dayjs.Dayjs;
     endDate: dayjs.Dayjs;
-    isSingleUse: boolean;
+    singleUse: boolean;
 };
 
 const CreateVoucher = (props: IProps) => {
@@ -108,7 +108,7 @@ const CreateVoucher = (props: IProps) => {
 
                 <Form.Item<FieldType>
                     label="Là phần trăm?"
-                    name="isPercentage"
+                    name="percentage"
                     valuePropName="checked"
                 >
                     <Switch />
@@ -132,7 +132,7 @@ const CreateVoucher = (props: IProps) => {
 
                 <Form.Item<FieldType>
                     label="Chỉ sử dụng 1 lần?"
-                    name="isSingleUse"
+                    name="singleUse"
                     valuePropName="checked"
                 >
                     <Switch />

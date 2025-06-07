@@ -52,7 +52,7 @@ const mergeDuplicateItems = (items: CartItem[]): CartItem[] => {
     return Array.from(map.values());
 };
 
-const CheckoutPage = () => {
+const CheckoutPage: React.FC = () => {
     const [form] = Form.useForm();
     const [userId, setUserId] = useState<number | null>(null);
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -63,6 +63,8 @@ const CheckoutPage = () => {
     const [voucherModalVisible, setVoucherModalVisible] = useState(false);
     const navigate = useNavigate();
     const { setCartSummary } = useCurrentApp();
+
+    const finalTotal = Math.max(totalPrice - voucherDiscount, 0);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -115,7 +117,7 @@ const CheckoutPage = () => {
             quantity: item.quantity,
         }));
 
-        const orderPayload = {
+        const orderPayload: any = {
             userId,
             name: values.name,
             address: values.address,
@@ -147,7 +149,7 @@ const CheckoutPage = () => {
                 const paymentRef = `ORDER_${Date.now()}`;
                 const res = await createVNPayURL({
                     ...orderPayload,
-                    amount: totalPrice - voucherDiscount,
+                    amount: finalTotal,
                     paymentRef,
                 });
                 if (res?.data) {
@@ -165,26 +167,33 @@ const CheckoutPage = () => {
     const handleApplyVoucher = async (code: string) => {
         if (!userId) return;
 
-        const orderTotal = totalPrice;
         try {
-            const res = await applyVoucherAPI(userId, code, orderTotal);
-
+            const res = await applyVoucherAPI(userId, code, totalPrice);
             const discount = res?.data?.discountAmount;
             const messageFromBackend = res?.data?.message || res?.message;
 
             if (discount !== undefined && discount >= 0) {
                 setVoucherCode(code);
                 setVoucherDiscount(discount);
-                message.success(`Đã áp dụng mã giảm giá: -${discount.toLocaleString('vi-VN')}%`);
-                // Đóng modal ngay khi áp voucher thành công
+                message.success(`Đã áp dụng mã: -${discount.toLocaleString('vi-VN')}₫`);
                 setVoucherModalVisible(false);
             } else {
                 message.error(messageFromBackend || 'Mã giảm giá không hợp lệ');
             }
         } catch (err) {
-            console.error('Lỗi khi gọi API áp voucher:', err);
+            console.error('Lỗi khi gọi API voucher:', err);
             message.error('Không thể áp dụng mã giảm giá');
         }
+    };
+
+    const getDiscountedPrice = (item: CartItem) => {
+        if (!voucherCode || voucherDiscount <= 0) {
+            return item.price * item.quantity;
+        }
+        const discountRatio = voucherDiscount / totalPrice;
+        const original = item.price * item.quantity;
+        const discounted = original - original * discountRatio;
+        return Math.round(discounted);
     };
 
     return (
@@ -227,8 +236,8 @@ const CheckoutPage = () => {
                                 value={paymentMethod}
                                 onChange={(e) => setPaymentMethod(e.target.value)}
                             >
-                                <Radio.Button value="vnpay">Thanh toán qua VNPAY</Radio.Button>
-                                <Radio.Button value="cod">Thanh toán khi giao hàng (COD)</Radio.Button>
+                                <Radio.Button value="vnpay">VNPAY</Radio.Button>
+                                <Radio.Button value="cod">Thanh toán khi nhận (COD)</Radio.Button>
                             </Radio.Group>
                         </Form.Item>
 
@@ -266,10 +275,11 @@ const CheckoutPage = () => {
                                             <div>Số lượng: {item.quantity}</div>
                                         </div>
                                         <Text className="product-price">
-                                            {(item.price * item.quantity).toLocaleString('vi-VN')}₫
+                                            {getDiscountedPrice(item).toLocaleString('vi-VN')}₫
                                         </Text>
                                     </div>
                                 ))}
+
                                 <Divider />
                                 {voucherCode && (
                                     <div className="summary-voucher">
@@ -277,15 +287,16 @@ const CheckoutPage = () => {
                                         <Text type="success">{voucherCode}</Text>
                                         <br />
                                         <Text>Giảm: </Text>
-                                        <Text type="danger">- {voucherDiscount.toLocaleString('vi-VN')}%</Text>
+                                        <Text type="danger">- {voucherDiscount.toLocaleString('vi-VN')}₫</Text>
                                     </div>
                                 )}
                                 <div className="summary-total">
                                     <Text strong>Tổng cộng</Text>
                                     <Text strong className="total-amount">
-                                        {(totalPrice - voucherDiscount).toLocaleString('vi-VN')}₫
+                                        {finalTotal.toLocaleString('vi-VN')}₫
                                     </Text>
                                 </div>
+
                                 <Button type="dashed" block onClick={() => setVoucherModalVisible(true)}>
                                     + Nhập mã giảm giá
                                 </Button>
@@ -298,14 +309,13 @@ const CheckoutPage = () => {
                 </Col>
             </Row>
 
-            {/* Modal voucher */}
             <Modal
                 open={voucherModalVisible}
                 title="Áp dụng mã giảm giá"
                 onCancel={() => setVoucherModalVisible(false)}
                 footer={null}
+                destroyOnClose
             >
-                {/* Truyền hàm apply voucher, modal sẽ tự đóng khi thành công */}
                 <ApplyVoucherForm onApply={handleApplyVoucher} />
             </Modal>
         </div>

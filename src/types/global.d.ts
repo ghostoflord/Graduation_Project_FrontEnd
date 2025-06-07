@@ -310,10 +310,10 @@ declare global {
         code: string;
         description: string;
         discountValue: number;
-        isPercentage: boolean;
+        percentage: boolean;
         startDate: string; // ISO 8601 format
         endDate: string;
-        isSingleUse: boolean;
+        singleUse: boolean;
         isActive: boolean;
         used: boolean;
         assignedUser?: {
@@ -323,7 +323,7 @@ declare global {
         } | null;
         createdAt: string;
         updatedAt: string;
-          assignedUser: IAssignedUser | null;
+        assignedUser: IAssignedUser | null;
     }
 
     export interface IAssignedUser {

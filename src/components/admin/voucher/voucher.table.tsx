@@ -6,7 +6,6 @@ import { useRef, useState } from 'react';
 import { DeleteTwoTone, PlusOutlined } from '@ant-design/icons';
 import CreateVoucher from './voucher.create';
 import AssignVoucherToUser from './assign.voucher.to.user';
-import ApplyVoucherForm from './apply.voucher.form';
 import ApplyVoucherModal from './apply.voucher.form';
 const TableVoucher = () => {
     const [vouchers, setVouchers] = useState<IVoucher[]>([]);
@@ -70,7 +69,7 @@ const TableVoucher = () => {
             title: 'Giá trị',
             dataIndex: 'discountValue',
             render: (value, record) =>
-                record.isPercentage ? `${value}%` : `${value.toLocaleString()}%`,
+                record.percentage ? `${value}%` : `${value.toLocaleString()}%`,
         },
         {
             title: 'Áp dụng một lần?',
