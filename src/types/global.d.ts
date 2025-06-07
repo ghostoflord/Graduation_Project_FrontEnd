@@ -323,6 +323,7 @@ declare global {
         } | null;
         createdAt: string;
         updatedAt: string;
+          assignedUser: IAssignedUser | null;
     }
 
     export interface IAssignedUser {

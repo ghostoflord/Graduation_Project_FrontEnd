@@ -121,8 +121,11 @@ const CheckoutPage = () => {
             address: values.address,
             phone: values.phone,
             items: itemsToCheckout,
-            voucherCode,
         };
+
+        if (voucherCode) {
+            orderPayload.voucherCode = voucherCode;
+        }
 
         if (paymentMethod === 'cod') {
             try {
@@ -172,7 +175,7 @@ const CheckoutPage = () => {
             if (discount !== undefined && discount >= 0) {
                 setVoucherCode(code);
                 setVoucherDiscount(discount);
-                message.success(`Đã áp dụng mã giảm giá: -${discount.toLocaleString('vi-VN')}₫`);
+                message.success(`Đã áp dụng mã giảm giá: -${discount.toLocaleString('vi-VN')}%`);
                 // Đóng modal ngay khi áp voucher thành công
                 setVoucherModalVisible(false);
             } else {
@@ -274,7 +277,7 @@ const CheckoutPage = () => {
                                         <Text type="success">{voucherCode}</Text>
                                         <br />
                                         <Text>Giảm: </Text>
-                                        <Text type="danger">- {voucherDiscount.toLocaleString('vi-VN')}₫</Text>
+                                        <Text type="danger">- {voucherDiscount.toLocaleString('vi-VN')}%</Text>
                                     </div>
                                 )}
                                 <div className="summary-total">
