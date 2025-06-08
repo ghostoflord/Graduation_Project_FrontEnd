@@ -497,3 +497,8 @@ export const deleteVoucherAPI = (id: number) => {
 export const getVouchersForUserAPI = (userId: number) => {
     return axios.get<IBackendRes<IVoucher[]>>(`/api/v1/vouchers/user/${userId}`);
 };
+
+export const compareProductsAPI = (ids: number[]) => {
+    const query = ids.join(",");
+    return axios.get<IBackendRes<CompareProductDTO[]>>(`/api/v1/compare?ids=${query}`);
+};

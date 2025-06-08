@@ -332,4 +332,24 @@ declare global {
         email: string;
     }
 
+
+    export interface CompareProductDTO {
+        id: number;
+        name: string;
+        image: string;
+
+        cpu: string;
+        ram: string;
+        storage: string;
+        gpu: string;
+        screen: string;
+        battery: string;
+        weight: string;
+        material: string;
+        os: string;
+        specialFeatures: string;
+        ports: string;
+    }
+
+
 }
