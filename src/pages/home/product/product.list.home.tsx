@@ -6,6 +6,7 @@ import { slugify } from '@/utils/slugify';
 import { PropagateLoader } from 'react-spinners';
 import { Rate, message } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProductTable[]>([]);
@@ -23,6 +24,10 @@ const ProductList = () => {
     const sort = query.get('sort');
     const priceFrom = query.get('priceFrom');
     const priceTo = query.get('priceTo');
+
+    const [selectedCompareProducts, setSelectedCompareProducts] = useState<number[]>([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -127,6 +132,28 @@ const ProductList = () => {
         return null;
     };
 
+
+    const handleSelectCompare = (id: number) => {
+        setSelectedCompareProducts((prev) => {
+            if (prev.includes(id)) {
+                return prev.filter((pid) => pid !== id); // Bỏ chọn
+            }
+
+            if (prev.length >= 2) {
+                message.warning("Chỉ được so sánh 2 sản phẩm một lúc");
+                return prev;
+            }
+
+            const newSelected = [...prev, id];
+            if (newSelected.length === 2) {
+                const query = newSelected.join(",");
+                navigate(`/compare?ids=${query}`);
+            }
+
+            return newSelected;
+        });
+    };
+
     return (
         <div className="product-list-container">
             {products.length > 0 ? (
@@ -213,6 +240,19 @@ const ProductList = () => {
                                                         <span style={{ marginLeft: 4 }}>Yêu thích</span>
                                                     </div>
                                                 </div>
+                                                <div className="product-compare">
+                                                    <button
+                                                        className={`compare-btn ${selectedCompareProducts.includes(product.id) ? 'selected' : ''
+                                                            }`}
+                                                        onClick={(e) => {
+                                                            e.preventDefault(); // Ngăn mở link khi click
+                                                            handleSelectCompare(product.id);
+                                                        }}
+                                                    >
+                                                        {selectedCompareProducts.includes(product.id) ? 'Đã chọn' : 'So sánh'}
+                                                    </button>
+                                                </div>
+
                                             </div>
                                         </Link>
                                     </div>
