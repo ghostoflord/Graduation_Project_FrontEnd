@@ -9,6 +9,7 @@ import { deleteProductAPI, getProductsAPI } from '@/services/api';
 import CreateProduct from './create.product';
 import UpdateProduct from './update.product';
 import DetailProduct from './detail.product';
+import LowStockModal from './low.stock';
 type TSearch = {
     name: string;
     productCode: string;
@@ -39,7 +40,7 @@ const TableProduct = () => {
     const [isDeleteProduct, setIsDeleteProduct] = useState<boolean>(false);
     const { message, notification } = App.useApp();
 
-
+    const [openLowStockModal, setOpenLowStockModal] = useState(false);
     const handleDeleteProduct = async (id: string) => {
         setIsDeleteProduct(true)
         try {
@@ -219,6 +220,10 @@ const TableProduct = () => {
                 }
                 headerTitle="Table Product"
                 toolBarRender={() => [
+
+                    <Button type="primary" onClick={() => setOpenLowStockModal(true)}>
+                        Xem sản phẩm sắp hết hàng
+                    </Button>,
                     <CSVLink
                         data={currentDataTable}
                         filename='export-book.csv'
@@ -262,6 +267,11 @@ const TableProduct = () => {
                 setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
+            />
+
+            <LowStockModal
+                open={openLowStockModal}
+                onClose={() => setOpenLowStockModal(false)}
             />
         </>
     )

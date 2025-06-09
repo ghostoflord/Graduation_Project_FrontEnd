@@ -502,3 +502,9 @@ export const compareProductsAPI = (ids: number[]) => {
     const query = ids.join(",");
     return axios.get<IBackendRes<CompareProductDTO[]>>(`/api/v1/compare?ids=${query}`);
 };
+
+export const getLowStockProductsAPI = async (
+    threshold: number = 5
+): Promise<IBackendRes<IProductTable[]>> => {
+    return axios.get(`/api/v1/products/low-stock?threshold=${threshold}`);
+};
