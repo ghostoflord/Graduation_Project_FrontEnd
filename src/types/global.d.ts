@@ -123,6 +123,7 @@ declare global {
         sell: string;
         averageRating: number;
         totalReviews: number;
+        sku: string;
     }
 
     export interface ProductDetail {
