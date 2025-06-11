@@ -227,7 +227,7 @@ declare global {
         status: string;
         createdAt: string;
         totalPrice: number;
-        totalQuantity: number; // thêm dòng này
+        totalQuantity: number;
     }
 
     interface IOrder {

@@ -18,20 +18,15 @@ const TableRole = () => {
         total: 0,
     });
 
-    //update role
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IRole | null>(null);
 
     const [permissions, setPermissions] = useState<IPermission[]>([]);
 
-    //delete role
     const [isDeleteRole, setIsDeleteRole] = useState<boolean>(false);
 
-    //create role
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
-
-    //detail role
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IRole | null>(null);
 
@@ -171,27 +166,6 @@ const TableRole = () => {
                 }}
 
                 toolBarRender={() => [
-                    // <CSVLink
-                    //     data={currentDataTable}
-                    //     filename='export-user.csv'
-                    // >
-                    //     <Button
-                    //         icon={<ExportOutlined />}
-                    //         type="primary"
-                    //     >
-                    //         Export
-                    //     </Button>
-                    // </CSVLink>
-                    // ,
-
-                    // <Button
-                    //     icon={<CloudUploadOutlined />}
-                    //     type="primary"
-                    //     onClick={() => setOpenModalImport(true)}
-                    // >
-                    //     Import
-                    // </Button>,
-
                     <Button
                         key="button"
                         icon={<PlusOutlined />}

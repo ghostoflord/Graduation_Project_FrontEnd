@@ -16,10 +16,7 @@ const DetailUser = (props: IProps) => {
         setOpenViewDetail(false);
         setDataViewDetail(null);
     }
-
     const avatarURL = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${dataViewDetail?.avatar}`
-    console.log("CHECK", avatarURL)
-    console.log("CHECK dataViewDetail", dataViewDetail)
     return (
         <>
             <Drawer

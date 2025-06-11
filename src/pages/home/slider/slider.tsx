@@ -28,7 +28,7 @@ const Slider: React.FC = () => {
     };
 
     useEffect(() => {
-        const timer = setInterval(goToNext, 5000); // tăng thành 5s giống laptopnew
+        const timer = setInterval(goToNext, 5000);
         return () => clearInterval(timer);
     }, []);
 

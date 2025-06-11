@@ -10,14 +10,18 @@ import { useNavigate } from 'react-router-dom';
 
 const ProductList = () => {
     const [products, setProducts] = useState<IProductTable[]>([]);
+
     const [likedProductIds, setLikedProductIds] = useState<number[]>([]);
+
     const [loading, setLoading] = useState(true);
+
     const [current, setCurrent] = useState(1);
     const [pageSize] = useState(10);
     const [total, setTotal] = useState(0);
+
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user?.id;
-    console.log('currentUserId', userId);
+    
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const search = query.get('search') || '';
@@ -245,7 +249,7 @@ const ProductList = () => {
                                                         className={`compare-btn ${selectedCompareProducts.includes(product.id) ? 'selected' : ''
                                                             }`}
                                                         onClick={(e) => {
-                                                            e.preventDefault(); // Ngăn mở link khi click
+                                                            e.preventDefault();
                                                             handleSelectCompare(product.id);
                                                         }}
                                                     >

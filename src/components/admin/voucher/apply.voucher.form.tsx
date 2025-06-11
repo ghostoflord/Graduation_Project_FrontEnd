@@ -30,11 +30,8 @@ const ApplyVoucherModal = ({ openModalApply, setOpenModalApply }: IProps) => {
 
     useEffect(() => {
         if (openModalApply) {
-            // Gọi API getUsersAPI với query page=0&size=1000 để lấy hết user
             getUsersAPI('page=0&size=1000')
                 .then((res) => {
-                    // API của bạn trả về IBackendRes<IModelPaginate<IUserTable>>
-                    // Dữ liệu user nằm ở res.data.data.content (giả sử cấu trúc paginate có content)
                     const userList = res.data?.result || [];
                     setUsers(userList);
                 })
@@ -49,7 +46,6 @@ const ApplyVoucherModal = ({ openModalApply, setOpenModalApply }: IProps) => {
         try {
             const res = await applyVoucherAPI(values.code, values.userId, values.orderTotal);
             if (res.data) {
-                // Giả sử res.data.data là số tiền giảm
                 setResult(res.data);
                 message.success(`Đã áp dụng: giảm ${res.data.toLocaleString()}₫`);
             } else {

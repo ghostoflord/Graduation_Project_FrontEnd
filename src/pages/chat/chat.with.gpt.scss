@@ -10,7 +10,6 @@
         width: 100%;
         max-width: 600px;
         height: 100vh;
-        /* full chiều cao màn hình */
         max-height: 100vh;
         border: 1px solid #d9d9d9;
         border-radius: 12px;
@@ -23,13 +22,10 @@
         gap: 12px;
     }
 
-    /* Danh sách chat bung ra hết, cuộn nếu quá dài */
     ul.ant-list {
         flex-grow: 1;
-        /* chiếm hết chỗ trống */
         overflow-y: auto;
         padding-right: 8px;
-        /* tránh chạm scrollbar */
         margin: 0;
     }
 
@@ -37,7 +33,6 @@
         display: flex;
         gap: 12px;
         margin-top: auto;
-        /* đẩy input xuống đáy */
     }
 
     .user-message,
@@ -77,7 +72,6 @@
         font-size: 13px;
     }
 
-    /* Nút tùy chọn lỗi, hỏi AI hoặc gặp nhân viên */
     .error-options {
         margin-top: 8px;
         display: flex;

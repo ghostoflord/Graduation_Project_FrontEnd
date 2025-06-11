@@ -154,40 +154,6 @@
     }
 }
 
-// .pagination {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     gap: 12px;
-//     margin-top: 24px;
-
-//     button {
-//         background: #1976d2;
-//         color: #fff;
-//         padding: 8px 16px;
-//         border: none;
-//         border-radius: 999px; // Bo tròn hoàn toàn
-//         cursor: pointer;
-//         font-weight: bold;
-//         transition: all 0.3s;
-
-//         &:hover:not(:disabled) {
-//             background-color: #155aaf;
-//         }
-
-//         &:disabled {
-//             background: #ccc;
-//             cursor: not-allowed;
-//         }
-//     }
-
-//     span {
-//         font-weight: 500;
-//         color: #333;
-//         font-size: 16px;
-//     }
-// }
-
 .pagination {
     display: flex;
     justify-content: center;
@@ -223,7 +189,6 @@
         }
     }
 }
-
 
 .product-list-wrapper {
     position: relative;

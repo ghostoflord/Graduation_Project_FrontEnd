@@ -33,13 +33,12 @@ const groupOrdersByStatus = (orders: IOrderTable[]): GroupedOrders => {
 const ShipperOrderPage = ({ selectedTab }: { selectedTab: string }) => {
     const [groupedOrders, setGroupedOrders] = useState<GroupedOrders>({});
     const [loading, setLoading] = useState(true);
-    const [processingId, setProcessingId] = useState<number | null>(null); // để disable nút tạm thời
+    const [processingId, setProcessingId] = useState<number | null>(null);
 
     const fetchOrders = async () => {
         try {
             setLoading(true);
             const res = await getOrdersForShipperAPI();
-            console.log("RES >>> ", res.data);
             const allOrders: IOrderTable[] = res.data;
             setGroupedOrders(groupOrdersByStatus(allOrders));
         } catch (err) {

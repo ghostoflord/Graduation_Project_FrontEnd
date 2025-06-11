@@ -10,14 +10,12 @@ import ApplyVoucherModal from './apply.voucher.form';
 const TableVoucher = () => {
     const [vouchers, setVouchers] = useState<IVoucher[]>([]);
 
-    //create user
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const actionRef = useRef<ActionType>();
     const { message, notification } = App.useApp();
     const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-    ///
     const [openModalAssign, setOpenModalAssign] = useState(false);
     const [openApply, setOpenApply] = useState(false);
 
@@ -170,28 +168,6 @@ const TableVoucher = () => {
 
                 headerTitle="Table Voucher"
                 toolBarRender={() => [
-                    // <CSVLink
-                    //     data={currentDataTable}
-                    //     filename='export-user.csv'
-                    // >
-                    //     <Button
-                    //         icon={<ExportOutlined />}
-                    //         type="primary"
-                    //     >
-                    //         Export
-                    //     </Button>
-                    // </CSVLink>
-                    // ,
-
-                    // <Button
-                    //     icon={<CloudUploadOutlined />}
-                    //     type="primary"
-                    //     onClick={() => setOpenModalImport(true)}
-                    // >
-                    //     Import
-                    // </Button>,
-
-                    ///
                     <Button
                         key="assign"
                         onClick={() => setOpenModalAssign(true)}

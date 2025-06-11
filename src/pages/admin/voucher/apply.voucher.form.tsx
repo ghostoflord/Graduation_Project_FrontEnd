@@ -51,7 +51,7 @@ const ApplyVoucherForm: React.FC<Props> = ({ onApply }) => {
         if (!values.voucherCode) {
             return message.warning('Vui lòng chọn mã giảm giá');
         }
-        onApply(values.voucherCode); // Gọi hàm apply từ props
+        onApply(values.voucherCode);
     };
 
     return (

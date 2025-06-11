@@ -9,7 +9,7 @@ const PAGE_SIZE = Number(import.meta.env.VITE_NOTIFICATION_PAGE_SIZE) || 5;
 const NotificationBell = ({ userId }: { userId: number }) => {
     const [notifications, setNotifications] = useState<any[]>([]);
     const [visible, setVisible] = useState(false);
-    const [current, setCurrent] = useState(1); // current page
+    const [current, setCurrent] = useState(1);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 

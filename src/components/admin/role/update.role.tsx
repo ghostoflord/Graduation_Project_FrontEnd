@@ -15,7 +15,7 @@ type FieldType = {
     id?: string;
     name: string;
     description: string;
-    permissions: string[]; // danh sách ID
+    permissions: string[];
 };
 
 const UpdateRole = (props: IProps) => {
@@ -31,11 +31,9 @@ const UpdateRole = (props: IProps) => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
 
-    // State mới: danh sách quyền
     const [permissionOptions, setPermissionOptions] = useState<IPermission[]>([]);
     const [loadingPermissions, setLoadingPermissions] = useState(false);
 
-    // Gọi API lấy danh sách quyền khi mở modal
     useEffect(() => {
         if (openModalUpdate) {
             fetchPermissions();
@@ -60,7 +58,6 @@ const UpdateRole = (props: IProps) => {
         }
     };
 
-    // Khi mở modal, fill form với dataUpdate
     useEffect(() => {
         if (dataUpdate) {
             form.resetFields();

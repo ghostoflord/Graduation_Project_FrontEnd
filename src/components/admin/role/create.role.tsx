@@ -30,7 +30,6 @@ const CreateRole = (props: IProps) => {
     const [permissions, setPermissions] = useState<IPermission[]>([]);
     const [loadingPermissions, setLoadingPermissions] = useState(false);
 
-    // Fetch permissions from DB
     useEffect(() => {
         const fetchPermissions = async () => {
             setLoadingPermissions(true);

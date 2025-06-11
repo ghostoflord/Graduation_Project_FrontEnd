@@ -2,10 +2,12 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
-    withCredentials: true
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json"
+    }
 });
-// console.log('Backend URL:', import.meta.env.VITE_BACKEND_URL);
-// "dev": "vite --host", package.json
+
 instance.interceptors.request.use(function (config) {
     const token = localStorage.getItem("access_token");
     const auth = token ? `Bearer ${token}` : '';

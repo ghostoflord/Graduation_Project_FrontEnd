@@ -9,7 +9,6 @@ const RolePage = () => {
     const [listPermissions, setListPermissions] = useState([]);
 
     const reloadTable = () => {
-        // gọi API để reload lại danh sách role (tùy bạn định nghĩa)
     }
 
     useEffect(() => {

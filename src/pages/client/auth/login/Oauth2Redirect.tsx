@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useCurrentApp } from "@/components/context/app.context"; // nhớ import
-
+import { useCurrentApp } from "@/components/context/app.context";
 const Oauth2Redirect = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { setIsAuthenticated, setUser } = useCurrentApp(); // Lấy context ra
+    const { setIsAuthenticated, setUser } = useCurrentApp();
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);

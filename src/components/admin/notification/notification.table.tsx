@@ -11,7 +11,6 @@ const NotificationTable = () => {
     const [meta, setMeta] = useState({ current: 1, pageSize: 10, total: 0 });
     const [loading, setLoading] = useState(false);
 
-    //create user
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const columns: ProColumns<INotification>[] = [

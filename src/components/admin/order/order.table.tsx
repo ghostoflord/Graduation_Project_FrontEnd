@@ -12,18 +12,13 @@ const TableOrder = () => {
     const [dataSource, setDataSource] = useState<IOrderTable[]>([]);
     const { message, notification } = App.useApp();
 
-    //detail order
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IOrderTable | null>(null);
 
-    //update order
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IOrderTable | null>(null);
 
-
-    //delete orders
     const [isDeleteOrder, setIsDeleteOrder] = useState<boolean>(false);
-
 
     const handleDeleteOrder = async (id: string) => {
         setIsDeleteOrder(true);

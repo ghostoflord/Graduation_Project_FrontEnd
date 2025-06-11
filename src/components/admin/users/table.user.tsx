@@ -26,21 +26,16 @@ const TableUser = () => {
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
     const { message, notification } = App.useApp();
 
-    //create user
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
-    //detail user
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
 
-    //update user
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IUserTable | null>(null);
 
-    //delete user
     const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
 
-    // import user 
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
     const handleDeleteUser = async (id: string) => {
         setIsDeleteUser(true);

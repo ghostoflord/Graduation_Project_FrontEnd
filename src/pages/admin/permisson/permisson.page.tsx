@@ -1,6 +1,5 @@
 import PermissionTable from "@/components/admin/permission/table.permission";
 
-
 const PermissionPage = () => {
     return (
         <>

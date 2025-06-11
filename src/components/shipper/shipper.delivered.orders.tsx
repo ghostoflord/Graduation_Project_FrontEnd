@@ -37,7 +37,6 @@ const ShipperDeliveredOrders = () => {
         setLoading(true);
         try {
             const res = await getDeliveredOrders();
-            console.log('Delivered Orders Response:', res);
             if (res.statusCode === 200) {
                 setOrders(res.data);
             } else {

@@ -8,7 +8,7 @@ interface IProps {
     openModalUpdate: boolean;
     setOpenModalUpdate: (v: boolean) => void;
     refreshTable: () => void;
-    dataUpdate: any; // Replace with your Order type if available
+    dataUpdate: any;
     setDataUpdate: (v: any | null) => void;
 }
 
@@ -78,7 +78,6 @@ const UpdateOrder = (props: IProps) => {
         }
         setIsSubmit(false);
     };
-
 
     return (
         <Modal

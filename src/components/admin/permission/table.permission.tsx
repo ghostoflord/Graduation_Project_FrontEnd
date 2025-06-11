@@ -18,11 +18,9 @@ const PermissionTable = () => {
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
-    //detail user
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IPermission | null>(null);
 
-    //update user
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IPermission | null>(null);
 

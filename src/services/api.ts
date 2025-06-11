@@ -31,8 +31,14 @@ export const logoutAPI = () => {
 
 export const registerAPI = (name: string, email: string, password: string, address: string, age: string) => {
     const urlBackend = "/api/v1/auth/register";
-    return axios.post<IBackendRes<IRegister>>(urlBackend, { name, email, password, address, age })
-}
+    return axios.post<IBackendRes<IRegister>>(urlBackend,
+        { name, email, password, address, age },
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+};
 
 export const sendRequest = async <T>(props: IRequest) => {
     let { url, method, body, queryParams = {}, useCredentials = false, headers = {}, nextOption = {} } = props;
@@ -240,7 +246,7 @@ Module Notifications
 export const createNotificationAPI = (
     title: string,
     content: string,
-    userId?: number // optional
+    userId?: number
 ) => {
     const urlBackend = `/api/v1/notifications/create`;
 
@@ -449,13 +455,12 @@ export const sendMessageToChatBOT = (message: string) => {
 * 
  Module Voucher
 */
-// Tạo voucher
 export const createVoucherAPI = (voucher: {
     code: string;
     description: string;
     discountValue: number;
     isPercentage: boolean;
-    startDate: string; // ISO string
+    startDate: string;
     endDate: string;
     isSingleUse: boolean;
 }) => {
@@ -484,12 +489,10 @@ export const applyVoucherAPI = (userId: string, code: string, orderTotal: string
     });
 };
 
-// Lấy tất cả voucher
 export const getAllVouchersAPI = () => {
     return axios.get<IBackendRes<IVoucher[]>>("/api/v1/vouchers");
 };
 
-// Xoá voucher theo ID
 export const deleteVoucherAPI = (id: number) => {
     return axios.delete<IBackendRes<string>>(`/api/v1/vouchers/${id}`);
 };

@@ -26,9 +26,6 @@ const CreatePermission = (props: IProps) => {
         setIsSubmit(true);
         try {
             const res = await callCreatePermission(values);
-
-            console.log("RESPONSE BACKEND:", res); // log full ra đây để debug
-
             if (res?.statusCode === 201) {
                 message.success('Tạo permission thành công');
                 form.resetFields();
@@ -49,7 +46,6 @@ const CreatePermission = (props: IProps) => {
             setIsSubmit(false);
         }
     };
-
 
     return (
         <Modal
