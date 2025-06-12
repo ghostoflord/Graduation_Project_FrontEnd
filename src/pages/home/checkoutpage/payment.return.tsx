@@ -26,7 +26,7 @@ const PaymentReturn = () => {
             hasSentRef.current = true;
 
             try {
-                const res = await axios.post('http://localhost:8080/api/v1/payment/vnpay/response', {
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payment/vnpay/response`, {
                     userId,
                     amount,
                     paymentRef,

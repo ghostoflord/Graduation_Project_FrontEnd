@@ -18,7 +18,7 @@ const OrderHistory = () => {
     const [orders, setOrders] = useState<OrderSummary[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const [selectedOrder, setSelectedOrder] = useState<OrderHistory | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<IOrderTable | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
     const fetchOrders = async () => {
@@ -131,7 +131,7 @@ const OrderHistory = () => {
                 if (record.status === 'CONFIRMED') {
                     return (
                         <a
-                            href={`http://localhost:8080/api/v1/invoice/${record.id}`}
+                            href={`${import.meta.env.VITE_BACKEND_URL}/api/v1/invoice/${record.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
