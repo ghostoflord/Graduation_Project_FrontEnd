@@ -30,7 +30,7 @@ const UpdateOrder = (props: IProps) => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
     const [form] = Form.useForm();
-
+    console.log("check dataupdate ", dataUpdate)
     useEffect(() => {
         if (dataUpdate) {
             form.resetFields();

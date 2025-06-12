@@ -221,14 +221,23 @@ declare global {
     */
     interface IOrderTable {
         id: number;
-        receiverName: string;
-        receiverPhone: string;
-        receiverAddress: address,
-        status: string;
-        createdAt: string;
         totalPrice: number;
+        receiverName: string;
+        receiverAddress: string;
+        receiverPhone: string;
+        status: string;
+        userId: number;
         totalQuantity: number;
+
+        paymentStatus?: string;
+        paymentMethod?: string;
+        shippingMethod?: string;
+        trackingCode?: string;
+        estimatedDeliveryTime?: string;
+        createdAt?: string;
+        updatedAt?: string;
     }
+
 
     interface IOrder {
         userId: number;
