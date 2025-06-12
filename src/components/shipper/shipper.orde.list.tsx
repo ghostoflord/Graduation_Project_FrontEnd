@@ -1,42 +1,42 @@
-import { useEffect, useState } from 'react';
-import { Button, Card, List, message, Result } from 'antd';
-import { acceptOrderAPI, completeOrderAPI, getOrdersForShipperAPI } from '@/services/api';
-import { useNavigate } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { Button, message, Tag } from 'antd';
+import { ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { getOrdersForShipperAPI, acceptOrderAPI, completeOrderAPI } from '@/services/api';
 import { useCurrentApp } from '../context/app.context';
 
-interface Props {
-    selectedKey: 'pending' | 'delivered';
-}
+type TOrder = {
+    id: number;
+    code: string;
+    receiverName: string;
+    receiverAddress: string;
+    receiverPhone: string;
+    status: 'PENDING' | 'SHIPPING' | 'DELIVERED' | string;
+    createdAt: string;
+};
 
-const ShipperOrderList = ({ selectedKey }: Props) => {
-    const [orders, setOrders] = useState([]);
-    const navigate = useNavigate();
+type TSearch = {
+    code?: string;
+    receiverName?: string;
+};
+
+const ShipperOrderTable = () => {
+    const actionRef = useRef<ActionType>();
     const { user } = useCurrentApp();
 
-    const isShipper = user?.role === 'SHIPPER';
+    const [currentDataTable, setCurrentDataTable] = useState<[]>([]);
 
-    const fetchOrders = async () => {
-        try {
-            const res = await getOrdersForShipperAPI();
-            const allOrders = res.data;
-
-            const filteredOrders = allOrders.filter((order: any) => {
-                if (selectedKey === 'pending') return order.status === 'PENDING';
-                if (selectedKey === 'delivered') return order.status === 'SHIPPING';
-                return false;
-            });
-
-            setOrders(filteredOrders);
-        } catch (err) {
-            message.error('Không thể tải danh sách đơn hàng.');
-        }
-    };
+    const [meta, setMeta] = useState({
+        current: 1,
+        pageSize: 5,
+        total: 0,
+    });
 
     const handleAccept = async (orderId: number) => {
         try {
             await acceptOrderAPI(orderId);
             message.success('Nhận đơn thành công');
-            fetchOrders();
+            actionRef.current?.reload();
         } catch (err) {
             message.error('Nhận đơn thất bại');
         }
@@ -46,54 +46,92 @@ const ShipperOrderList = ({ selectedKey }: Props) => {
         try {
             await completeOrderAPI(orderId);
             message.success('Hoàn tất đơn hàng');
-            fetchOrders();
+            actionRef.current?.reload();
         } catch (err) {
             message.error('Thất bại khi hoàn tất đơn hàng');
         }
     };
 
-    useEffect(() => {
-        if (isShipper) {
-            fetchOrders();
-        }
-    }, [isShipper, selectedKey]);
-
-    if (!isShipper) {
-        return (
-            <Result
-                status="403"
-                title="403 - Forbidden"
-                subTitle="Bạn không có quyền truy cập vào trang này"
-                extra={<Button type="primary" onClick={() => navigate('/')}>Về trang chủ</Button>}
-            />
-        );
-    }
+    const columns: ProColumns<TOrder>[] = [
+        {
+            title: 'Mã đơn',
+            dataIndex: 'code',
+            copyable: true,
+        },
+        {
+            title: 'Người nhận',
+            dataIndex: 'receiverName',
+        },
+        {
+            title: 'SĐT',
+            dataIndex: 'receiverPhone',
+        },
+        {
+            title: 'Địa chỉ',
+            dataIndex: 'receiverAddress',
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            render: (_, entity) => (
+                <Tag color={
+                    entity.status === 'PENDING' ? 'orange' :
+                        entity.status === 'SHIPPING' ? 'blue' : 'green'
+                }>
+                    {entity.status}
+                </Tag>
+            ),
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+            valueType: 'dateTime',
+        },
+        {
+            title: 'Hành động',
+            valueType: 'option',
+            render: (_, entity) => {
+                if (entity.status === 'PENDING') {
+                    return <Button type="primary" onClick={() => handleAccept(entity.id)}>Nhận đơn</Button>;
+                }
+                if (entity.status === 'SHIPPING') {
+                    return <Button danger onClick={() => handleComplete(entity.id)}>Hoàn tất</Button>;
+                }
+                return null;
+            }
+        },
+    ];
 
     return (
-        <List
-            grid={{ gutter: 16, column: 2 }}
-            dataSource={orders}
-            renderItem={(order: any) => (
-                <List.Item>
-                    <Card title={`Mã đơn: ${order.code}`}>
-                        <p>Người nhận: {order.receiverName}</p>
-                        <p>Địa chỉ: {order.address}</p>
-                        <p>Trạng thái: {order.status}</p>
-                        {order.status === 'PENDING' && (
-                            <Button type="primary" onClick={() => handleAccept(order.id)}>
-                                Nhận đơn
-                            </Button>
-                        )}
-                        {order.status === 'SHIPPING' && (
-                            <Button type="primary" danger onClick={() => handleComplete(order.id)}>
-                                Hoàn tất
-                            </Button>
-                        )}
-                    </Card>
-                </List.Item>
-            )}
+        <ProTable<TOrder, TSearch>
+            columns={columns}
+            actionRef={actionRef}
+            cardBordered
+            rowKey="id"
+            pagination={{
+                current: meta.current,
+                pageSize: meta.pageSize,
+                total: meta.total,
+                showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
+            }}
+            request={async (params) => {
+                const query = `current=${params.current}&pageSize=${params.pageSize}`;
+                const res = await getOrdersForShipperAPI(query);
+
+                if (res.data) {
+                    setMeta(res.data.meta);
+                    setCurrentDataTable(res.data?.result ?? [])
+                }
+                return {
+                    data: res.data?.result,
+                    page: 1,
+                    success: true,
+                    total: res.data?.meta.total
+                }
+            }}
+            headerTitle="Danh sách đơn hàng cho shipper"
         />
     );
 };
 
-export default ShipperOrderList;
+export default ShipperOrderTable;

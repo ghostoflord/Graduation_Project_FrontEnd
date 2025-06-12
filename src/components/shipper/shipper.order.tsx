@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Spin, message } from "antd";
+import { Button, Card, Spin, message, Pagination } from "antd";
 import { getOrdersForShipperAPI, markOrderAsDeliveredAPI } from "@/services/api";
 
 interface IOrderTable {
@@ -13,51 +13,48 @@ interface IOrderTable {
     totalQuantity: number;
 }
 
-type GroupedOrders = Record<string, IOrderTable[]>;
-
 const statusLabels: Record<string, string> = {
     pending: "PENDING",
     delivered: "SHIPPING",
     history: "DELIVERED",
 };
 
-const groupOrdersByStatus = (orders: IOrderTable[]): GroupedOrders => {
-    return orders.reduce((acc: GroupedOrders, order) => {
-        const key = order.status;
-        if (!acc[key]) acc[key] = [];
-        acc[key].push(order);
-        return acc;
-    }, {});
-};
-
 const ShipperOrderPage = ({ selectedTab }: { selectedTab: string }) => {
-    const [groupedOrders, setGroupedOrders] = useState<GroupedOrders>({});
+    const [orders, setOrders] = useState<IOrderTable[]>([]);
     const [loading, setLoading] = useState(true);
     const [processingId, setProcessingId] = useState<number | null>(null);
 
-    const fetchOrders = async () => {
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [total, setTotal] = useState(0);
+
+    const fetchOrders = async (page = current, size = pageSize) => {
         try {
             setLoading(true);
-            const res = await getOrdersForShipperAPI();
-            const allOrders: IOrderTable[] = res.data;
-            setGroupedOrders(groupOrdersByStatus(allOrders));
+            const status = statusLabels[selectedTab];
+            const query = `current=${page}&pageSize=${size}&status=${status}`;
+            const res = await getOrdersForShipperAPI(query);
+
+            setOrders(res.data.result ?? []);
+            setTotal(res.data.meta?.total ?? 0);
         } catch (err) {
-            message.error("Lỗi khi tải đơn hàng của bạn");
+            message.error("Lỗi khi tải đơn hàng");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        fetchOrders(1); // load lại từ đầu khi tab đổi
+        setCurrent(1);
+    }, [selectedTab]);
 
     const handleDelivered = async (orderId: number) => {
         try {
             setProcessingId(orderId);
             await markOrderAsDeliveredAPI(orderId);
             message.success("Đã chuyển trạng thái đơn hàng sang 'Đã giao'");
-            fetchOrders();
+            fetchOrders(); // giữ nguyên current, pageSize
         } catch (err) {
             message.error("Không thể cập nhật trạng thái đơn hàng");
         } finally {
@@ -65,33 +62,47 @@ const ShipperOrderPage = ({ selectedTab }: { selectedTab: string }) => {
         }
     };
 
-    const currentStatus = statusLabels[selectedTab];
-    const ordersToShow = groupedOrders[currentStatus] || [];
+    const handlePageChange = (page: number, size?: number) => {
+        setCurrent(page);
+        setPageSize(size || pageSize);
+        fetchOrders(page, size || pageSize);
+    };
 
     return (
         <Spin spinning={loading}>
-            {ordersToShow.length === 0 ? (
+            {orders.length === 0 ? (
                 <p>Không có đơn hàng nào.</p>
             ) : (
-                ordersToShow.map((order) => (
-                    <Card key={order.id} title={`Mã đơn: ${order.id}`}>
-                        <p>Người nhận: {order.receiverName}</p>
-                        <p>SĐT: {order.receiverPhone}</p>
-                        <p>Địa chỉ: {order.receiverAddress}</p>
-                        <p>Số lượng: {order.totalQuantity}</p>
-                        <p>Tổng tiền: {order.totalPrice.toLocaleString()}đ</p>
+                <>
+                    {orders.map((order) => (
+                        <Card key={order.id} title={`Mã đơn: ${order.id}`}>
+                            <p>Người nhận: {order.receiverName}</p>
+                            <p>SĐT: {order.receiverPhone}</p>
+                            <p>Địa chỉ: {order.receiverAddress}</p>
+                            <p>Số lượng: {order.totalQuantity}</p>
+                            <p>Tổng tiền: {order.totalPrice.toLocaleString()}đ</p>
 
-                        {order.status === "SHIPPING" && (
-                            <Button
-                                type="primary"
-                                onClick={() => handleDelivered(order.id)}
-                                loading={processingId === order.id}
-                            >
-                                Đã giao xong
-                            </Button>
-                        )}
-                    </Card>
-                ))
+                            {order.status === "SHIPPING" && (
+                                <Button
+                                    type="primary"
+                                    onClick={() => handleDelivered(order.id)}
+                                    loading={processingId === order.id}
+                                >
+                                    Đã giao xong
+                                </Button>
+                            )}
+                        </Card>
+                    ))}
+
+                    <Pagination
+                        current={current}
+                        pageSize={pageSize}
+                        total={total}
+                        showSizeChanger
+                        onChange={handlePageChange}
+                        style={{ marginTop: 16, textAlign: "center" }}
+                    />
+                </>
             )}
         </Spin>
     );

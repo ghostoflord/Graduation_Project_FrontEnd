@@ -327,8 +327,8 @@ export const deleteOrderAPI = async (orderId: string) => {
 };
 
 // Lấy danh sách đơn hàng dành cho shipper
-export const getOrdersForShipperAPI = () => {
-    return axios.get('/api/v1/orders/shipper');
+export const getOrdersForShipperAPI = (query: string) => {
+    return axios.get(`/api/v1/orders/shipper?${query}`);
 };
 
 // Shipper nhận đơn hàng

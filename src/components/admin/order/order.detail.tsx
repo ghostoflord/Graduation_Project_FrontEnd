@@ -51,7 +51,7 @@ const DetailOrder = (props: IProps) => {
                     {dataViewDetail?.estimatedDeliveryTime
                         ? dayjs(dataViewDetail.estimatedDeliveryTime).format(FORMATE_DATE_VN)
                         : 'Chưa có'}
-                </Descriptions.Item>
+                </Descriptions.Item>    
                 <Descriptions.Item label="Ngày tạo">
                     {dataViewDetail?.createdAt
                         ? dayjs(dataViewDetail.createdAt).format(FORMATE_DATE_VN)
