@@ -85,6 +85,7 @@ declare global {
         gender: string;
         firstName: string;
         lastName: string;
+        
     }
 
     interface IResponseImport {

@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react';
-import { App, Divider, Form, Input, Modal, Select, Upload, Button, Image } from 'antd';
+import {
+    App,
+    Divider,
+    Form,
+    Input,
+    Modal,
+    Select,
+    Upload,
+    Button,
+    Image,
+    Spin
+} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
-import { updateUserAPI, uploadFileAPI } from '@/services/api';
+import { updateUserAPI, uploadFileAPI, callFetchRoles } from '@/services/api';
 import type { RcFile, UploadFile } from 'antd/es/upload';
+
 interface IProps {
     openModalUpdate: boolean;
     setOpenModalUpdate: (v: boolean) => void;
@@ -20,6 +32,7 @@ type FieldType = {
     address: string;
     gender: string;
     age: string;
+    roleId: string;
     avatar?: UploadFile[];
 };
 
@@ -37,6 +50,8 @@ const UpdateUser = (props: IProps) => {
 
     const [avatarFile, setAvatarFile] = useState<UploadFile | null>(null);
     const [previewImage, setPreviewImage] = useState<string>("");
+    const [roleList, setRoleList] = useState<IRole[]>([]);
+    const [loadingRoles, setLoadingRoles] = useState(false);
 
     const normFile = (e: any) => Array.isArray(e) ? e : e?.fileList;
 
@@ -83,6 +98,18 @@ const UpdateUser = (props: IProps) => {
     };
 
     useEffect(() => {
+        const fetchRoles = async () => {
+            setLoadingRoles(true);
+            const res = await callFetchRoles("page=1&pageSize=100");
+            if (res?.data?.result) {
+                setRoleList(res.data.result);
+            }
+            setLoadingRoles(false);
+        };
+        fetchRoles();
+    }, []);
+
+    useEffect(() => {
         if (dataUpdate) {
             form.resetFields();
             form.setFieldsValue({
@@ -92,7 +119,8 @@ const UpdateUser = (props: IProps) => {
                 lastName: dataUpdate.lastName,
                 address: dataUpdate.address,
                 gender: dataUpdate.gender ?? undefined,
-                age: dataUpdate.age
+                age: dataUpdate.age,
+                roleId: dataUpdate.role?.id
             });
             if (dataUpdate.avatar) {
                 const avatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${dataUpdate.avatar}`;
@@ -110,7 +138,7 @@ const UpdateUser = (props: IProps) => {
     }, [dataUpdate]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        const { id, firstName, lastName, name, address, gender, age } = values;
+        const { id, firstName, lastName, name, address, gender, age, roleId } = values;
         setIsSubmit(true);
         const avatarBase64 = avatarFile?.originFileObj
             ? await getBase64(avatarFile.originFileObj as RcFile)
@@ -123,6 +151,7 @@ const UpdateUser = (props: IProps) => {
             address,
             gender,
             age,
+            roleId,
             avatarBase64
         );
         if (res && res.data) {
@@ -196,6 +225,19 @@ const UpdateUser = (props: IProps) => {
                     <Input />
                 </Form.Item>
                 <Form.Item<FieldType>
+                    label="Role"
+                    name="roleId"
+                    rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
+                >
+                    <Select placeholder="Chọn vai trò" loading={loadingRoles} allowClear>
+                        {roleList.map(role => (
+                            <Select.Option key={role.id} value={role.id}>
+                                {role.name}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+                <Form.Item<FieldType>
                     label="Avatar"
                     name="avatar"
                     valuePropName="fileList"
@@ -228,4 +270,5 @@ const UpdateUser = (props: IProps) => {
         </Modal>
     );
 };
+
 export default UpdateUser;

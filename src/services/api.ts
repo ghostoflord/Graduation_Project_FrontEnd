@@ -78,10 +78,10 @@ export const resendVerificationAPI = (email: string) => {
  * 
 Module User
  */
-export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string, avatar?: string // base64
+export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string, roleId: string, avatar?: string
 ) => {
     const urlBackend = "/api/v1/users/update";
-    return axios.post<IBackendRes<IRegister>>(urlBackend, { id, firstName, lastName, name, address, gender, age, avatar });
+    return axios.post<IBackendRes<IRegister>>(urlBackend, { id, firstName, lastName, name, address, gender, age, avatar, roleId });
 };
 
 export const getUsersAPI = (query: string) => {
@@ -351,9 +351,9 @@ export const getDeliveredOrders = () => {
 
 // Nếu backend không cần from, to nữa:
 export const getShipperStats = (shipperId: number) => {
-  return axios.get('/api/v1/orders/shipper-stats', {
-    params: { shipperId },
-  });
+    return axios.get('/api/v1/orders/shipper-stats', {
+        params: { shipperId },
+    });
 };
 
 
