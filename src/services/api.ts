@@ -349,6 +349,14 @@ export const getDeliveredOrders = () => {
     return axios.get(`/api/v1/orders/shipper/delivered`);
 };
 
+// Nếu backend không cần from, to nữa:
+export const getShipperStats = (shipperId: number) => {
+  return axios.get('/api/v1/orders/shipper-stats', {
+    params: { shipperId },
+  });
+};
+
+
 /**
  * 
 Module Dashboard

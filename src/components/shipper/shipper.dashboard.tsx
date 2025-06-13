@@ -12,6 +12,7 @@ import { useCurrentApp } from '../context/app.context';
 import ShipperOrderPage from './shipper.order';
 import ShipperOrderList from './shipper.orde.list';
 import ShipperDeliveredOrders from './shipper.delivered.orders';
+import ShipperStats from './shipper.stats';
 
 const { Sider, Content } = Layout;
 
@@ -50,7 +51,7 @@ const ShipperDashboard = () => {
             case 'history':
                 return <ShipperDeliveredOrders selectedTab={selectedKey} />;
             case 'stats':
-                return <div>Thống kê đơn hàng (đang phát triển)</div>;
+                return <ShipperStats />;
             case '/':
                 navigate('/');
                 return null;
