@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Row, Typography, Space, Button, message } from "antd";
+import { Card, Col, Row, Typography, Space, Button, message, Modal } from "antd";
 import { UserOutlined, LogoutOutlined, LockOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import "./account.page.scss";
 import { getAccountInfoAPI, logoutAPI } from "@/services/api";
@@ -24,6 +24,8 @@ const AccountPage = () => {
     const navigate = useNavigate();
     const { setUser, setIsAuthenticated, setCarts, setCartSummary } = useCurrentApp();
     const [changePassword, setChangePassword] = useState(false);
+
+    const [openProfileModal, setOpenProfileModal] = useState(false);
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user.id;
@@ -96,6 +98,14 @@ const AccountPage = () => {
                         <Card title="Thông tin tài khoản" className="account-card">
                             <Space direction="vertical" style={{ width: "100%" }}>
                                 <Button
+                                    icon={<UserOutlined />}
+                                    block
+                                    onClick={() => setOpenProfileModal(true)}
+                                >
+                                    Cập nhật thông tin cá nhân
+                                </Button>
+
+                                <Button
                                     icon={<LockOutlined />}
                                     block
                                     onClick={() => setChangePassword(true)}
@@ -113,18 +123,6 @@ const AccountPage = () => {
                                     Đăng xuất
                                 </Button>
                             </Space>
-                        </Card>
-                    </Col>
-
-                    <Col span={24}>
-                        <Card title="Thông tin cá nhân" className="account-card">
-                            {/* <p><strong>Họ và tên:</strong> {userData.name}</p>
-    <p><strong>Email:</strong> {userData.email}</p> */}
-                            {userId ? (
-                                <UserProfileForm userId={userId} />
-                            ) : (
-                                <p>Không tìm thấy ID người dùng.</p>
-                            )}
                         </Card>
                     </Col>
 
@@ -151,6 +149,19 @@ const AccountPage = () => {
                     }, 800);
                 }}
             />
+            <Modal
+                title="Cập nhật thông tin cá nhân"
+                open={openProfileModal}
+                onCancel={() => setOpenProfileModal(false)}
+                footer={null}
+                destroyOnClose
+            >
+                <UserProfileForm
+                    userId={userId}
+                    onUpdateSuccess={() => setOpenProfileModal(false)}
+                />
+            </Modal>
+
         </>
     );
 };

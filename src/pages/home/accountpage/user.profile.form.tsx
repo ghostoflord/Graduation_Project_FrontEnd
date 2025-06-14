@@ -1,22 +1,51 @@
 import { useEffect, useState } from "react";
-import { Form, Input, Button, Card, Select, message, Spin, Avatar } from "antd";
-import { getUserByIdAPI, selfUpdateUserAPI } from "@/services/api";
+import {
+    Form,
+    Input,
+    Button,
+    Card,
+    Select,
+    message,
+    Spin,
+    Avatar,
+    Upload,
+    Image
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import type { RcFile, UploadFile } from "antd/es/upload/interface";
+import type { RcCustomRequestOptions } from "antd/es/upload";
+import {
+    getUserByIdAPI,
+    selfUpdateUserAPI,
+    uploadFileAPI
+} from "@/services/api";
 
 const { Option } = Select;
 
 interface Props {
     userId: number;
+    onUpdateSuccess?: () => void;
 }
 
-const UserProfileForm = ({ userId }: Props) => {
+const UserProfileForm = ({ userId, onUpdateSuccess }: Props) => {
     const [form] = Form.useForm<IUserTable>();
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [avatarFile, setAvatarFile] = useState<UploadFile | null>(null);
+    const [previewImage, setPreviewImage] = useState<string>("");
 
     useEffect(() => {
         fetchUserInfo();
     }, []);
+
+    const getBase64 = (file: RcFile): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+        });
 
     const fetchUserInfo = async () => {
         try {
@@ -25,12 +54,21 @@ const UserProfileForm = ({ userId }: Props) => {
             if (res?.data) {
                 const user = res.data;
 
-                // Lưu avatar để hiển thị
                 if (user.avatar) {
-                    setAvatarUrl(`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`);
+                    const fullAvatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`;
+                    setAvatarUrl(fullAvatarUrl);
+
+                    const file: UploadFile = {
+                        uid: '-1',
+                        name: user.avatar,
+                        status: 'done',
+                        url: fullAvatarUrl,
+                        thumbUrl: fullAvatarUrl
+                    };
+                    setAvatarFile(file);
+                    setPreviewImage(fullAvatarUrl);
                 }
 
-                // Định dạng role ID nếu có
                 const formattedUser = {
                     ...user,
                     role: user.role?.id ?? null,
@@ -48,12 +86,55 @@ const UserProfileForm = ({ userId }: Props) => {
         }
     };
 
+    const handleUploadAvatar = async (options: RcCustomRequestOptions) => {
+        const { file, onSuccess, onError } = options;
+        try {
+            const res = await uploadFileAPI(file as File, 'avatars');
+            if (res && res.data) {
+                const uploadedUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${res.data.fileName}`;
+                const uploadedFile: UploadFile = {
+                    uid: (file as RcFile).uid,
+                    name: res.data.fileName,
+                    status: 'done',
+                    url: uploadedUrl,
+                    thumbUrl: uploadedUrl,
+                    originFileObj: file as RcFile
+                };
+                setAvatarFile(uploadedFile);
+                await handlePreview(uploadedFile);
+                onSuccess?.("ok", uploadedFile as any);
+            } else {
+                onError?.(new Error(res?.message || "Upload failed"));
+            }
+        } catch (err: any) {
+            onError?.(err);
+        }
+    };
+
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview && file.originFileObj) {
+            file.preview = await getBase64(file.originFileObj as RcFile);
+        }
+        setPreviewImage(file.preview as string);
+    };
+
     const onFinish = async (values: IUserTable) => {
         try {
             setSubmitting(true);
-            const res = await selfUpdateUserAPI({ ...values, id: userId });
-            if (res?.data?.statusCode === 200) {
+
+            const avatarBase64 = avatarFile?.originFileObj
+                ? await getBase64(avatarFile.originFileObj as RcFile)
+                : '';
+
+            const res = await selfUpdateUserAPI({
+                ...values,
+                id: userId,
+                avatar: avatarBase64
+            });
+
+            if (res?.data) {
                 message.success("Cập nhật thông tin thành công");
+                onUpdateSuccess?.();
             } else {
                 message.error(res?.data?.message || "Cập nhật thất bại");
             }
@@ -71,12 +152,6 @@ const UserProfileForm = ({ userId }: Props) => {
                 <Spin />
             ) : (
                 <Form form={form} layout="vertical" onFinish={onFinish}>
-                    {avatarUrl && (
-                        <div style={{ marginBottom: 16 }}>
-                            <Avatar size={64} src={avatarUrl} />
-                        </div>
-                    )}
-
                     <Form.Item label="Họ và tên" name="name" rules={[{ required: true, message: "Nhập tên" }]}>
                         <Input />
                     </Form.Item>
@@ -99,6 +174,31 @@ const UserProfileForm = ({ userId }: Props) => {
 
                     <Form.Item label="Tuổi" name="age">
                         <Input type="number" />
+                    </Form.Item>
+
+                    <Form.Item label="Avatar" name="avatar">
+                        <Upload
+                            listType="picture"
+                            maxCount={1}
+                            customRequest={handleUploadAvatar}
+                            fileList={avatarFile ? [avatarFile] : []}
+                            onRemove={() => {
+                                setAvatarFile(null);
+                                setPreviewImage("");
+                            }}
+                            onPreview={handlePreview}
+                            accept="image/*"
+                        >
+                            <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+                        </Upload>
+                        {previewImage && (
+                            <Image
+                                width={100}
+                                src={previewImage}
+                                style={{ marginTop: 10, borderRadius: 4 }}
+                                preview={false}
+                            />
+                        )}
                     </Form.Item>
 
                     <Form.Item>
