@@ -403,7 +403,7 @@ export const toggleLikeAPI = (productId: number, userId: number) => {
     return axios.post('/api/v1/likes/toggle', null, { params: { productId, userId } });
 };
 
-export const getLikedProductsAPI = (userId: number) => {
+export const getLikedProductsAPI = (userId: number): Promise<ILike[]> => {
     return axios.get(`/api/v1/likes/user/${userId}`);
 };
 

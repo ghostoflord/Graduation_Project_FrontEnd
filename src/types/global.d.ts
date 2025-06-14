@@ -85,7 +85,7 @@ declare global {
         gender: string;
         firstName: string;
         lastName: string;
-        
+
     }
 
     interface IResponseImport {
@@ -362,5 +362,14 @@ declare global {
         ports: string;
     }
 
-
+    export interface ILike {
+        likeId: number;
+        userId: number;
+        userName: string;
+        productId: number;
+        productName: string;
+        productThumbnail: string;
+        productDescription: string;
+        productPrice: number;
+    }
 }

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentApp } from "@/components/context/app.context";
 import ModalChangePassword from "../../../components/client/account/modal.change.password";
 import UserProfileForm from "./user.profile.form";
+import LikedProducts from "./liked.products";
 
 
 const { Title, Text } = Typography;
@@ -26,6 +27,8 @@ const AccountPage = () => {
     const [changePassword, setChangePassword] = useState(false);
 
     const [openProfileModal, setOpenProfileModal] = useState(false);
+
+    const [openLikedModal, setOpenLikedModal] = useState(false);
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user.id;
@@ -119,6 +122,14 @@ const AccountPage = () => {
                                 >
                                     Lịch sử giao hàng
                                 </Button>
+                                <Button
+                                    icon={<UserOutlined />}
+                                    block
+                                    onClick={() => setOpenLikedModal(true)}
+                                >
+                                    Sản phẩm đã thích
+                                </Button>
+
                                 <Button icon={<LogoutOutlined />} block danger onClick={handleLogout}>
                                     Đăng xuất
                                 </Button>
@@ -161,7 +172,15 @@ const AccountPage = () => {
                     onUpdateSuccess={() => setOpenProfileModal(false)}
                 />
             </Modal>
-
+            <Modal
+                title="Sản phẩm đã thích"
+                open={openLikedModal}
+                onCancel={() => setOpenLikedModal(false)}
+                footer={null}
+                destroyOnClose
+            >
+                <LikedProducts userId={userId} />
+            </Modal>
         </>
     );
 };
