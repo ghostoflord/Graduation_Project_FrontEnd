@@ -107,6 +107,16 @@ export const importUserExcelAPI = (data: any[]) => {
     return axios.post("/api/v1/users/import", data);
 };
 
+//
+export const getUserByIdAPI = (id: number) => {
+    const url = `/api/v1/users/me/${id}`;
+    return axios.get<IBackendRes<IUserTable>>(url);
+};
+
+export const selfUpdateUserAPI = (data: IUserTable) => {
+    return axios.post<IBackendRes<IUserTable>>("/api/v1/users/me/update", data);
+};
+
 /**
  * 
 Module Upload File

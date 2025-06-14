@@ -6,6 +6,7 @@ import { getAccountInfoAPI, logoutAPI } from "@/services/api";
 import { useNavigate } from "react-router-dom";
 import { useCurrentApp } from "@/components/context/app.context";
 import ModalChangePassword from "../../../components/client/account/modal.change.password";
+import UserProfileForm from "./user.profile.form";
 
 
 const { Title, Text } = Typography;
@@ -23,6 +24,9 @@ const AccountPage = () => {
     const navigate = useNavigate();
     const { setUser, setIsAuthenticated, setCarts, setCartSummary } = useCurrentApp();
     const [changePassword, setChangePassword] = useState(false);
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.id;
     useEffect(() => {
         const fetchAccountInfo = async () => {
             try {
@@ -109,6 +113,18 @@ const AccountPage = () => {
                                     Đăng xuất
                                 </Button>
                             </Space>
+                        </Card>
+                    </Col>
+
+                    <Col span={24}>
+                        <Card title="Thông tin cá nhân" className="account-card">
+                            {/* <p><strong>Họ và tên:</strong> {userData.name}</p>
+    <p><strong>Email:</strong> {userData.email}</p> */}
+                            {userId ? (
+                                <UserProfileForm userId={userId} />
+                            ) : (
+                                <p>Không tìm thấy ID người dùng.</p>
+                            )}
                         </Card>
                     </Col>
 
