@@ -518,13 +518,26 @@ export const getVouchersForUserAPI = (userId: number) => {
     return axios.get<IBackendRes<IVoucher[]>>(`/api/v1/vouchers/user/${userId}`);
 };
 
+////
 export const compareProductsAPI = (ids: number[]) => {
     const query = ids.join(",");
     return axios.get<IBackendRes<CompareProductDTO[]>>(`/api/v1/compare?ids=${query}`);
 };
 
+///
 export const getLowStockProductsAPI = async (
     threshold: number = 5
 ): Promise<IBackendRes<IProductTable[]>> => {
     return axios.get(`/api/v1/products/low-stock?threshold=${threshold}`);
+};
+
+///
+export const postManualChatAPI = (chat: {
+    name: string;
+    email: string
+    phone: string;
+    address: string;
+    question: string;
+}) => {
+    return axios.post("/api/v1/manual-chats", chat);
 };
