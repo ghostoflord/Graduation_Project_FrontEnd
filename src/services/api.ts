@@ -296,7 +296,7 @@ export const markNotificationAsReadAPI = (notificationId: number) => {
  * 
 Module Order
  */
-export const placeOrderAPI = (data: { userId: number; name: string, address: string, phone: string, }) => {
+export const placeOrderAPI = (data: { userId: number; name: string, address: string, phone: string, voucherCode: string }) => {
     return axios.post('/api/v1/orders/place', data);
 };
 
