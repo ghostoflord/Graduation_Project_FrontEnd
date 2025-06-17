@@ -337,6 +337,20 @@ declare global {
         assignedUser: IAssignedUser | null;
     }
 
+    export interface IVoucherUpdateDTO {
+        code: string;
+        description: string;
+        discountValue: number;
+        percentage: boolean;
+        startDate: string;
+        endDate: string;
+        singleUse: boolean;
+        active: boolean;
+        used: boolean;
+        assignedUserId?: number | null;
+    }
+
+
     export interface IAssignedUser {
         id: number;
         name: string;

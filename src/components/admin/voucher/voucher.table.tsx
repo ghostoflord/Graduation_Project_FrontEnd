@@ -3,14 +3,23 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Tag } from 'antd';
 import { useRef, useState } from 'react';
-import { DeleteTwoTone, PlusOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import CreateVoucher from './voucher.create';
 import AssignVoucherToUser from './assign.voucher.to.user';
 import ApplyVoucherModal from './apply.voucher.form';
+import DetailVoucher from './detail.voucher';
+import UpdateVoucher from './update.voucher';
 const TableVoucher = () => {
     const [vouchers, setVouchers] = useState<IVoucher[]>([]);
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IVoucher | null>(null);
+
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [dataUpdate, setDataUpdate] = useState<IVoucher | null>(null);
+    const [userList, setUserList] = useState<IUser[]>([]);
 
     const actionRef = useRef<ActionType>();
     const { message, notification } = App.useApp();
@@ -50,9 +59,19 @@ const TableVoucher = () => {
 
     const columns: ProColumns<IVoucher>[] = [
         {
-            title: 'ID',
+            title: 'Id',
             dataIndex: 'id',
-            width: 80,
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(entity);
+                            setOpenViewDetail(true);
+                        }}
+                        href='#'>{entity.id}</a>
+                )
+            },
         },
         {
             title: 'Mã giảm giá',
@@ -131,17 +150,36 @@ const TableVoucher = () => {
         {
             title: 'Hành động',
             hideInSearch: true,
-            render: (_, record) => (
-                <Popconfirm
-                    title="Xác nhận xoá voucher?"
-                    onConfirm={() => handleDeleteVoucher(record.id)}
-                    okText="Xoá"
-                    cancelText="Huỷ"
-                    okButtonProps={{ loading: isDeleteLoading }}
-                >
-                    <DeleteTwoTone twoToneColor="#ff4d4f" style={{ cursor: 'pointer' }} />
-                </Popconfirm>
-            ),
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        <EditTwoTone
+                            twoToneColor="#f57800"
+                            style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
+                            }}
+                        />
+                        <Popconfirm
+                            placement="leftTop"
+                            title={"Xác nhận xóa user"}
+                            description={"Bạn có chắc chắn muốn xóa user này ?"}
+                            onConfirm={() => handleDeleteVoucher(entity.id)}
+                            okText="Xác nhận"
+                            cancelText="Hủy"
+                            okButtonProps={{ loading: isDeleteLoading }}
+                        >
+                            <span style={{ cursor: "pointer", marginLeft: 20 }}>
+                                <DeleteTwoTone
+                                    twoToneColor="#ff4d4f"
+                                    style={{ cursor: "pointer" }}
+                                />
+                            </span>
+                        </Popconfirm>
+                    </>
+                )
+            }
         },
     ];
 
@@ -207,6 +245,20 @@ const TableVoucher = () => {
             <ApplyVoucherModal
                 openModalApply={openModalApply}
                 setOpenModalApply={setOpenModalApply}
+            />
+            <DetailVoucher
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
+            <UpdateVoucher
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
+                userList={userList || []}
             />
         </>
     );

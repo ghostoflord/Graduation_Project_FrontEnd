@@ -518,6 +518,10 @@ export const getVouchersForUserAPI = (userId: number) => {
     return axios.get<IBackendRes<IVoucher[]>>(`/api/v1/vouchers/user/${userId}`);
 };
 
+export const updateVoucherAPI = (id: number, data: IVoucherUpdateDTO) => {
+    return axios.put<IBackendRes<IVoucher>>(`/api/v1/vouchers/${id}`, data);
+};
+
 ////
 export const compareProductsAPI = (ids: number[]) => {
     const query = ids.join(",");
