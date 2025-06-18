@@ -45,6 +45,7 @@ import InvoiceView from './components/admin/order/orderqr/order.qr.view';
 import ChatWithGPT from './pages/chat/chat.with.gpt'
 import VoucherPage from './pages/admin/voucher/voucher.page';
 import CompareProductPage from './pages/compare/compare.product.page';
+import FlashSalePage from './pages/flashsale/flash.sale.page';
 
 const router = createBrowserRouter([
   {
@@ -223,9 +224,15 @@ const router = createBrowserRouter([
     element: < CompareProductPage />
   },
   {
+    path: "/test",
+    element: < FlashSalePage />
+  },
+  {
     path: "*",
     element: <ErrorPage />,
   },
+
+
 
 ]);
 

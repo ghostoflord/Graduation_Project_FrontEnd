@@ -3,6 +3,7 @@ import ProductList from "@/pages/home/product/product.list.home";
 import Banner from "../banner/banner.home";
 import ScrollToTop from "@/components/scrolltotop/scrolltotop";
 import ChatWidget from "@/pages/chatbot/chat.widget";
+import FlashSaleList from "@/components/admin/flashsale/flash.sale.list";
 
 const HomePage = () => {
     return (
@@ -11,6 +12,7 @@ const HomePage = () => {
             <Banner />
             <Slider />
             <ProductList />
+            <FlashSaleList />
             <ChatWidget />
         </>
     );

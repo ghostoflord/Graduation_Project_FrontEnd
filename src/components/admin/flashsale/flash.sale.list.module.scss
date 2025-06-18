@@ -1,0 +1,63 @@
+.container {
+    padding: 24px;
+    background-color: #f9fafb;
+    min-height: 100vh;
+}
+
+.saleCard {
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+.saleHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .countdown {
+        background-color: #ff4d4f;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+}
+
+.productCard {
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    transition: all 0.3s;
+    background-color: #fff;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .ant-card-body {
+        padding: 12px;
+    }
+
+    .productName {
+        font-weight: 600;
+        margin-top: 8px;
+    }
+
+    .originalPrice {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 13px;
+    }
+
+    .salePrice {
+        color: #d0021b;
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 4px;
+        display: block;
+    }
+}

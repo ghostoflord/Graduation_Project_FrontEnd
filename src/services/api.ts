@@ -545,3 +545,22 @@ export const postManualChatAPI = (chat: {
 }) => {
     return axios.post("/api/v1/manual-chats", chat);
 };
+
+/// 
+
+// 1. Tạo Flash Sale
+export const createFlashSaleAPI = (
+    data: IFlashSaleRequest
+): Promise<IBackendRes<IFlashSale>> => {
+    return axios.post("/api/v1/flash-sales", data);
+};
+
+// 2. Lấy tất cả Flash Sales
+export const getAllFlashSalesAPI = (): Promise<IBackendRes<IFlashSale[]>> => {
+    return axios.get("/api/v1/flash-sales");
+};
+
+// 3. Lấy Flash Sale đang diễn ra
+export const getActiveFlashSaleItemsAPI = (): Promise<IBackendRes<IFlashSaleItem[]>> => {
+    return axios.get("/api/v1/flash-sales/active-items");
+};

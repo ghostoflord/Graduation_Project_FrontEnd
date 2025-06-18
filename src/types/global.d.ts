@@ -386,4 +386,37 @@ declare global {
         productDescription: string;
         productPrice: number;
     }
+
+    //
+    // types/flashsale.ts (hoặc thêm vào file chứa CreateFlashSaleModal)
+
+    export interface IFlashSaleItemRequest {
+        productId: number;
+        salePrice: number;
+        quantity: number;
+    }
+
+    export interface IFlashSaleRequest {
+        name: string;
+        startTime: string; // ISO string
+        endTime: string;
+        items: IFlashSaleItemRequest[];
+    }
+
+    export interface IFlashSale {
+        id: number;
+        name: string;
+        startTime: string;
+        endTime: string;
+        items: IFlashSaleItem[];
+    }
+
+    export interface IFlashSaleItem {
+        id: number;
+        productId: number;
+        salePrice: number;
+        quantity: number;
+        flashSaleId: number;
+    }
+
 }
