@@ -176,6 +176,10 @@ const router = createBrowserRouter([
         element: <VoucherPage />,
       },
       {
+        path: "flashsale",
+        element: <FlashSalePage />,
+      },
+      {
         path: "*",
         element: <ErrorPage />,
       }
@@ -223,10 +227,10 @@ const router = createBrowserRouter([
     path: "compare",
     element: < CompareProductPage />
   },
-  {
-    path: "/test",
-    element: < FlashSalePage />
-  },
+  // {
+  //   path: "/test",
+  //   element: < FlashSalePage />
+  // },
   {
     path: "*",
     element: <ErrorPage />,

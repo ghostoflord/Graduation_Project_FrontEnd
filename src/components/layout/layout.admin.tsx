@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppstoreOutlined, ExceptionOutlined, HeartTwoTone, TeamOutlined, UserOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ProductOutlined, ApiOutlined, NotificationOutlined, DollarOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ExceptionOutlined, HeartTwoTone, TeamOutlined, UserOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ProductOutlined, ApiOutlined, NotificationOutlined, DollarOutlined, MoneyCollectOutlined } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, Avatar } from 'antd';
 import { Outlet, useLocation, useNavigate, Navigate, Link } from "react-router-dom";
 import { useCurrentApp } from '../context/app.context';
@@ -76,8 +76,13 @@ const LayoutAdmin = () => {
             label: <Link to='/admin/voucher'>Manage Voucher</Link>,
             key: '/admin/voucher',
             icon: <DollarOutlined />
-        }
+        },
+        {
+            label: <Link to='/admin/flashsale'>Manage Flash Sale</Link>,
+            key: '/admin/flashsale',
+            icon: <MoneyCollectOutlined />
 
+        },
     ];
 
     useEffect(() => {
