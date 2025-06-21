@@ -387,9 +387,6 @@ declare global {
         productPrice: number;
     }
 
-    //
-    // types/flashsale.ts (hoặc thêm vào file chứa CreateFlashSaleModal)
-
     export interface IFlashSaleItemRequest {
         productId: number;
         salePrice: number;

@@ -26,6 +26,36 @@
     }
 }
 
+.customArrow {
+    position: absolute;
+    top: 35%;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    background-color: #068bff;
+    color: white;
+    font-size: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: #065bf8;
+    }
+}
+
+.nextArrow {
+    right: -18px;
+}
+
+.prevArrow {
+    left: -18px;
+}
+
+
 .productCard {
     border-radius: 10px;
     overflow: hidden;

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { Card, Tag, Row, Col, Image, Typography, Badge } from "antd";
+import { Card, Typography, Badge, Image } from "antd";
 import { getAllFlashSalesAPI } from "@/services/api";
 import dayjs from "dayjs";
 import Countdown, { CountdownRenderProps } from "react-countdown";
-
+import Slider from "react-slick";
 import styles from "./flash.sale.list.module.scss";
-const { Title, Text } = Typography;
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const { Title } = Typography;
 
 const FlashSaleList = () => {
     const [flashSales, setFlashSales] = useState<IFlashSale[]>([]);
@@ -21,11 +25,67 @@ const FlashSaleList = () => {
 
     useEffect(() => {
         getAllFlashSalesAPI().then((res) => {
-            if (res.statusCode === 200) {
-                setFlashSales(res.data.filter((fs) => fs.status === "ACTIVE"));
-            }
+            const result = res?.data?.result || [];
+            const activeSales = result.filter((fs) => fs.status === "ACTIVE");
+            setFlashSales(activeSales);
         });
     }, []);
+
+    const PrevArrow = (props: any) => {
+        const { onClick } = props;
+        return (
+            <div className={`${styles.customArrow} ${styles.prevArrow}`} onClick={onClick}>
+                {"<"}
+            </div>
+        );
+    };
+
+    const NextArrow = (props: any) => {
+        const { onClick } = props;
+        return (
+            <div className={`${styles.customArrow} ${styles.nextArrow}`} onClick={onClick}>
+                {">"}
+            </div>
+        );
+    };
+
+
+    const sliderSettings = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        arrows: true,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+        responsive: [
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 4,
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 3,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                }
+            }
+        ]
+    };
 
     return (
         <div className={styles.container}>
@@ -41,17 +101,16 @@ const FlashSaleList = () => {
                             </div>
                         </div>
                     }
-                    style={{ marginBottom: 24 }}
                     bordered
                 >
-                    <Row gutter={[16, 16]}>
+                    <Slider {...sliderSettings}>
                         {sale.items?.map((item) => {
                             const percent = item.originalPrice && item.originalPrice > item.salePrice
                                 ? Math.round(((item.originalPrice - item.salePrice) / item.originalPrice) * 100)
                                 : 0;
 
                             return (
-                                <Col key={item.productId} xs={24} sm={12} md={8} lg={6} xl={4}>
+                                <div key={item.productId} className={styles.slideItem}>
                                     <Badge.Ribbon text={`Giảm ${percent}%`} color="red">
                                         <Card
                                             hoverable
@@ -74,14 +133,13 @@ const FlashSaleList = () => {
                                             </div>
                                         </Card>
                                     </Badge.Ribbon>
-                                </Col>
+                                </div>
                             );
                         })}
-                    </Row>
+                    </Slider>
                 </Card>
             ))}
         </div>
-
     );
 };
 
