@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import { ProTable } from "@ant-design/pro-components";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
-import { Tag, Tooltip, List, Typography, Popconfirm, Button } from "antd";
-import { getAllFlashSalesAPI } from "@/services/api";
+import { Tag, Tooltip, List, Typography, Popconfirm, Button, App } from "antd";
+import { deleteFlashSaleAPI, getAllFlashSalesAPI } from "@/services/api";
 import CreateFlashSaleModal from "./create.flash.sale";
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import UpdateFlashSale from "./update.flash.sale";
+import DetailFlashSale from "./flash.sale.detail";
 interface IFlashSaleItem {
     id: number;
     productId: number;
@@ -45,11 +46,42 @@ const FlashSaleTable = () => {
         total: 0,
     });
 
+    const { message, notification } = App.useApp();
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IFlashSale | null>(null);
+
+
+    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
+    const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
+
+    const [isDeleteFlashSale, setIsDeleteFlashSale] = useState<boolean>(false);
+
+    const handleDeleteFlashSale = async (id: string) => {
+        setIsDeleteFlashSale(true);
+        try {
+            const res = await deleteFlashSaleAPI(id);
+            if (res && res.statusCode === 200) {
+                message.success(res.message || 'Xóa flash sale thành công');
+                refreshTable(); // reload bảng
+            } else {
+                notification.error({
+                    message: res.error || 'Đã có lỗi xảy ra',
+                    description: res.message || 'Không thể xóa flash sale'
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi hệ thống',
+                description: 'Đã có lỗi xảy ra khi xóa flash sale'
+            });
+        } finally {
+            setIsDeleteFlashSale(false);
+        }
+    };
+
 
     const refreshTable = () => {
         actionRef.current?.reload();
@@ -62,9 +94,19 @@ const FlashSaleTable = () => {
             width: 48,
         },
         {
-            title: "ID",
-            dataIndex: "id",
-            copyable: true,
+            title: 'Id',
+            dataIndex: 'id',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a
+                        onClick={() => {
+                            setDataViewDetail(entity);
+                            setOpenViewDetail(true);
+                        }}
+                        href='#'>{entity.id}</a>
+                )
+            },
         },
         {
             title: "Tên Flash Sale",
@@ -135,12 +177,12 @@ const FlashSaleTable = () => {
                         />
                         <Popconfirm
                             placement="leftTop"
-                            title={"Xác nhận xóa user"}
-                            description={"Bạn có chắc chắn muốn xóa user này ?"}
-                            // onConfirm={() => handleDeleteUser(entity.id)}
+                            title={"Xác nhận xóa flash sale"}
+                            description={"Bạn có chắc chắn muốn xóa flash sale này?"}
+                            onConfirm={() => handleDeleteFlashSale(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
-                        // okButtonProps={{ loading: isDeleteUser }}
+                            okButtonProps={{ loading: isDeleteFlashSale }}
                         >
                             <span style={{ cursor: "pointer", marginLeft: 20 }}>
                                 <DeleteTwoTone
@@ -234,6 +276,13 @@ const FlashSaleTable = () => {
                 refreshTable={refreshTable}
                 setDataUpdate={setDataUpdate}
                 dataUpdate={dataUpdate}
+            />
+
+            <DetailFlashSale
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
             />
         </>
     );

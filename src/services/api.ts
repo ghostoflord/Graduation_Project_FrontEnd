@@ -571,3 +571,8 @@ export const updateFlashSaleAPI = (
 ): Promise<IBackendRes<void>> => {
   return axios.put(`/api/v1/flash-sales/${id}`, data);
 };
+
+export const deleteFlashSaleAPI = (id: string | number) => {
+  const url = `/api/v1/flash-sales/${id}`;
+  return axios.delete<IBackendRes<null>>(url);
+};

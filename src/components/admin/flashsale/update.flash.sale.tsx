@@ -76,10 +76,7 @@ const UpdateFlashSale = (props: IProps) => {
             open={openModalUpdate}
             onOk={async () => {
                 try {
-                    await form.validateFields();
-                    const values = form.getFieldsValue(true);
-
-                    console.log('🔥 Final form values:', values);
+                    const values = await form.validateFields();
 
                     const payload: FlashSaleUpdateDTO = {
                         name: values.name || '',
@@ -105,8 +102,9 @@ const UpdateFlashSale = (props: IProps) => {
                         message: 'Cập nhật thất bại',
                         description: error?.response?.data?.message || 'Lỗi không xác định'
                     });
+                } finally {
+                    setIsSubmit(false);
                 }
-                setIsSubmit(false);
             }}
             onCancel={() => {
                 setOpenModalUpdate(false);
@@ -119,20 +117,36 @@ const UpdateFlashSale = (props: IProps) => {
         >
             <Divider />
             <Form form={form} layout="vertical">
-                <Form.Item name="name" label="Tên Flash Sale" rules={[{ required: true }]}> <Input /> </Form.Item>
-                <Form.Item name="status" label="Trạng thái" rules={[{ required: true }]}> <Select>
-                    <Select.Option value="ACTIVE">ACTIVE</Select.Option>
-                    <Select.Option value="INACTIVE">INACTIVE</Select.Option>
-                    <Select.Option value="UPCOMING">UPCOMING</Select.Option>
-                </Select> </Form.Item>
-                <Form.Item name="startTime" label="Thời gian bắt đầu" rules={[{ required: true }]}> <DatePicker showTime style={{ width: '100%' }} /> </Form.Item>
-                <Form.Item name="endTime" label="Thời gian kết thúc" rules={[{ required: true }]}> <DatePicker showTime style={{ width: '100%' }} /> </Form.Item>
+                <Form.Item name="name" label="Tên Flash Sale" rules={[{ required: true }]}>
+                    <Input />
+                </Form.Item>
+
+                <Form.Item name="status" label="Trạng thái" rules={[{ required: true }]}>
+                    <Select>
+                        <Select.Option value="ACTIVE">ACTIVE</Select.Option>
+                        <Select.Option value="INACTIVE">INACTIVE</Select.Option>
+                        <Select.Option value="UPCOMING">UPCOMING</Select.Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item name="startTime" label="Thời gian bắt đầu" rules={[{ required: true }]}>
+                    <DatePicker showTime style={{ width: '100%' }} />
+                </Form.Item>
+
+                <Form.Item name="endTime" label="Thời gian kết thúc" rules={[{ required: true }]}>
+                    <DatePicker showTime style={{ width: '100%' }} />
+                </Form.Item>
 
                 <Form.List name="items">
                     {(fields, { add, remove }) => (
                         <>
                             {fields.map(({ key, name, ...restField }) => (
                                 <Space key={key} align="baseline" style={{ display: 'flex', marginBottom: 8 }}>
+                                    {/* Hidden ID field */}
+                                    <Form.Item {...restField} name={[name, 'id']} hidden>
+                                        <Input />
+                                    </Form.Item>
+
                                     <Form.Item
                                         {...restField}
                                         name={[name, 'productId']}
@@ -146,7 +160,11 @@ const UpdateFlashSale = (props: IProps) => {
                                             allowClear
                                         >
                                             {productList.map((product) => (
-                                                <Select.Option key={product.id} value={product.id} label={product.name}>
+                                                <Select.Option
+                                                    key={product.id}
+                                                    value={product.id}
+                                                    label={product.name}
+                                                >
                                                     {`#${product.id} - ${product.name}`}
                                                 </Select.Option>
                                             ))}
@@ -179,7 +197,9 @@ const UpdateFlashSale = (props: IProps) => {
                                 </Space>
                             ))}
                             <Form.Item>
-                                <Button icon={<PlusOutlined />} onClick={() => add()}>Thêm sản phẩm</Button>
+                                <Button icon={<PlusOutlined />} onClick={() => add()}>
+                                    Thêm sản phẩm
+                                </Button>
                             </Form.Item>
                         </>
                     )}
