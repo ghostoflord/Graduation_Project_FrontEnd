@@ -564,3 +564,10 @@ export const getAllFlashSalesAPI = (): Promise<IBackendRes<IFlashSale[]>> => {
 export const getActiveFlashSaleItemsAPI = (): Promise<IBackendRes<IFlashSaleItem[]>> => {
     return axios.get("/api/v1/flash-sales/active-items");
 };
+
+export const updateFlashSaleAPI = (
+  id: number,
+  data: FlashSaleUpdateDTO
+): Promise<IBackendRes<void>> => {
+  return axios.put(`/api/v1/flash-sales/${id}`, data);
+};

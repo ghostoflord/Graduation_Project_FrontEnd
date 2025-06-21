@@ -418,5 +418,18 @@ declare global {
         quantity: number;
         flashSaleId: number;
     }
-
+    // update 
+    export interface FlashSaleItemUpdateDTO {
+        id?: number;
+        productId: number;
+        salePrice: number;
+        quantity: number;
+    }
+    export interface FlashSaleUpdateDTO {
+        name: string;
+        startTime: string;
+        endTime: string;
+        status: string;
+        items: FlashSaleItemUpdateDTO[];
+    }
 }
