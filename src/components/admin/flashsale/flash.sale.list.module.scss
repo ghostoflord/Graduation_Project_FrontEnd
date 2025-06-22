@@ -119,4 +119,46 @@
             }
         }
     }
+
+    .buttonGroup {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+
+        button {
+            flex: 1;
+            height: 36px;
+            font-weight: 600;
+            transition: all 0.3s;
+
+            &:first-child {
+                margin-right: 8px;
+                background-color: #fff;
+                color: #054bfb;
+                border: 1px solid #054bfb;
+
+                &:hover {
+                    background-color: #fff1f0;
+                    color: #054bfb;
+                    border-color: #054bfb;
+                }
+            }
+
+            &:last-child {
+                background-color: #054bfb;
+                border-color: #054bfb;
+
+                &:hover {
+                    background-color: #054bfb;
+                    border-color: #054bfb;
+                }
+            }
+
+            .anticon {
+                font-size: 18px;
+            }
+        }
+    }
+
 }

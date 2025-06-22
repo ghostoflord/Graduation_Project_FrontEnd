@@ -566,13 +566,22 @@ export const getActiveFlashSaleItemsAPI = (): Promise<IBackendRes<IFlashSaleItem
 };
 
 export const updateFlashSaleAPI = (
-  id: number,
-  data: FlashSaleUpdateDTO
+    id: number,
+    data: FlashSaleUpdateDTO
 ): Promise<IBackendRes<void>> => {
-  return axios.put(`/api/v1/flash-sales/${id}`, data);
+    return axios.put(`/api/v1/flash-sales/${id}`, data);
 };
 
 export const deleteFlashSaleAPI = (id: string | number) => {
-  const url = `/api/v1/flash-sales/${id}`;
-  return axios.delete<IBackendRes<null>>(url);
+    const url = `/api/v1/flash-sales/${id}`;
+    return axios.delete<IBackendRes<null>>(url);
+};
+
+export const reduceFlashSaleQuantityAPI = async (params: {
+    flashSaleItemId: number;
+    quantity: number;
+}) => {
+    return axios.post(`/api/v1/flash-sales/reduce-quantity`, null, {
+        params: params,
+    });
 };
