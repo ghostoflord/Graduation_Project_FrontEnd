@@ -110,29 +110,35 @@ const FlashSaleList = () => {
                                 : 0;
 
                             return (
-                                <div key={item.productId} className={styles.slideItem}>
-                                    <Badge.Ribbon text={`Giảm ${percent}%`} color="red">
-                                        <Card
-                                            hoverable
-                                            className={styles.productCard}
-                                            cover={
-                                                <Image
-                                                    height={150}
-                                                    src={item.productThumbnail || "/default.jpg"}
-                                                    alt="product"
-                                                    preview={false}
-                                                />
-                                            }
-                                        >
-                                            <div className={styles.productName}>{item.productName}</div>
-                                            <div className={styles.originalPrice}>
-                                                {item.originalPrice?.toLocaleString()}₫
-                                            </div>
-                                            <div className={styles.salePrice}>
-                                                {item.salePrice.toLocaleString()}₫
-                                            </div>
-                                        </Card>
-                                    </Badge.Ribbon>
+                                <div className={styles.slideItem}>
+                                    <div style={{ maxWidth: 220, margin: "0 auto" }}>
+                                        <Badge.Ribbon text={`Giảm ${percent}%`} color="red">
+                                            <Card
+                                                hoverable
+                                                className={styles.productCard}
+                                                cover={
+                                                    <div className={styles["product-image"]}>
+                                                        <img
+                                                            src={
+                                                                item.imageUrl
+                                                                    ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.imageUrl}`
+                                                                    : "/default-product.jpg"
+                                                            }
+                                                            alt="product"
+                                                        />
+                                                    </div>
+                                                }
+                                            >
+                                                <div className={styles.productName}>{item.productName}</div>
+                                                <div className={styles.originalPrice}>
+                                                    {item.originalPrice?.toLocaleString()}₫
+                                                </div>
+                                                <div className={styles.salePrice}>
+                                                    {item.salePrice.toLocaleString()}₫
+                                                </div>
+                                            </Card>
+                                        </Badge.Ribbon>
+                                    </div>
                                 </div>
                             );
                         })}

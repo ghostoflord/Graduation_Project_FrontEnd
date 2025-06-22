@@ -413,6 +413,7 @@ declare global {
         productId: number;
         salePrice: number;
         quantity: number;
+        imageUrl: string;
         flashSaleId: number;
     }
     // update 

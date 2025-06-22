@@ -2,92 +2,121 @@
     padding: 24px;
     background-color: #f9fafb;
     min-height: 100vh;
-}
 
-.saleCard {
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
-}
+    .saleCard {
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        margin-bottom: 32px;
+    }
 
-.saleHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    .saleHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-    .countdown {
-        background-color: #ff4d4f;
+        .countdown {
+            background-color: #ff4d4f;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    }
+
+    .customArrow {
+        position: absolute;
+        top: 35%;
+        z-index: 10;
+        width: 36px;
+        height: 36px;
+        background-color: #068bff;
         color: white;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-    }
-}
+        font-size: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
 
-.customArrow {
-    position: absolute;
-    top: 35%;
-    z-index: 10;
-    width: 36px;
-    height: 36px;
-    background-color: #068bff;
-    color: white;
-    font-size: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-        background-color: #065bf8;
-    }
-}
-
-.nextArrow {
-    right: -18px;
-}
-
-.prevArrow {
-    left: -18px;
-}
-
-
-.productCard {
-    border-radius: 10px;
-    overflow: hidden;
-    text-align: center;
-    transition: all 0.3s;
-    background-color: #fff;
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        &:hover {
+            background-color: #065bf8;
+        }
     }
 
-    .ant-card-body {
-        padding: 12px;
+    .nextArrow {
+        right: -18px;
     }
 
-    .productName {
-        font-weight: 600;
-        margin-top: 8px;
+    .prevArrow {
+        left: -18px;
     }
 
-    .originalPrice {
-        text-decoration: line-through;
-        color: #999;
-        font-size: 13px;
+    .product-image {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background: #f7f7f7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
     }
 
-    .salePrice {
-        color: #d0021b;
-        font-weight: bold;
-        font-size: 16px;
-        margin-top: 4px;
-        display: block;
+
+    .slideItem {
+        padding: 8px;
+
+        .productCard {
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            background-color: #fff;
+            height: 100%;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            .ant-card-body {
+                padding: 12px;
+            }
+
+            .productName {
+                font-weight: 600;
+                margin-top: 8px;
+                font-size: 14px;
+            }
+
+            .originalPrice {
+                text-decoration: line-through;
+                color: #999;
+                font-size: 13px;
+            }
+
+            .salePrice {
+                color: #d0021b;
+                font-weight: bold;
+                font-size: 16px;
+                margin-top: 4px;
+                display: block;
+            }
+
+            .ant-card-cover img {
+                width: 100%;
+                height: 150px;
+                object-fit: contain;
+                padding: 12px;
+            }
+        }
     }
 }
