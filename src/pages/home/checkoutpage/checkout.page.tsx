@@ -129,6 +129,11 @@ const CheckoutPage: React.FC = () => {
             items: itemsToCheckout,
         };
 
+        if (isFlashSale && flashSaleItem?.flashSaleItemId && flashSaleItem?.productId) {
+            orderPayload.flashSaleItemId = flashSaleItem.flashSaleItemId;
+            orderPayload.flashSaleProductId = flashSaleItem.productId;
+        }
+
         if (voucherCode && !isFlashSale) {
             orderPayload.voucherCode = voucherCode;
         }
@@ -167,6 +172,7 @@ const CheckoutPage: React.FC = () => {
             }
         }
     };
+
 
     const handleApplyVoucher = async (code: string) => {
         if (!userId || isFlashSale) return;
