@@ -111,11 +111,6 @@ const FlashSaleList = () => {
             const user = JSON.parse(storedUser);
             const userId = user.id;
 
-            await reduceFlashSaleQuantityAPI({
-                flashSaleItemId: item.id,
-                quantity: 1
-            });
-
             await addToCartAPI({
                 productId: item.productId,
                 quantity: 1,
@@ -136,7 +131,20 @@ const FlashSaleList = () => {
             const res = await getCart(userId);
             if (res?.data) setCartSummary(res.data);
 
-            navigate("/thanh-toan");
+            navigate("/thanh-toan", {
+                state: {
+                    flashSaleItem: {
+                        flashSaleItemId: item.id,
+                        productId: item.productId,
+                        price: item.salePrice,
+                        quantity: 1,
+                        name: item.productName,
+                        image: item.imageUrl,
+                        shortDescription: item.shortDescription,
+                        detailDescription: item.detailDescription,
+                    },
+                },
+            });
         } catch (error: any) {
             message.error(error?.response?.data?.message || "Không thể mua ngay");
         }

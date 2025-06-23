@@ -13,7 +13,7 @@ import {
     message,
     Modal,
 } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     checkoutOrder,
     getCart,
@@ -62,9 +62,13 @@ const CheckoutPage: React.FC = () => {
     const [voucherDiscount, setVoucherDiscount] = useState<number>(0);
     const [voucherModalVisible, setVoucherModalVisible] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const { setCartSummary } = useCurrentApp();
 
-    const finalTotal = Math.max(totalPrice - voucherDiscount, 0);
+    const flashSaleItem = location.state?.flashSaleItem;
+    const isFlashSale = !!flashSaleItem;
+
+    const finalTotal = Math.max(totalPrice - (isFlashSale ? 0 : voucherDiscount), 0);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -125,7 +129,7 @@ const CheckoutPage: React.FC = () => {
             items: itemsToCheckout,
         };
 
-        if (voucherCode) {
+        if (voucherCode && !isFlashSale) {
             orderPayload.voucherCode = voucherCode;
         }
 
@@ -165,7 +169,7 @@ const CheckoutPage: React.FC = () => {
     };
 
     const handleApplyVoucher = async (code: string) => {
-        if (!userId) return;
+        if (!userId || isFlashSale) return;
 
         try {
             const res = await applyVoucherAPI(userId, code, totalPrice);
@@ -187,7 +191,7 @@ const CheckoutPage: React.FC = () => {
     };
 
     const getDiscountedPrice = (item: CartItem) => {
-        if (!voucherCode || voucherDiscount <= 0) {
+        if (!voucherCode || voucherDiscount <= 0 || isFlashSale) {
             return item.price * item.quantity;
         }
         const discountRatio = voucherDiscount / totalPrice;
@@ -281,15 +285,19 @@ const CheckoutPage: React.FC = () => {
                                 ))}
 
                                 <Divider />
-                                {voucherCode && (
+
+                                {!isFlashSale && voucherCode && (
                                     <div className="summary-voucher">
                                         <Text>Mã giảm giá: </Text>
                                         <Text type="success">{voucherCode}</Text>
                                         <br />
                                         <Text>Giảm: </Text>
-                                        <Text type="danger">- {voucherDiscount.toLocaleString('vi-VN')}₫</Text>
+                                        <Text type="danger">
+                                            - {voucherDiscount.toLocaleString('vi-VN')}₫
+                                        </Text>
                                     </div>
                                 )}
+
                                 <div className="summary-total">
                                     <Text strong>Tổng cộng</Text>
                                     <Text strong className="total-amount">
@@ -297,9 +305,11 @@ const CheckoutPage: React.FC = () => {
                                     </Text>
                                 </div>
 
-                                <Button type="dashed" block onClick={() => setVoucherModalVisible(true)}>
-                                    + Nhập mã giảm giá
-                                </Button>
+                                {!isFlashSale && (
+                                    <Button type="dashed" block onClick={() => setVoucherModalVisible(true)}>
+                                        + Nhập mã giảm giá
+                                    </Button>
+                                )}
                             </>
                         )}
                         <Button type="link" block onClick={() => navigate('/')}>
@@ -309,15 +319,17 @@ const CheckoutPage: React.FC = () => {
                 </Col>
             </Row>
 
-            <Modal
-                open={voucherModalVisible}
-                title="Áp dụng mã giảm giá"
-                onCancel={() => setVoucherModalVisible(false)}
-                footer={null}
-                destroyOnClose
-            >
-                <ApplyVoucherForm onApply={handleApplyVoucher} />
-            </Modal>
+            {!isFlashSale && (
+                <Modal
+                    open={voucherModalVisible}
+                    title="Áp dụng mã giảm giá"
+                    onCancel={() => setVoucherModalVisible(false)}
+                    footer={null}
+                    destroyOnClose
+                >
+                    <ApplyVoucherForm onApply={handleApplyVoucher} />
+                </Modal>
+            )}
         </div>
     );
 };
