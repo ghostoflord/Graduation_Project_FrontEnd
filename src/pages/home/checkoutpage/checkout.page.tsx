@@ -142,7 +142,7 @@ const CheckoutPage: React.FC = () => {
             try {
                 const res = await placeOrderAPI(orderPayload);
                 if (res?.statusCode === 201) {
-                    await checkoutOrder(itemsToCheckout);
+                    // await checkoutOrder(itemsToCheckout);
                     message.success('Đặt hàng thành công!');
                     setCartSummary({ sum: 0 });
                     setTimeout(() => navigate('/'), 1000);

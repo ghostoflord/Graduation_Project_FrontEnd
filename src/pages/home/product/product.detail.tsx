@@ -64,11 +64,6 @@ const ProductDetail = () => {
             return;
         }
 
-        if (quantity > availableQuantity) {
-            message.error(`Số lượng bạn chọn vượt quá số lượng tồn kho (${availableQuantity}).`);
-            return;
-        }
-
         const user = JSON.parse(localStorage.getItem("user") || "{}");
         const userId = user.id;
 
@@ -77,20 +72,31 @@ const ProductDetail = () => {
             return;
         }
 
-        const cartData = {
-            quantity,
-            price: Number(product.price),
-            productId: product.id,
-            userId,
-        };
-
         try {
+            // Lấy giỏ hàng hiện tại để kiểm tra số lượng đã có
+            const res = await getCart(userId);
+            const existingItem = res?.data?.items?.find((item: any) => item.productId === product.id);
+            const currentQtyInCart = existingItem?.quantity || 0;
+            const totalQty = currentQtyInCart + quantity;
+
+            if (totalQty > availableQuantity) {
+                message.warning(`Tổng số lượng vượt quá tồn kho (${availableQuantity}).`);
+                return;
+            }
+
+            const cartData = {
+                quantity, // bạn có thể đổi thành quantity: 1 nếu muốn mỗi lần chỉ thêm 1
+                price: Number(product.price),
+                productId: product.id,
+                userId,
+            };
+
             await addToCartAPI(cartData);
             message.success("Đã thêm vào giỏ hàng!");
 
-            const res = await getCart(userId);
-            if (res?.data) {
-                setCartSummary(res.data);
+            const updatedCart = await getCart(userId);
+            if (updatedCart?.data) {
+                setCartSummary(updatedCart.data);
             }
 
         } catch (err) {
@@ -115,7 +121,7 @@ const ProductDetail = () => {
 
             const buyItem = {
                 productId: product.id,
-                quantity: 1,
+                quantity: quantity, // ✅ Sử dụng số lượng người dùng đã chọn
                 price: product.price,
                 userId
             };
@@ -126,7 +132,7 @@ const ProductDetail = () => {
                 productId: product.id,
                 name: product.name,
                 price: product.price,
-                quantity: 1,
+                quantity: quantity,
                 image: product.image,
                 shortDescription: product.shortDescription,
                 detailDescription: product.detailDescription,
@@ -143,6 +149,7 @@ const ProductDetail = () => {
             message.error('Không thể mua ngay');
         }
     };
+
 
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
