@@ -33,6 +33,9 @@ const FlashSaleList = () => {
     useEffect(() => {
         getAllFlashSalesAPI().then((res) => {
             const result = res?.data?.result || [];
+
+            console.log("Flash Sales:", result);
+
             const activeSales = result.filter((fs) => fs.status === "ACTIVE");
             setFlashSales(activeSales);
         });
@@ -242,11 +245,14 @@ const FlashSaleList = () => {
                     <Slider {...sliderSettings}>
                         {sale.items?.map((item) => {
                             const enrichedItem = { ...item, endTime: sale.endTime };
+                            // const isExpired = dayjs().isAfter(dayjs(enrichedItem.endTime));
+                            const isExpired = sale.status !== "ACTIVE";
                             const percent = enrichedItem.originalPrice && enrichedItem.originalPrice > enrichedItem.salePrice
                                 ? Math.round(((enrichedItem.originalPrice - enrichedItem.salePrice) / enrichedItem.originalPrice) * 100)
                                 : 0;
 
                             return (
+
                                 <div className={styles.slideItem} key={enrichedItem.id}>
                                     <div style={{ maxWidth: 220, margin: "0 auto" }}>
                                         <Badge.Ribbon text={`Giảm ${percent}%`} color="red">
@@ -271,25 +277,38 @@ const FlashSaleList = () => {
                                                 )}
                                             >
                                                 <div className={styles.productName}>{enrichedItem.productName}</div>
-                                                <div className={styles.originalPrice}>
-                                                    {enrichedItem.originalPrice?.toLocaleString()}₫
-                                                </div>
-                                                <div className={styles.salePrice}>
-                                                    {enrichedItem.salePrice.toLocaleString()}₫
-                                                </div>
+                                                {isExpired ? (
+                                                    <div className={styles.salePrice}>
+                                                        {enrichedItem.originalPrice?.toLocaleString()}₫
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div className={styles.originalPrice}>
+                                                            {enrichedItem.originalPrice?.toLocaleString()}₫
+                                                        </div>
+                                                        <div className={styles.salePrice}>
+                                                            {enrichedItem.salePrice.toLocaleString()}₫
+                                                        </div>
+                                                    </>
+                                                )}
+
                                                 <div className={styles.quantityInfo}>Còn lại: {enrichedItem.quantity}</div>
-                                                <div className={styles.buttonGroup}>
-                                                    <Button
-                                                        icon={<ShoppingCartOutlined />}
-                                                        onClick={() => handleAddToCart(enrichedItem)}
-                                                    />
-                                                    <Button
-                                                        type="primary"
-                                                        onClick={() => handleBuyNow(enrichedItem)}
-                                                    >
-                                                        Mua ngay
-                                                    </Button>
-                                                </div>
+                                                {!isExpired && (
+                                                    <div className={styles.buttonGroup}>
+                                                        <Button
+                                                            icon={<ShoppingCartOutlined />}
+                                                            onClick={() => handleAddToCart(enrichedItem)}
+                                                        />
+                                                        <Button
+                                                            type="primary"
+                                                            onClick={() => handleBuyNow(enrichedItem)}
+                                                        >
+                                                            Mua ngay
+                                                        </Button>
+                                                    </div>
+                                                )}
+
+
                                             </Card>
                                         </Badge.Ribbon>
                                     </div>
