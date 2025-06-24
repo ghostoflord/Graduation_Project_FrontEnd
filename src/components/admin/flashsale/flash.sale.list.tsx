@@ -70,29 +70,65 @@ const FlashSaleList = () => {
             return;
         }
 
-        Modal.warning({
-            title: "Lưu ý về giá sản phẩm",
-            content: "Sản phẩm sẽ trở về giá gốc sau khi kết thúc Flash Sale. Quý khách có chắc chắn muốn thêm vào giỏ hàng?",
-            centered: true,
-            okText: "Đồng ý",
-            onOk: async () => {
-                try {
-                    await addToCartAPI({
-                        productId: item.productId,
-                        quantity: 1,
-                        price: item.salePrice,
-                        userId,
-                    });
-                    message.success("Đã thêm vào giỏ hàng!");
+        // Kiểm tra thời gian còn lại của Flash Sale
+        const now = new Date();
+        const endTime = item.endTime ? new Date(item.endTime) : null;
 
-                    const res = await getCart(userId);
-                    if (res?.data) setCartSummary(res.data);
-                } catch (error) {
-                    message.error("Lỗi khi thêm vào giỏ hàng!");
-                }
-            },
-        });
+        if (!endTime || isNaN(endTime.getTime())) {
+            console.warn(" Không có thời gian kết thúc hợp lệ:", item.endTime);
+            message.warning("Không xác định được thời gian Flash Sale.");
+            return;
+        }
+
+        const timeLeft = endTime.getTime() - now.getTime(); // milliseconds
+        const fiveMinutes = 5 * 60 * 1000;
+
+        if (timeLeft <= 0) {
+            message.warning("Flash Sale đã kết thúc cho sản phẩm này.");
+            return;
+        }
+
+        const confirmAdd = async () => {
+            try {
+                await addToCartAPI({
+                    productId: item.productId,
+                    quantity: 1,
+                    price: item.salePrice,
+                    userId,
+                });
+                message.success("Đã thêm vào giỏ hàng!");
+
+                const res = await getCart(userId);
+                if (res?.data) setCartSummary(res.data);
+            } catch (error) {
+                message.error("Lỗi khi thêm vào giỏ hàng!");
+            }
+        };
+
+        // Nếu còn dưới 5 phút → hiện cảnh báo trước
+        if (timeLeft < fiveMinutes) {
+            const minutesLeft = Math.floor(timeLeft / 60000);
+            const secondsLeft = Math.floor((timeLeft % 60000) / 1000);
+
+            const formattedTime =
+                minutesLeft > 0
+                    ? `${minutesLeft} phút ${secondsLeft} giây`
+                    : `${secondsLeft} giây`;
+
+            Modal.warning({
+                title: "Flash Sale sắp kết thúc",
+                content: `Sản phẩm chỉ còn ${formattedTime} trước khi trở về giá gốc. Bạn có chắc chắn muốn thêm vào giỏ hàng không?`,
+                centered: true,
+                okText: "Thêm vào giỏ hàng",
+                cancelText: "Huỷ",
+                onOk: confirmAdd,
+            });
+        }
+        else {
+            confirmAdd();
+        }
     };
+
 
     const handleBuyNow = async (item: any) => {
         const storedUser = localStorage.getItem("user");
@@ -205,12 +241,13 @@ const FlashSaleList = () => {
                 >
                     <Slider {...sliderSettings}>
                         {sale.items?.map((item) => {
-                            const percent = item.originalPrice && item.originalPrice > item.salePrice
-                                ? Math.round(((item.originalPrice - item.salePrice) / item.originalPrice) * 100)
+                            const enrichedItem = { ...item, endTime: sale.endTime };
+                            const percent = enrichedItem.originalPrice && enrichedItem.originalPrice > enrichedItem.salePrice
+                                ? Math.round(((enrichedItem.originalPrice - enrichedItem.salePrice) / enrichedItem.originalPrice) * 100)
                                 : 0;
 
                             return (
-                                <div className={styles.slideItem} key={item.id}>
+                                <div className={styles.slideItem} key={enrichedItem.id}>
                                     <div style={{ maxWidth: 220, margin: "0 auto" }}>
                                         <Badge.Ribbon text={`Giảm ${percent}%`} color="red">
                                             <Card
@@ -219,13 +256,13 @@ const FlashSaleList = () => {
                                                 cover={(
                                                     <div
                                                         className={styles["product-image"]}
-                                                        onClick={() => handleProductClick(item)}
+                                                        onClick={() => handleProductClick(enrichedItem)}
                                                         style={{ cursor: "pointer" }}
                                                     >
                                                         <img
                                                             src={
-                                                                item.imageUrl
-                                                                    ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.imageUrl}`
+                                                                enrichedItem.imageUrl
+                                                                    ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${enrichedItem.imageUrl}`
                                                                     : "/default-product.jpg"
                                                             }
                                                             alt="product"
@@ -233,22 +270,22 @@ const FlashSaleList = () => {
                                                     </div>
                                                 )}
                                             >
-                                                <div className={styles.productName}>{item.productName}</div>
+                                                <div className={styles.productName}>{enrichedItem.productName}</div>
                                                 <div className={styles.originalPrice}>
-                                                    {item.originalPrice?.toLocaleString()}₫
+                                                    {enrichedItem.originalPrice?.toLocaleString()}₫
                                                 </div>
                                                 <div className={styles.salePrice}>
-                                                    {item.salePrice.toLocaleString()}₫
+                                                    {enrichedItem.salePrice.toLocaleString()}₫
                                                 </div>
-                                                <div className={styles.quantityInfo}>Còn lại: {item.quantity}</div>
+                                                <div className={styles.quantityInfo}>Còn lại: {enrichedItem.quantity}</div>
                                                 <div className={styles.buttonGroup}>
                                                     <Button
                                                         icon={<ShoppingCartOutlined />}
-                                                        onClick={() => handleAddToCart(item)}
+                                                        onClick={() => handleAddToCart(enrichedItem)}
                                                     />
                                                     <Button
                                                         type="primary"
-                                                        onClick={() => handleBuyNow(item)}
+                                                        onClick={() => handleBuyNow(enrichedItem)}
                                                     >
                                                         Mua ngay
                                                     </Button>
@@ -259,6 +296,7 @@ const FlashSaleList = () => {
                                 </div>
                             );
                         })}
+
                     </Slider>
                 </Card>
             ))}
