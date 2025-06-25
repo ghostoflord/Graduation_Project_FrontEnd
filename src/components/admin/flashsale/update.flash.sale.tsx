@@ -124,7 +124,7 @@ const UpdateFlashSale = (props: IProps) => {
                 <Form.Item name="status" label="Trạng thái" rules={[{ required: true }]}>
                     <Select>
                         <Select.Option value="ACTIVE">ACTIVE</Select.Option>
-                        <Select.Option value="INACTIVE">INACTIVE</Select.Option>
+                        <Select.Option value="ENDED">ENDED</Select.Option>
                         <Select.Option value="UPCOMING">UPCOMING</Select.Option>
                     </Select>
                 </Form.Item>

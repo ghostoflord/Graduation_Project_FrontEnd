@@ -465,7 +465,7 @@ export const sendMessageToChatbot = async (prompt: string): Promise<string> => {
 };
 
 export const sendMessageToChatBOT = (message: string) => {
-    return axios.post<string>('/api/v1/manual-chat', { message });
+    return axios.post<string>('/api/v1/manual-chats/manual-chat', { message });
 };
 
 /**

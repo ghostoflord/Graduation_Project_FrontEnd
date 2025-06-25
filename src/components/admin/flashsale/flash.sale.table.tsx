@@ -154,13 +154,20 @@ const FlashSaleTable = () => {
         {
             title: "Trạng thái",
             dataIndex: "status",
-            render: (val) =>
-                val === "ACTIVE" ? (
-                    <Tag color="green">Đang hoạt động</Tag>
-                ) : (
-                    <Tag color="orange">Sắp diễn ra</Tag>
-                ),
+            render: (val) => {
+                switch (val) {
+                    case "ACTIVE":
+                        return <Tag color="green">Đang hoạt động</Tag>;
+                    case "UPCOMING":
+                        return <Tag color="orange">Sắp diễn ra</Tag>;
+                    case "ENDED":
+                        return <Tag color="red">Đã kết thúc</Tag>;
+                    default:
+                        return <Tag color="default">{val}</Tag>;
+                }
+            },
         },
+
         {
             title: 'Action',
             hideInSearch: true,
