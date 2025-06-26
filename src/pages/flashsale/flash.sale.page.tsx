@@ -1,10 +1,10 @@
-import FlashSaleTable from "@/components/admin/flashsale/flash.sale.table";
+import FlashSaleTableResponsive from "@/components/admin/flashsale/flashsalemobile/flashsaletable.responsive";
 
 const FlashSalePage = () => {
     return (
         <>
             <div>
-                <FlashSaleTable />
+                <FlashSaleTableResponsive />
             </div>
         </>
     )
