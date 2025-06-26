@@ -1,10 +1,10 @@
-import NotificationTable from "@/components/admin/notification/notification.table";
+import NotificationTableResponsive from "@/components/admin/notification/notificationmobile/notification.table.responsive";
 
 const NotificationPage = () => {
 
     return (
         <div>
-            <NotificationTable />
+            <NotificationTableResponsive />
         </div>
     );
 }
