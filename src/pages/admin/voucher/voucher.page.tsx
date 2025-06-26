@@ -1,11 +1,10 @@
-
-import TableVoucher from "@/components/admin/voucher/voucher.table";
+import TableVoucherResponsive from "@/components/admin/voucher/vouchermobile/voucher.table.responsive";
 
 const VoucherPage = () => {
     return (
         <>
             <div>
-                <TableVoucher />
+                <TableVoucherResponsive />
             </div>
         </>
     )
