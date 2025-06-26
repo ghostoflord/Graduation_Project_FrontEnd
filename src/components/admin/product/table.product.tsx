@@ -142,7 +142,15 @@ const TableProduct = () => {
         {
             title: 'Action',
             hideInSearch: true,
+            width: 100,
             render(dom, entity, index, action, schema) {
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
+                    }}
+                ></div>
                 return (
                     <>
                         <EditTwoTone

@@ -76,10 +76,14 @@ const TableVoucher = () => {
         {
             title: 'Mã giảm giá',
             dataIndex: 'code',
+            width: 100,
+            ellipsis: true,
             copyable: true,
         },
         {
             title: 'Mô tả',
+            width: 50,
+            ellipsis: true,
             dataIndex: 'description',
         },
         {
@@ -111,7 +115,7 @@ const TableVoucher = () => {
             dataIndex: 'isActive',
             render: (value) => (
                 <Tag color={value ? 'green' : 'default'}>
-                    {value ? 'Đang hoạt động' : 'Ngưng'}
+                    {value ? 'Hoạt động' : 'Ngưng'}
                 </Tag>
             ),
         },
@@ -119,11 +123,15 @@ const TableVoucher = () => {
             title: 'Ngày bắt đầu',
             dataIndex: 'startDate',
             valueType: 'date',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Ngày kết thúc',
             dataIndex: 'endDate',
             valueType: 'date',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Người được gán',
@@ -150,12 +158,25 @@ const TableVoucher = () => {
         {
             title: 'Hành động',
             hideInSearch: true,
+            width: 100,
             render(dom, entity, index, action, schema) {
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
+                    }}
+                ></div>
                 return (
                     <>
                         <EditTwoTone
                             twoToneColor="#f57800"
-                            style={{ cursor: "pointer", marginRight: 15 }}
+                            style={{
+                                cursor: "pointer", marginRight: 15,
+                                alignItems: 'center',
+                                justifyContent: 'flex-start',
+                                gap: 12
+                            }}
                             onClick={() => {
                                 setDataUpdate(entity);
                                 setOpenModalUpdate(true);

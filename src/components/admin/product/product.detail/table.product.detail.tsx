@@ -63,6 +63,8 @@ const TableProductDetail = () => {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
+            width: 50,
+            ellipsis: true,
             render(dom, entity, index, action, schema) {
                 return (
                     <a href='#' onClick={() => {
@@ -75,51 +77,75 @@ const TableProductDetail = () => {
         {
             title: 'CPU',
             dataIndex: 'cpu',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'RAM',
             dataIndex: 'ram',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Storage',
             dataIndex: 'storage',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'GPU',
             dataIndex: 'gpu',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Màn hình',
             dataIndex: 'screen',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Pin',
             dataIndex: 'battery',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Trọng lượng',
             dataIndex: 'weight',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Chất liệu',
             dataIndex: 'material',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Hệ điều hành',
             dataIndex: 'os',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Tính năng đặc biệt',
             dataIndex: 'specialFeatures',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Cổng kết nối',
             dataIndex: 'ports',
+            width: 50,
+            ellipsis: true,
         },
         {
             title: 'Product Id',
             dataIndex: 'productId',
             hideInSearch: true,
+            width: 50,
+            ellipsis: true,
             render(_, entity) {
                 return (
                     <a
@@ -146,7 +172,15 @@ const TableProductDetail = () => {
         {
             title: 'Action',
             hideInSearch: true,
+            width: 100,
             render(dom, entity, index, action, schema) {
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
+                    }}
+                ></div>
                 return (
                     <>
                         <EditTwoTone

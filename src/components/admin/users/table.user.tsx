@@ -83,15 +83,21 @@ const TableUser = () => {
         {
             title: ' Name',
             dataIndex: 'name',
+            width: 100,
+            ellipsis: true,
             sorter: true,
         },
         {
             title: 'Email',
             dataIndex: 'email',
+            width: 100,
+            ellipsis: true,
             copyable: true
         },
         {
             title: ' Address',
+            width: 100,
+            ellipsis: true,
             dataIndex: 'address',
         },
         {
@@ -123,6 +129,7 @@ const TableUser = () => {
             title: 'Update At',
             dataIndex: 'updateAt',
             valueType: 'date',
+            width: 100,
             sorter: true,
             hideInSearch: true
         },
@@ -139,6 +146,8 @@ const TableUser = () => {
             title: 'Created At',
             dataIndex: 'createdAt',
             valueType: 'date',
+            width: 100,
+            ellipsis: true,
             sorter: true,
             hideInSearch: true
         },
@@ -146,7 +155,15 @@ const TableUser = () => {
         {
             title: 'Action',
             hideInSearch: true,
+            width: 100,
             render(dom, entity, index, action, schema) {
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
+                    }}
+                ></div>
                 return (
                     <>
                         <EditTwoTone

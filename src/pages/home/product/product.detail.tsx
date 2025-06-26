@@ -121,7 +121,7 @@ const ProductDetail = () => {
 
             const buyItem = {
                 productId: product.id,
-                quantity: quantity, // ✅ Sử dụng số lượng người dùng đã chọn
+                quantity: quantity,
                 price: product.price,
                 userId
             };
