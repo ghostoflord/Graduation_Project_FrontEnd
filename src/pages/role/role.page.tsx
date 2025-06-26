@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import TableRole from "@/components/admin/role/table.role";
+
 import { callFetchPermissions } from "@/services/api";
 import { groupByPermission } from "@/utils/config";
+import TableRoleResponsive from "@/components/admin/role/rolemobile/role.table.responsive";
 
 const RolePage = () => {
     const [openModal, setOpenModal] = useState(false);
@@ -9,37 +10,33 @@ const RolePage = () => {
     const [listPermissions, setListPermissions] = useState([]);
 
     const reloadTable = () => {
-    }
+        // TODO: Nếu cần reload
+    };
 
     useEffect(() => {
         const fetchPermissions = async () => {
             const res = await callFetchPermissions("");
-            console.log(">>> API response:", res);
             const rawPermissions = res?.data?.result || [];
-            console.log(">>> Raw permissions:", rawPermissions);
             const grouped = groupByPermission(rawPermissions);
-            console.log(">>> Grouped permissions:", grouped);
             setListPermissions(grouped);
         };
         fetchPermissions();
     }, []);
 
-
     return (
         <div>
             {listPermissions.length > 0 && (
-                <TableRole
+                <TableRoleResponsive
                     openModal={openModal}
                     setOpenModal={setOpenModal}
                     reloadTable={reloadTable}
-                    listPermissions={listPermissions}
                     singleRole={singleRole}
                     setSingleRole={setSingleRole}
+                    listPermissions={listPermissions}
                 />
             )}
         </div>
     );
 };
-
 
 export default RolePage;
