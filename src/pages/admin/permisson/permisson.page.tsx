@@ -1,10 +1,9 @@
-import PermissionTable from "@/components/admin/permission/table.permission";
-
+import TablePermissionResponsive from "@/components/admin/permission/permissionmobile/table.permission.responsive";
 const PermissionPage = () => {
     return (
         <>
             <div>
-                <PermissionTable />
+                <TablePermissionResponsive />
             </div>
         </>
     )
