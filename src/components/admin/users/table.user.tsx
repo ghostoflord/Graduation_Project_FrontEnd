@@ -103,10 +103,12 @@ const TableUser = () => {
         {
             title: ' Age',
             dataIndex: 'age',
+            ellipsis: true,
         },
         {
             title: ' Gender',
             dataIndex: 'gender',
+            ellipsis: true,
         },
         {
             title: 'Avatar',
@@ -124,6 +126,7 @@ const TableUser = () => {
                     <span>No avatar</span>
                 );
             },
+            ellipsis: true,
         },
         {
             title: 'Update At',
