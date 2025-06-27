@@ -46,6 +46,7 @@ import ChatWithGPT from './pages/chat/chat.with.gpt'
 import VoucherPage from './pages/admin/voucher/voucher.page';
 import CompareProductPage from './pages/compare/compare.product.page';
 import FlashSalePage from './pages/flashsale/flash.sale.page';
+import TableProductDetailResponsive from './components/admin/product/product.detail/productdetailmobile/table.product.detail.responsive';
 
 const router = createBrowserRouter([
   {
@@ -153,7 +154,7 @@ const router = createBrowserRouter([
       },
       {
         path: "product/detail",
-        element: <TableProductDetail />,
+        element: <TableProductDetailResponsive />,
       },
       {
         path: "order",
