@@ -34,6 +34,7 @@ const TableOrderMobile = () => {
 
     return (
         <div style={{ padding: 16 }}>
+            {/* Export CSV button */}
             <Row justify="end" style={{ marginBottom: 16 }}>
                 <Col>
                     <CSVLink
@@ -49,35 +50,37 @@ const TableOrderMobile = () => {
                 </Col>
             </Row>
 
+            {/* Loading Spinner */}
             {loading ? (
                 <Spin />
             ) : (
-                <List
-                    dataSource={paginatedOrders}
-                    renderItem={(item) => (
-                        <Card
-                            key={item.id}
-                            title={item.receiverName}
-                            style={{ marginBottom: 16 }}
-                        >
-                            <div><strong>Địa chỉ:</strong> {item.receiverAddress}</div>
-                            <div><strong>Điện thoại:</strong> {item.receiverPhone}</div>
-                            <div><strong>Tổng:</strong> {item.totalPrice} Đơn</div>
-                            <div><strong>Trạng thái:</strong> {item.status}</div>
-                            <div style={{ textAlign: 'center', marginTop: 16 }}>
-                                <Pagination
-                                    current={currentPage}
-                                    pageSize={pageSize}
-                                    total={orders.length}
-                                    onChange={(page) => setCurrentPage(page)}
-                                    size="small"
-                                    responsive
-                                    simple={window.innerWidth < 1000}
-                                />
-                            </div>
-                        </Card>
-                    )}
-                />
+                <>
+                    {/* List of Orders */}
+                    <List
+                        dataSource={paginatedOrders}
+                        renderItem={(item) => (
+                            <Card key={item.id} title={item.receiverName} style={{ marginBottom: 16 }}>
+                                <div><strong>Địa chỉ:</strong> {item.receiverAddress}</div>
+                                <div><strong>Điện thoại:</strong> {item.receiverPhone}</div>
+                                <div><strong>Tổng:</strong> {item.totalPrice} Đơn</div>
+                                <div><strong>Trạng thái:</strong> {item.status}</div>
+                            </Card>
+                        )}
+                    />
+
+                    {/* Pagination */}
+                    <div style={{ textAlign: 'center', marginTop: 16 }}>
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={orders.length}
+                            onChange={(page) => setCurrentPage(page)}
+                            size="small"
+                            responsive
+                            simple={window.innerWidth < 1000}
+                        />
+                    </div>
+                </>
             )}
         </div>
     );
