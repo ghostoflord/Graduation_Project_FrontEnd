@@ -96,19 +96,16 @@ const TableUser = () => {
         },
         {
             title: ' Address',
-            width: 100,
-            ellipsis: true,
             dataIndex: 'address',
+            ellipsis: true,
         },
         {
             title: ' Age',
             dataIndex: 'age',
-            ellipsis: true,
         },
         {
             title: ' Gender',
             dataIndex: 'gender',
-            ellipsis: true,
         },
         {
             title: 'Avatar',
@@ -126,14 +123,11 @@ const TableUser = () => {
                     <span>No avatar</span>
                 );
             },
-            ellipsis: true,
         },
         {
             title: 'Update At',
             dataIndex: 'updateAt',
             valueType: 'date',
-            width: 100,
-            sorter: true,
             hideInSearch: true
         },
         {
@@ -149,8 +143,6 @@ const TableUser = () => {
             title: 'Created At',
             dataIndex: 'createdAt',
             valueType: 'date',
-            width: 100,
-            ellipsis: true,
             sorter: true,
             hideInSearch: true
         },

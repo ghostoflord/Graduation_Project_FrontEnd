@@ -3,19 +3,17 @@ import { AppstoreOutlined, ExceptionOutlined, HeartTwoTone, TeamOutlined, UserOu
 import { Layout, Menu, Dropdown, Space, Avatar } from 'antd';
 import { Outlet, useLocation, useNavigate, Navigate, Link } from "react-router-dom";
 import { useCurrentApp } from '../context/app.context';
-import type { MenuProps } from 'antd';
 import { logoutAPI } from '@/services/api';
 import { message } from 'antd';
+import type { MenuProps } from 'antd';
+
 type MenuItem = Required<MenuProps>['items'][number];
 const { Content, Footer, Sider } = Layout;
 
 const LayoutAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [activeMenu, setActiveMenu] = useState('');
-    const {
-        user, setUser, setIsAuthenticated, isAuthenticated,
-        setCarts
-    } = useCurrentApp();
+    const { user, setUser, setIsAuthenticated, isAuthenticated, setCarts } = useCurrentApp();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -59,19 +57,16 @@ const LayoutAdmin = () => {
             key: '/admin/permission',
             icon: <ApiOutlined />
         },
-
         {
             label: <Link to='/admin/role'>Manage Role</Link>,
             key: '/admin/role',
             icon: <ExceptionOutlined />
         },
-
         {
             label: <Link to='/admin/notification'>Manage Notification</Link>,
             key: '/admin/notification',
             icon: <NotificationOutlined />
         },
-
         {
             label: <Link to='/admin/voucher'>Manage Voucher</Link>,
             key: '/admin/voucher',
@@ -81,7 +76,6 @@ const LayoutAdmin = () => {
             label: <Link to='/admin/flashsale'>Manage Flash Sale</Link>,
             key: '/admin/flashsale',
             icon: <MoneyCollectOutlined />
-
         },
     ];
 
@@ -109,7 +103,6 @@ const LayoutAdmin = () => {
             navigate('/login', { replace: true });
         }
     };
-
 
     const itemsDropdown = [
         {
@@ -166,18 +159,25 @@ const LayoutAdmin = () => {
                 />
             </Sider>
             <Layout>
-                <div className='admin-header' style={{
-                    height: "50px",
-                    borderBottom: "1px solid #ebebeb",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "0 15px",
-                }}>
+                <div
+                    className='admin-header'
+                    style={{
+                        height: "50px",
+                        borderBottom: "1px solid #ebebeb",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "0 15px",
+                    }}
+                >
                     <span>
                         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                             className: 'trigger',
                             onClick: () => setCollapsed(!collapsed),
+                            style: {
+                                cursor: 'pointer',
+                                display: window.innerWidth <= 1000 ? 'none' : 'block', // Hide on mobile
+                            }
                         })}
                     </span>
                     <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
