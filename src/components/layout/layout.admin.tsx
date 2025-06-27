@@ -39,13 +39,12 @@ const LayoutAdmin = () => {
             label: <Link to='/admin/product'>Manage Products</Link>,
             key: '/admin/product',
             icon: <ExceptionOutlined />,
-            children: [
-                {
-                    label: <Link to='/admin/product/detail'>Product Detail</Link>,
-                    key: '/admin/product/detail',
-                    icon: <ProductOutlined />,
-                },
-            ]
+
+        },
+        {
+            label: <Link to='/admin/product/detail'>Product Detail</Link>,
+            key: '/admin/product/detail',
+            icon: <ProductOutlined />,
         },
         {
             label: <Link to='/admin/order'>Manage Orders</Link>,
