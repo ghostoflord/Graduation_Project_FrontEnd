@@ -30,6 +30,14 @@ const TableVoucher = () => {
 
     const [openModalApply, setOpenModalApply] = useState(false);
 
+    const [meta, setMeta] = useState({
+        current: 1,
+        pageSize: 10,
+        pages: 0,
+        total: 0
+    });
+    const [currentDataTable, setCurrentDataTable] = useState<IVoucher[]>([]);
+
     const handleDeleteVoucher = async (id: number) => {
         setIsDeleteLoading(true);
         try {
@@ -208,20 +216,30 @@ const TableVoucher = () => {
         <>
             <ProTable<IVoucher>
                 columns={columns}
-                request={async () => {
-                    const res = await getAllVouchersAPI();
-                    if (res && res.data) {
-                        setVouchers(res.data);
+                actionRef={actionRef}
+                request={async (params, sort, filter) => {
+                    let query = `current=${params.current}&pageSize=${params.pageSize}`;
+                    const res = await getAllVouchersAPI(query);
+                    if (res?.data) {
+                        setMeta(res.data.meta);
+                        setCurrentDataTable(res.data.result);
                     }
                     return {
-                        data: res.data || [],
+                        data: res.data?.result ?? [],
+                        page: 1,
                         success: true,
+                        total: res.data?.meta.total ?? 0,
                     };
                 }}
                 rowKey="id"
                 pagination={{
-                    pageSize: 10,
+                    current: meta.current,
+                    pageSize: meta.pageSize,
                     showSizeChanger: true,
+                    total: meta.total,
+                    showTotal: (total, range) => (
+                        <div>{range[0]}-{range[1]} trên {total} dòng</div>
+                    )
                 }}
                 search={false}
 

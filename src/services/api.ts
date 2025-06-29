@@ -506,8 +506,9 @@ export const applyVoucherAPI = (userId: string, code: string, orderTotal: string
     });
 };
 
-export const getAllVouchersAPI = () => {
-    return axios.get<IBackendRes<IVoucher[]>>("/api/v1/vouchers");
+export const getAllVouchersAPI = (query: string) => {
+    const urlBackend = `/api/v1/vouchers?${query}`;
+    return axios.get<IBackendRes<IModelPaginate<IVoucher>>>(urlBackend);
 };
 
 export const deleteVoucherAPI = (id: number) => {
