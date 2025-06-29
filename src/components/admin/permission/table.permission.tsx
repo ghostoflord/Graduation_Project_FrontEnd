@@ -104,7 +104,7 @@ const PermissionTable = () => {
         {
             title: 'Actions',
             hideInSearch: true,
-            render(dom, entity, index, action, schema) {
+            render: (dom, entity, index, action, schema) => {
                 return (
                     <>
                         <EditTwoTone
@@ -118,7 +118,7 @@ const PermissionTable = () => {
                         <Popconfirm
                             title="Xác nhận xóa permission?"
                             description="Bạn có chắc chắn muốn xóa permission này?"
-                            onConfirm={() => handleDeletePermission(record.id)}
+                            onConfirm={() => handleDeletePermission(entity.id)}
                             okText="Xác nhận"
                             cancelText="Hủy"
                             placement="leftTop"
