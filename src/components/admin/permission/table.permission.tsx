@@ -29,7 +29,22 @@ const PermissionTable = () => {
             const res = await callDeletePermission(id);
             if (res && res.statusCode === 200) {
                 message.success('Xóa Permission thành công');
-                tableRef?.current?.reload();
+
+                const newTotal = meta.total - 1;
+                const totalPages = Math.ceil(newTotal / meta.pageSize);
+
+                const newPage = meta.current > totalPages ? totalPages : meta.current;
+
+                setMeta(prev => ({
+                    ...prev,
+                    total: newTotal,
+                    current: newPage,
+                }));
+
+                tableRef?.current?.reload?.({
+                    current: newPage,
+                    pageSize: meta.pageSize,
+                });
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -38,6 +53,7 @@ const PermissionTable = () => {
             }
         }
     };
+
 
     const refreshTable = () => {
         actionRef.current?.reload();
