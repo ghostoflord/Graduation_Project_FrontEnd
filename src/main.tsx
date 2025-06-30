@@ -29,14 +29,12 @@ import ShippingPolicy from './pages/home/footer/shippingpolicy/shipping.policy';
 import PaymentPolicy from './pages/home/footer/paymentpolicy/payment.policy';
 import PrivacyPolicy from './pages/home/footer/privacypolicy/privacy.policy';
 import AccountPage from './pages/home/accountpage/account.page';
-import OrderHistory from './pages/home/orderhistory/ordet.history';
 import Oauth2Redirect from './pages/client/auth/login/Oauth2Redirect';
 import CheckoutResponsive from './pages/home/checkoutpage/checkout.responsive';
 import CartResponsive from './pages/home/cart/cartmobile/cart.responsive';
 import PaymentReturn from './pages/home/checkoutpage/payment.return';
 import OrderSuccess from './pages/home/checkoutpage/orderstatus/order.success';
 import OrderFail from './pages/home/checkoutpage/orderstatus/orderfail';
-import TableProductDetail from './components/admin/product/product.detail/table.product.detail';
 import PermissionPage from './pages/admin/permisson/permisson.page';
 import RolePage from './pages/role/role.page';
 import ShipperPage from './pages/shipper/shipper.page';
@@ -47,7 +45,7 @@ import VoucherPage from './pages/admin/voucher/voucher.page';
 import CompareProductPage from './pages/compare/compare.product.page';
 import FlashSalePage from './pages/flashsale/flash.sale.page';
 import TableProductDetailResponsive from './components/admin/product/product.detail/productdetailmobile/table.product.detail.responsive';
-import OrderHistoryMobile from './pages/home/orderhistory/orderhistorymobile/order.history.mobile';
+import OrderHistoryResponsive from './pages/home/orderhistory/orderhistorymobile/order.history.responsive';
 
 const router = createBrowserRouter([
   {
@@ -132,7 +130,7 @@ const router = createBrowserRouter([
       },
       {
         path: "lich-su-mua-hang",
-        element: < OrderHistoryMobile />
+        element: < OrderHistoryResponsive />
       },
     ]
   },
