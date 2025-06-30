@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, message } from "antd";
+import { Alert, Button, Form, Input, Modal, message } from "antd";
 import { postManualChatAPI } from "@/services/api";
 
 interface AskStaffFormProps {
@@ -27,6 +27,13 @@ const AskStaffForm = ({ open, onClose }: AskStaffFormProps) => {
             onCancel={onClose}
             footer={null}
         >
+            <Alert
+                message="Hiện tại nhân viên đang không trực máy."
+                description="Vui lòng điền vào biểu mẫu bên dưới, chúng tôi sẽ liên hệ lại trong thời gian sớm nhất."
+                type="info"
+                showIcon
+                style={{ marginBottom: 16 }}
+            />
             <Form form={form} layout="vertical" onFinish={handleSubmit}>
                 <Form.Item
                     label="Họ và tên"
