@@ -97,29 +97,29 @@
 }
 
 //
-    .product-compare {
-        margin-top: 8px;
+.product-compare {
+    margin-top: 8px;
 
-        .compare-btn {
-            padding: 6px 12px;
-            border: 1px solid #1890ff;
-            background-color: #fff;
-            color: #1890ff;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
+    .compare-btn {
+        padding: 6px 12px;
+        border: 1px solid #1890ff;
+        background-color: #fff;
+        color: #1890ff;
+        border-radius: 4px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s;
 
-            &.selected {
-                background-color: #1890ff;
-                color: white;
-            }
+        &.selected {
+            background-color: #1890ff;
+            color: white;
+        }
 
-            &:hover {
-                background-color: #e6f7ff;
-            }
+        &:hover {
+            background-color: #e6f7ff;
         }
     }
+}
 
 
 .product-list-loading {
@@ -149,8 +149,33 @@
 }
 
 @media (max-width: 576px) {
-    .product-list {
-        grid-template-columns: repeat(2, 1fr);
+    .product-rating-like {
+        gap: 8px;
+
+        .product-rating .ant-rate {
+            font-size: 10px;
+        }
+
+        .product-like {
+            font-size: 10px;
+
+            i {
+                font-size: 12px;
+            }
+        }
+    }
+
+    .product-info {
+        padding: 12px;
+    }
+
+    .product-name {
+        font-size: 14px;
+        height: auto;
+    }
+
+    .product-price .price-current {
+        font-size: 16px;
     }
 }
 
@@ -271,6 +296,7 @@
     align-items: center;
     gap: 12px;
     margin-top: 6px;
+    flex-wrap: wrap;
 
     .product-rating {
         font-size: 12px;
@@ -295,8 +321,19 @@
             margin-right: 4px;
         }
 
+        span {
+            margin-left: 4px;
+        }
+
         &:hover {
             opacity: 0.8;
         }
     }
+
+    @media (max-width: 1000px) {
+        .product-like .like-text {
+            display: none;
+        }
+    }
+
 }

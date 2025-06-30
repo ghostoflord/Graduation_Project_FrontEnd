@@ -21,7 +21,7 @@ const ProductList = () => {
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user?.id;
-    
+
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const search = query.get('search') || '';
@@ -231,6 +231,7 @@ const ProductList = () => {
 
                                                     <div
                                                         className="product-like"
+                                                        title="Yêu thích"
                                                         onClick={(e) => {
                                                             e.preventDefault();
                                                             handleToggleLike(product.id,);
@@ -241,7 +242,7 @@ const ProductList = () => {
                                                         ) : (
                                                             <HeartOutlined style={{ fontSize: 14, color: 'gray' }} />
                                                         )}
-                                                        <span style={{ marginLeft: 4 }}>Yêu thích</span>
+                                                        <span className="like-text">Yêu thích</span>
                                                     </div>
                                                 </div>
                                                 <div className="product-compare">
