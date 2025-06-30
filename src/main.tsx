@@ -47,6 +47,7 @@ import VoucherPage from './pages/admin/voucher/voucher.page';
 import CompareProductPage from './pages/compare/compare.product.page';
 import FlashSalePage from './pages/flashsale/flash.sale.page';
 import TableProductDetailResponsive from './components/admin/product/product.detail/productdetailmobile/table.product.detail.responsive';
+import OrderHistoryMobile from './pages/home/orderhistory/orderhistorymobile/order.history.mobile';
 
 const router = createBrowserRouter([
   {
@@ -131,7 +132,7 @@ const router = createBrowserRouter([
       },
       {
         path: "lich-su-mua-hang",
-        element: < OrderHistory />
+        element: < OrderHistoryMobile />
       },
     ]
   },
