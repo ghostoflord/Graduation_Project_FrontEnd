@@ -6,7 +6,6 @@ import ChatWithGPT from '../chat/chat.with.gpt';
 import { sendMessageToChatBOT } from '@/services/api';
 import AskStaffForm from './ask.staff.form';
 
-
 const ChatToggleIcon = ({ onClick }: { onClick: () => void }) => (
     <div className="chat-toggle-icon" onClick={onClick} role="button" tabIndex={0}>
         <WechatOutlined style={{ fontSize: '30px', color: '#1677ff' }} />
@@ -48,20 +47,18 @@ const ChatWidget = () => {
         setLoading(false);
     };
 
-
     return (
         <>
             {!visible && <ChatToggleIcon onClick={() => setVisible(true)} />}
 
-            {visible && (
+            {/* Tách Modal ra ngoài */}
+            <AskStaffForm open={isAskStaffMode} onClose={() => setIsAskStaffMode(false)} />
+
+            {visible && !isAskStaffMode && (
                 <div className="chat-widget fadeInUp">
                     <div className="chat-header">
                         <span>
-                            {isGPTMode
-                                ? 'Chat với AI 🤖'
-                                : isAskStaffMode
-                                    ? 'Liên hệ nhân viên 📞'
-                                    : 'Hỗ trợ trực tuyến'}
+                            {isGPTMode ? 'Chat với AI 🤖' : 'Hỗ trợ trực tuyến'}
                         </span>
                         <CloseOutlined onClick={handleClose} style={{ cursor: 'pointer' }} />
                     </div>
@@ -69,8 +66,6 @@ const ChatWidget = () => {
                     <div className="chat-body">
                         {isGPTMode ? (
                             <ChatWithGPT onBack={() => setIsGPTMode(false)} />
-                        ) : isAskStaffMode ? (
-                            <AskStaffForm onClose={() => setIsAskStaffMode(false)} />
                         ) : (
                             <>
                                 {messages.map((msg, idx) => (
@@ -102,7 +97,7 @@ const ChatWidget = () => {
                         )}
                     </div>
 
-                    {!isGPTMode && !isAskStaffMode && (
+                    {!isGPTMode && (
                         <div className="chat-footer">
                             <Input
                                 value={input}
