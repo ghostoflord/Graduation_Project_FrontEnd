@@ -160,10 +160,10 @@
 
   @media (max-width: 999px) {
     .header-top {
+      display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
 
       .store-button,
       .news-links {
@@ -171,7 +171,7 @@
       }
 
       .call-phone {
-        display: block;
+        display: none !important;
         text-align: center;
         width: 100%;
 
@@ -200,6 +200,11 @@
       }
 
       .actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
         .cart-button {
           background: transparent;
           color: #fff;
