@@ -358,6 +358,10 @@ declare global {
     }
 
 
+    /**
+    * 
+    Module Compare
+    */
     export interface CompareProductDTO {
         id: number;
         name: string;
@@ -376,6 +380,11 @@ declare global {
         ports: string;
     }
 
+
+    /**
+    * 
+    Module Like
+    */
     export interface ILike {
         likeId: number;
         userId: number;
@@ -387,6 +396,11 @@ declare global {
         productPrice: number;
     }
 
+
+    /**
+    * 
+    Module Flash Sale
+    */
     export interface IFlashSaleItemRequest {
         productId: number;
         salePrice: number;
@@ -416,7 +430,7 @@ declare global {
         imageUrl: string;
         flashSaleId: number;
     }
-    // update 
+
     export interface FlashSaleItemUpdateDTO {
         id?: number;
         productId: number;

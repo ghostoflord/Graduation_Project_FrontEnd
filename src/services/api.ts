@@ -169,6 +169,13 @@ export const deleteProductAPI = (id: string) => {
     return axios.delete<IBackendRes<IRegister>>(urlBackend)
 }
 
+export const getLowStockProductsAPI = async (
+    threshold: number = 5
+): Promise<IBackendRes<IProductTable[]>> => {
+    return axios.get(`/api/v1/products/low-stock?threshold=${threshold}`);
+};
+
+
 /**
  * 
 Module Product Detail
@@ -523,20 +530,19 @@ export const updateVoucherAPI = (id: number, data: IVoucherUpdateDTO) => {
     return axios.put<IBackendRes<IVoucher>>(`/api/v1/vouchers/${id}`, data);
 };
 
-////
+
+/**
+ * 
+Module Compare
+ */
 export const compareProductsAPI = (ids: number[]) => {
     const query = ids.join(",");
     return axios.get<IBackendRes<CompareProductDTO[]>>(`/api/v1/compare?ids=${query}`);
 };
 
-///
-export const getLowStockProductsAPI = async (
-    threshold: number = 5
-): Promise<IBackendRes<IProductTable[]>> => {
-    return axios.get(`/api/v1/products/low-stock?threshold=${threshold}`);
-};
-
-///
+/**
+ *Module Manual Chat
+ */
 export const postManualChatAPI = (chat: {
     name: string;
     email: string
@@ -547,21 +553,21 @@ export const postManualChatAPI = (chat: {
     return axios.post("/api/v1/manual-chats", chat);
 };
 
-/// 
-
-// 1. Tạo Flash Sale
+/**
+ *Module Flash Sale
+ */
 export const createFlashSaleAPI = (
     data: IFlashSaleRequest
 ): Promise<IBackendRes<IFlashSale>> => {
     return axios.post("/api/v1/flash-sales", data);
 };
 
-// 2. Lấy tất cả Flash Sales
+/// Lấy tất cả Flash Sales
 export const getAllFlashSalesAPI = (): Promise<IBackendRes<IFlashSale[]>> => {
     return axios.get("/api/v1/flash-sales");
 };
 
-// 3. Lấy Flash Sale đang diễn ra
+/// Lấy Flash Sale đang diễn ra
 export const getActiveFlashSaleItemsAPI = (): Promise<IBackendRes<IFlashSaleItem[]>> => {
     return axios.get("/api/v1/flash-sales/active-items");
 };
