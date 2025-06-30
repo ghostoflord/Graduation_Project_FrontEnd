@@ -39,6 +39,16 @@ const ChatWidget = () => {
         }
     };
 
+    const handleClose = () => {
+        setVisible(false);
+        setIsGPTMode(false);
+        setIsAskStaffMode(false);
+        setMessages([]);
+        setInput('');
+        setLoading(false);
+    };
+
+
     return (
         <>
             {!visible && <ChatToggleIcon onClick={() => setVisible(true)} />}
@@ -53,7 +63,7 @@ const ChatWidget = () => {
                                     ? 'Liên hệ nhân viên 📞'
                                     : 'Hỗ trợ trực tuyến'}
                         </span>
-                        <CloseOutlined onClick={() => setVisible(false)} style={{ cursor: 'pointer' }} />
+                        <CloseOutlined onClick={handleClose} style={{ cursor: 'pointer' }} />
                     </div>
 
                     <div className="chat-body">
