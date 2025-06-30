@@ -30,3 +30,82 @@
         border-radius: 4px;
     }
 }
+
+.checkout-mobile {
+    padding: 16px;
+
+    .checkout-header {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    .checkout-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background-color: #fafafa;
+        border-radius: 6px;
+        font-size: 16px;
+
+        .price {
+            color: #f5222d;
+            font-weight: bold;
+        }
+    }
+
+    .checkout-product {
+        margin-bottom: 16px;
+
+        &-header {
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 8px;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        &-details {
+            padding: 8px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+
+        .image-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .product-image {
+            width: 30%;
+            height: auto;
+            border-radius: 4px;
+        }
+    }
+
+    .checkout-info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .payment-method-mobile {
+        margin: 16px 0;
+
+        .method-options {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+
+            .method-btn {
+                flex: 1;
+                border-radius: 6px;
+            }
+        }
+    }
+}

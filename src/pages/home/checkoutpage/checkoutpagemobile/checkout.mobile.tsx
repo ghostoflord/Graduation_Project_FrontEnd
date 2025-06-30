@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Input, Button, Typography, Divider, message } from "antd";
-import { getCart, checkoutOrder, placeOrderAPI } from "@/services/api";
+import { getCart, checkoutOrder, placeOrderAPI, createVNPayURL } from "@/services/api";
 import { useNavigate } from "react-router-dom";
 import "./checkout.mobile.scss";
 
@@ -39,6 +39,7 @@ const CheckoutMobile: React.FC = () => {
     const [phone, setPhone] = useState('');
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [paymentMethod, setPaymentMethod] = useState<'cod' | 'vnpay'>('cod');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -74,18 +75,40 @@ const CheckoutMobile: React.FC = () => {
     const handlePlaceOrder = async () => {
         if (!userId) return message.error("Thiếu thông tin người dùng");
 
+        const orderPayload: any = {
+            userId,
+            name,
+            address,
+            phone,
+        };
+
         try {
-            const res = await placeOrderAPI({ userId, name, address, phone });
-            if (res?.statusCode === 201) {
-                const itemsToCheckout = cartItems.map(item => ({
-                    productId: item.productId,
-                    quantity: item.quantity,
-                }));
-                await checkoutOrder(itemsToCheckout);
-                message.success("Đặt hàng thành công!");
-                navigate("/");
-            } else {
-                message.error(res?.message || "Đặt hàng thất bại");
+            if (paymentMethod === 'cod') {
+                const res = await placeOrderAPI(orderPayload);
+                if (res?.statusCode === 201) {
+                    const itemsToCheckout = cartItems.map(item => ({
+                        productId: item.productId,
+                        quantity: item.quantity,
+                    }));
+                    await checkoutOrder(itemsToCheckout);
+                    message.success("Đặt hàng thành công!");
+                    navigate("/");
+                } else {
+                    message.error(res?.message || "Đặt hàng thất bại");
+                }
+            } else if (paymentMethod === 'vnpay') {
+                const paymentRef = `ORDER_${Date.now()}`;
+                const res = await createVNPayURL({
+                    ...orderPayload,
+                    amount: totalPrice,
+                    paymentRef,
+                });
+
+                if (res?.data) {
+                    window.location.href = res.data;
+                } else {
+                    message.error("Không thể tạo URL thanh toán");
+                }
             }
         } catch (err) {
             console.error("Checkout error:", err);
@@ -96,7 +119,7 @@ const CheckoutMobile: React.FC = () => {
     return (
         <div className="checkout-mobile">
             <div className="checkout-header">
-                <Title level={3}> LAPTOPNEW</Title>
+                <Title level={3}>LAPTOPNEW</Title>
             </div>
 
             <div className="checkout-section">
@@ -136,7 +159,7 @@ const CheckoutMobile: React.FC = () => {
 
             <div className="checkout-section">
                 <div className="checkout-info-header">
-                    <Text strong> Thông tin nhận hàng</Text>
+                    <Text strong>Thông tin nhận hàng</Text>
                     <Button
                         type="link"
                         size="small"
@@ -169,8 +192,28 @@ const CheckoutMobile: React.FC = () => {
                     className="mb-2"
                 />
 
+                <div className="payment-method-mobile">
+                    <Text strong>Phương thức thanh toán</Text>
+                    <div className="method-options">
+                        <Button
+                            type={paymentMethod === 'cod' ? 'primary' : 'default'}
+                            onClick={() => setPaymentMethod('cod')}
+                            className="method-btn"
+                        >
+                            COD
+                        </Button>
+                        <Button
+                            type={paymentMethod === 'vnpay' ? 'primary' : 'default'}
+                            onClick={() => setPaymentMethod('vnpay')}
+                            className="method-btn"
+                        >
+                            VNPAY
+                        </Button>
+                    </div>
+                </div>
+
                 <Button type="primary" block onClick={handlePlaceOrder}>
-                    Thanh toán
+                    {paymentMethod === 'cod' ? 'Đặt hàng' : 'Thanh toán VNPAY'}
                 </Button>
                 <Button type="link" block onClick={() => navigate("/")}>
                     ← Quay về trang chủ
