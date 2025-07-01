@@ -16,7 +16,6 @@ const ProductInfo = ({ productId }: ProductInfo) => {
         try {
             const res = await getProductDetailByProductIdAPI(productId);
             if (res?.data) {
-                console.log('👉 Product Detail:', res.data); //  In ra console
                 setProductDetail(res.data);
             }
         } catch (error) {

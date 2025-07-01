@@ -25,7 +25,6 @@ const CommentSection = ({ productId }: CommentProps) => {
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user?.id;
-    console.log("check avavar", user?.avatar)
 
     const fetchComments = async () => {
         try {
@@ -72,7 +71,6 @@ const CommentSection = ({ productId }: CommentProps) => {
                 dataSource={comments}
                 itemLayout="horizontal"
                 renderItem={(item, index) => {
-                    console.log('Comment item:', item);
                     return (
                         <List.Item style={{ borderBottom: index !== comments.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
                             <List.Item.Meta
