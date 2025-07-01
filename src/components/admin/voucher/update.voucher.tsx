@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Input, DatePicker, Switch, InputNumber, Button, Select, App, notification } from 'antd';
+import {
+    Modal, Form, Input, DatePicker, Switch, InputNumber, notification, Select, App
+} from 'antd';
 import type { FormProps } from 'antd';
 import dayjs from 'dayjs';
-import { updateVoucherAPI } from '@/services/api';
+import { updateVoucherAPI, getUsersAPI } from '@/services/api';
 
 const { RangePicker } = DatePicker;
 
@@ -12,12 +14,18 @@ interface IProps {
     refreshTable: () => void;
     setDataUpdate: (v: IVoucher | null) => void;
     dataUpdate: IVoucher | null;
-    userList: IUserTable[]; // optional: nếu bạn muốn chọn assignedUser
 }
 
-const UpdateVoucher = ({ openModalUpdate, setOpenModalUpdate, refreshTable, setDataUpdate, dataUpdate, userList }: IProps) => {
+const UpdateVoucher = ({
+    openModalUpdate,
+    setOpenModalUpdate,
+    refreshTable,
+    setDataUpdate,
+    dataUpdate,
+}: IProps) => {
     const [form] = Form.useForm();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [userList, setUserList] = useState<IUserTable[]>([]);
     const { message } = App.useApp();
 
     useEffect(() => {
@@ -32,13 +40,33 @@ const UpdateVoucher = ({ openModalUpdate, setOpenModalUpdate, refreshTable, setD
                 active: dataUpdate.active,
                 used: dataUpdate.used,
                 dateRange: [dayjs(dataUpdate.startDate), dayjs(dataUpdate.endDate)],
-                assignedUserId: dataUpdate.assignedUser?.id || null
+                assignedUserId: dataUpdate.assignedUser?.id || null,
             });
         }
     }, [dataUpdate]);
 
+    // ✅ Fetch danh sách user
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const res = await getUsersAPI('page=1&limit=1000');
+                if (res.data && Array.isArray(res.data.result)) {
+                    setUserList(res.data.result);
+                }
+            } catch (err) {
+                notification.error({ message: 'Lỗi khi tải danh sách người dùng' });
+            }
+        };
+
+        if (openModalUpdate) {
+            fetchUsers();
+        }
+    }, [openModalUpdate]);
+
     const onFinish: FormProps<IVoucherUpdateDTO>['onFinish'] = async (values) => {
-        const { code, description, discountValue, percentage, singleUse, active, used, assignedUserId, dateRange } = values;
+        const {
+            code, description, discountValue, percentage, singleUse, active, used, assignedUserId, dateRange,
+        } = values;
         const dto: IVoucherUpdateDTO = {
             code,
             description,
@@ -49,7 +77,7 @@ const UpdateVoucher = ({ openModalUpdate, setOpenModalUpdate, refreshTable, setD
             used,
             assignedUserId: assignedUserId || null,
             startDate: dateRange?.[0]?.toISOString(),
-            endDate: dateRange?.[1]?.toISOString()
+            endDate: dateRange?.[1]?.toISOString(),
         };
 
         setIsSubmitting(true);
@@ -62,7 +90,7 @@ const UpdateVoucher = ({ openModalUpdate, setOpenModalUpdate, refreshTable, setD
         } else {
             notification.error({
                 message: 'Lỗi khi cập nhật',
-                description: res?.message || 'Có lỗi xảy ra'
+                description: res?.message || 'Có lỗi xảy ra',
             });
         }
         setIsSubmitting(false);
@@ -122,9 +150,9 @@ const UpdateVoucher = ({ openModalUpdate, setOpenModalUpdate, refreshTable, setD
 
                 <Form.Item label="Gán cho người dùng (nếu có)" name="assignedUserId">
                     <Select allowClear placeholder="Chọn người dùng">
-                        {userList.map(user => (
+                        {userList.map((user) => (
                             <Select.Option key={user.id} value={user.id}>
-                                {user.name}
+                                {user.name} ({user.email})
                             </Select.Option>
                         ))}
                     </Select>

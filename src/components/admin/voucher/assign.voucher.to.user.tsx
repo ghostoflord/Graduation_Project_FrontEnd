@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { App, Button, Form, Modal, Select, Spin } from "antd";
 import { assignVoucherToUserAPI, getAllVouchersAPI, getUsersAPI } from "@/services/api";
-import type { IUserTable, IVoucher, IModelPaginate } from "@/types";
+
 
 interface IProps {
     openModalAssign: boolean;
@@ -36,14 +36,15 @@ const AssignVoucherToUser = ({ openModalAssign, setOpenModalAssign, refreshTable
 
     const fetchVouchers = async () => {
         try {
-            const res = await getAllVouchersAPI();
-            if (res.data) {
-                setVouchers(res.data);
+            const res = await getAllVouchersAPI("page=1&pageSize=1000");
+            if (res.data && Array.isArray(res.data.result)) {
+                setVouchers(res.data.result);
             }
         } catch (error) {
             message.error("Không thể tải danh sách voucher");
         }
     };
+
 
     useEffect(() => {
         if (openModalAssign) {
