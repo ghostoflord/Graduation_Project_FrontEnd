@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Input, Button, List, Typography, Spin } from 'antd';
 import { SendOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import './chat.with.gpt.scss';
@@ -19,6 +19,7 @@ const ChatWithGPT: React.FC<ChatWithGPTProps> = ({ onBack }) => {
     const [input, setInput] = useState('');
     const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
     const [loading, setLoading] = useState(false);
+    const listRef = useRef<HTMLDivElement>(null);
 
     const handleSend = async () => {
         if (!input.trim()) return;
@@ -42,36 +43,45 @@ const ChatWithGPT: React.FC<ChatWithGPTProps> = ({ onBack }) => {
         }
     };
 
+    // Auto scroll to bottom when new message
+    useEffect(() => {
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
+    }, [chatHistory]);
+
     return (
         <div className="chat-container">
             <div className="chat-box">
-                <div style={{ marginBottom: 8 }}>
-                    <Button icon={<ArrowLeftOutlined />} size="small" onClick={onBack}>
+                <div className="chat-header">
+                    <Button
+                        icon={<ArrowLeftOutlined />}
+                        onClick={onBack}
+                        size="small"
+                        className="back-btn"
+                    >
                         Quay lại
                     </Button>
+                    <Text strong className="chat-title">Trợ lý ảo</Text>
                 </div>
 
-                <List
-                    size="small"
-                    dataSource={chatHistory}
-                    style={{ flexGrow: 1, overflowY: 'auto', maxHeight: '400px', marginBottom: 12 }}
-                    renderItem={(item, index) => (
-                        <List.Item
+                <div className="chat-list" ref={listRef}>
+                    {chatHistory.map((item, index) => (
+                        <div
                             key={index}
-                            className={item.role === 'user' ? 'user-message' : 'assistant-message'}
+                            className={`chat-bubble ${item.role === 'user' ? 'user' : 'assistant'}`}
                         >
                             <Text>
-                                {item.role === 'user' ? '🧑‍💻' : '🤖'} {item.content}
+                                {item.role === 'user' ? 'USER: ' : 'CHATBOT: '} {item.content}
                             </Text>
-                        </List.Item>
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className="chat-loading">
+                            <Spin size="small" />
+                        </div>
                     )}
-                />
-
-                {loading && (
-                    <div className="loading">
-                        <Spin />
-                    </div>
-                )}
+                </div>
 
                 <div className="chat-input">
                     <Input
@@ -81,9 +91,12 @@ const ChatWithGPT: React.FC<ChatWithGPTProps> = ({ onBack }) => {
                         placeholder="Nhập tin nhắn..."
                         disabled={loading}
                     />
-                    <Button type="primary" icon={<SendOutlined />} onClick={handleSend} disabled={loading}>
-                        Gửi
-                    </Button>
+                    <Button
+                        type="primary"
+                        icon={<SendOutlined />}
+                        onClick={handleSend}
+                        disabled={loading}
+                    />
                 </div>
             </div>
         </div>

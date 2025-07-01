@@ -58,7 +58,7 @@ const ChatWidget = () => {
                 <div className="chat-widget fadeInUp">
                     <div className="chat-header">
                         <span>
-                            {isGPTMode ? 'Chat với AI 🤖' : 'Hỗ trợ trực tuyến'}
+                            {isGPTMode ? 'Chat với AI' : 'Hỗ trợ trực tuyến'}
                         </span>
                         <CloseOutlined onClick={handleClose} style={{ cursor: 'pointer' }} />
                     </div>
