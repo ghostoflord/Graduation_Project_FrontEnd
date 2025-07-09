@@ -71,7 +71,7 @@ const TableVoucherMobile = () => {
         try {
             const res = await getAllVouchersAPI();
             if (res.data) {
-                setVouchers(res.data);
+                setVouchers(res.data.result);
             }
         } catch (error) {
             message.error('Không thể tải danh sách voucher');

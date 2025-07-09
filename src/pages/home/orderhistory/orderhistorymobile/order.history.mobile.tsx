@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Card, Tag, Button, message, Popconfirm, Pagination } from 'antd';
+import { Link } from 'react-router-dom';
 import axios from '@/services/axios.customize';
 import { fetchMyOrders } from '@/services/api';
 
@@ -33,7 +34,6 @@ const renderStatus = (status: string) => {
 const OrderHistoryMobile = () => {
     const [orders, setOrders] = useState<OrderSummary[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5;
 
@@ -104,6 +104,14 @@ const OrderHistoryMobile = () => {
 
     return (
         <>
+            <div style={{ marginBottom: 16 }}>
+                <Link to="/">
+                    <Button type="default" block>
+                        ⬅️ Quay về trang chủ
+                    </Button>
+                </Link>
+            </div>
+
             <List
                 loading={loading}
                 dataSource={paginatedOrders}
@@ -121,6 +129,7 @@ const OrderHistoryMobile = () => {
                     </Card>
                 )}
             />
+
             <Pagination
                 style={{ textAlign: 'center', marginTop: 12 }}
                 current={currentPage}

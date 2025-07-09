@@ -33,9 +33,6 @@ const FlashSaleList = () => {
     useEffect(() => {
         getAllFlashSalesAPI().then((res) => {
             const result = res?.data?.result || [];
-
-            console.log("Flash Sales:", result);
-
             const activeSales = result.filter((fs) => fs.status === "ACTIVE");
             setFlashSales(activeSales);
         });
