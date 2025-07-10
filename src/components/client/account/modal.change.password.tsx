@@ -18,24 +18,27 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
 
     const onFinishStep0 = async (values: any) => {
         const { email } = values;
-
-        const res = await sendRequest<IBackendRes<any>>({
-            url: `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/forgot-password`,
+        setIsSubmit(true);
+        const res = await sendRequest({
+            url: `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/send-reset-otp`,
             method: "POST",
-            body: { email }
+            body: { email },
         });
 
-        if (res?.data) {
-            setIsSubmit(true);
+        if (res?.statusCode === 200) {
             setUserEmail(res.data.email);
             setCurrent(1);
+            notification.success({
+                message: "Gửi mã OTP thành công",
+                description: "Vui lòng kiểm tra email để lấy mã xác thực."
+            });
         } else {
             notification.error({
-                message: "Lỗi API",
-                description: res?.message || "Không thể gửi email xác nhận."
+                message: "Lỗi gửi OTP",
+                description: res?.message || "Không thể gửi mã xác thực. Vui lòng thử lại."
             });
-            setIsSubmit(false);
         }
+        setIsSubmit(false);
     };
 
     const onFinishStep1 = async (values: any) => {
@@ -49,30 +52,29 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
             return;
         }
 
-        const res = await sendRequest<IBackendRes<any>>({
+        const res = await sendRequest({
             url: `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/reset-password`,
             method: "POST",
-            body: { token, newPassword, confirmPassword, email: userEmail }
+            body: {
+                token,
+                newPassword
+            }
         });
 
         if (res?.statusCode === 200) {
             notification.success({
-                message: "Thay đổi mật khẩu thành công",
+                message: "Đặt lại mật khẩu thành công",
                 description: "Bạn sẽ được chuyển hướng đến trang đăng nhập."
             });
 
             setCurrent(2);
-
             if (onSuccess) {
-                setTimeout(() => {
-                    onSuccess();
-                }, 1000);
+                setTimeout(() => onSuccess(), 1000);
             }
-
         } else {
             notification.error({
-                message: "Lỗi API",
-                description: res?.message || "Không thể đổi mật khẩu."
+                message: "Lỗi đổi mật khẩu",
+                description: res?.message || "Không thể đổi mật khẩu. Vui lòng thử lại."
             });
         }
     };
@@ -104,17 +106,23 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
             {current === 0 && (
                 <>
                     <div style={{ margin: "20px 0" }}>
-                        <p>Nhập email để đổi mật khẩu:</p>
+                        <p>Nhập email để nhận mã xác thực:</p>
                     </div>
                     <Form
                         form={form}
                         layout="vertical"
                         onFinish={onFinishStep0}
                     >
-                        <Form.Item name="email" rules={[{ required: true, message: "Vui lòng nhập email!" }]}>
+                        <Form.Item
+                            name="email"
+                            rules={[
+                                { required: true, message: "Vui lòng nhập email!" },
+                                { type: "email", message: "Email không hợp lệ!" }
+                            ]}
+                        >
                             <Input placeholder="Email" />
                         </Form.Item>
-                        <Button type="primary" htmlType="submit" loading={isSubmit}>Tiếp tục</Button>
+                        <Button type="primary" htmlType="submit" loading={isSubmit}>Gửi mã OTP</Button>
                     </Form>
                 </>
             )}
@@ -122,16 +130,16 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
             {current === 1 && (
                 <>
                     <div style={{ margin: "20px 0" }}>
-                        <p>Nhập mã xác thực và mật khẩu mới:</p>
+                        <p>Nhập mã OTP và mật khẩu mới:</p>
                     </div>
                     <Form layout="vertical" onFinish={onFinishStep1}>
-                        <Form.Item name="token" rules={[{ required: true, message: "Nhập mã xác thực!" }]}>
-                            <Input placeholder="Mã xác thực" />
+                        <Form.Item name="token" rules={[{ required: true, message: "Vui lòng nhập mã OTP!" }]}>
+                            <Input placeholder="Mã OTP 6 chữ số" />
                         </Form.Item>
-                        <Form.Item name="newPassword" rules={[{ required: true, message: "Nhập mật khẩu mới!" }]}>
+                        <Form.Item name="newPassword" rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}>
                             <Input.Password placeholder="Mật khẩu mới" />
                         </Form.Item>
-                        <Form.Item name="confirmPassword" rules={[{ required: true, message: "Xác nhận mật khẩu!" }]}>
+                        <Form.Item name="confirmPassword" rules={[{ required: true, message: "Vui lòng xác nhận mật khẩu!" }]}>
                             <Input.Password placeholder="Xác nhận mật khẩu" />
                         </Form.Item>
                         <Button type="primary" htmlType="submit">Xác nhận</Button>
@@ -141,11 +149,12 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
 
             {current === 2 && (
                 <div style={{ margin: "20px 0", textAlign: "center" }}>
-                    <p>Đổi mật khẩu thành công! Vui lòng đăng nhập lại.</p>
+                    <p>Đặt lại mật khẩu thành công! Vui lòng đăng nhập lại.</p>
                     <Button onClick={resetModal}>Đóng</Button>
                 </div>
             )}
         </Modal>
     );
 };
+
 export default ModalChangePassword;
