@@ -348,3 +348,69 @@
   }
 
 }
+
+@media (max-width: 999px) {
+  .header-menu {
+    display: none;
+  }
+}
+
+@media (max-width: 499px) {
+  .header-top.mobile-layout {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .top-row,
+    .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .top-row {
+      .logo {
+        img {
+          height: 32px;
+        }
+      }
+
+      .right-icons {
+        display: flex;
+        gap: 6px;
+
+        button {
+          background: transparent;
+          color: white;
+          padding: 0;
+        }
+      }
+    }
+
+    .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button,
+      .ant-avatar {
+        background: transparent;
+        color: white;
+      }
+    }
+
+    // Ẩn phần không cần
+    .search-bar,
+    .store-button,
+    .news-links,
+    .call-phone {
+      display: none !important;
+    }
+  }
+
+  .header-menu {
+    display: none !important;
+  }
+}

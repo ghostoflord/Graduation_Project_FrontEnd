@@ -1,5 +1,19 @@
-import { Badge, Button, Input, Avatar, Space, Dropdown, message } from 'antd';
-import { BellOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import {
+    Badge,
+    Button,
+    Input,
+    Avatar,
+    Space,
+    Dropdown,
+    message,
+    Drawer,
+} from 'antd';
+import {
+    BellOutlined,
+    ShoppingCartOutlined,
+    UserOutlined,
+    MenuOutlined,
+} from '@ant-design/icons';
 import './home.header.scss';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
@@ -17,14 +31,25 @@ export default function Header() {
         setIsAuthenticated,
         setUser,
         cartSummary = { sum: 0 },
-        setCartSummary
+        setCartSummary,
     } = useCurrentApp();
 
     const navigate = useNavigate();
-    const [showCategory, setShowCategory] = useState(false);
     const location = useLocation();
     const query = new URLSearchParams(location.search);
     const [searchValue, setSearchValue] = useState(query.get('search') || '');
+    const [showCategory, setShowCategory] = useState(false);
+    const [drawerVisible, setDrawerVisible] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 500);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleLogout = () => {
         setUser(null);
@@ -48,8 +73,10 @@ export default function Header() {
         if (!isAuthenticated || !user) return [];
 
         const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
-        const items: MenuProps['items'] = [];
         const isShipper = user?.role === 'SHIPPER';
+
+        const items: MenuProps['items'] = [];
+
         if (isAdmin) {
             items.push({
                 label: <Link to="/admin/dashboard">Quản trị hệ thống</Link>,
@@ -70,7 +97,11 @@ export default function Header() {
                 key: 'profile',
             },
             {
-                label: <span onClick={handleLogout} style={{ cursor: 'pointer' }}>Đăng xuất</span>,
+                label: (
+                    <span onClick={handleLogout} style={{ cursor: 'pointer' }}>
+                        Đăng xuất
+                    </span>
+                ),
                 key: 'logout',
             }
         );
@@ -95,70 +126,118 @@ export default function Header() {
     return (
         <div className="container">
             <div className="header-wrapper">
-                <div className="header-top">
-
-                    <div className="logo">
-                        <Link to="/">
-                            <img src={logo} alt="LaptopNew" />
-                        </Link>
-                    </div>
-
-                    <Button className="store-button">Hệ thống cửa hàng (10+ chi nhánh)</Button>
-
-                    <div className="search-bar">
-                        <Input.Search
-                            placeholder="Từ khóa..."
-                            allowClear
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            onSearch={handleSearch}
-                        />
-                    </div>
-
-                    <div className="news-links">
-                        <a href="#">Tin khuyến mãi</a>
-                        <span>|</span>
-                        <a href="#">Tin tức công nghệ</a>
-                    </div>
-
-                    <div className="call-phone">
-                        <div>Gọi mua hàng</div>
-                        <div className="phone-number">1900.8946</div>
-                    </div>
-
-                    <div className="actions">
-                        {!isAuthenticated ? (
-                            <Link to="/login">
-                                <Button className="login-button" icon={<UserOutlined />}>
-                                    Đăng nhập / Đăng ký
-                                </Button>
-                            </Link>
-                        ) : (
-                            <>
+                {isMobile ? (
+                    <div className="header-top mobile-layout">
+                        {/* Hàng TRÊN: Logo trái | Notification + Cart phải */}
+                        <div className="top-row">
+                            <div className="logo">
+                                <Link to="/">
+                                    <img src={logo} alt="LaptopNew" />
+                                </Link>
+                            </div>
+                            <div className="right-icons">
                                 <NotificationBell userId={user?.id} />
+                                <Badge count={cartSummary?.sum || 0} size="small">
+                                    <Button
+                                        type="text"
+                                        icon={<ShoppingCartOutlined />}
+                                        className="cart-button"
+                                        onClick={() => navigate('/gio-hang')}
+                                    />
+                                </Badge>
+                            </div>
+                        </div>
 
-                                {/* Avatar + Dropdown */}
-                                <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                                    <Space style={{ cursor: "pointer" }}>
-                                        <Avatar src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`} />
-                                        <span>{user?.name}</span>
-                                    </Space>
-                                </Dropdown>
-                            </>
-                        )}
-
-                        {/* Cart icon */}
-                        <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
+                        {/* Hàng DƯỚI: Burger trái | Avatar phải */}
+                        <div className="bottom-row">
                             <Button
-                                shape="circle"
-                                icon={<ShoppingCartOutlined />}
-                                className="cart-button"
-                                onClick={() => navigate('/gio-hang')}
+                                type="text"
+                                icon={<MenuOutlined />}
+                                onClick={() => setDrawerVisible(true)}
                             />
-                        </Badge>
+                            {isAuthenticated ? (
+                                <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                                    <Avatar
+                                        size="small"
+                                        src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                </Dropdown>
+                            ) : (
+                                <Link to="/login">
+                                    <Button icon={<UserOutlined />} type="text" />
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
-                </div>
+                ) : (
+                    <div className="header-top">
+                        <div className="logo">
+                            <Link to="/">
+                                <img src={logo} alt="LaptopNew" />
+                            </Link>
+                        </div>
+
+                        <Button className="store-button">
+                            Hệ thống cửa hàng (10+ chi nhánh)
+                        </Button>
+
+                        <div className="search-bar">
+                            <Input.Search
+                                placeholder="Từ khóa..."
+                                allowClear
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                onSearch={handleSearch}
+                            />
+                        </div>
+
+                        <div className="news-links">
+                            <a href="#">Tin khuyến mãi</a>
+                            <span>|</span>
+                            <a href="#">Tin tức công nghệ</a>
+                        </div>
+
+                        <div className="call-phone">
+                            <div>Gọi mua hàng</div>
+                            <div className="phone-number">1900.8946</div>
+                        </div>
+
+                        <div className="actions">
+                            {!isAuthenticated ? (
+                                <Link to="/login">
+                                    <Button
+                                        className="login-button"
+                                        icon={<UserOutlined />}
+                                    >
+                                        Đăng nhập / Đăng ký
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <>
+                                    <NotificationBell userId={user?.id} />
+                                    <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                                        <Space style={{ cursor: 'pointer' }}>
+                                            <Avatar
+                                                src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`}
+                                            />
+                                            <span>{user?.name}</span>
+                                        </Space>
+                                    </Dropdown>
+                                </>
+                            )}
+                            <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
+                                <Button
+                                    shape="circle"
+                                    icon={<ShoppingCartOutlined />}
+                                    className="cart-button"
+                                    onClick={() => navigate('/gio-hang')}
+                                />
+                            </Badge>
+                        </div>
+                    </div>
+                )}
 
                 <div className="header-menu">
                     <ul>
@@ -176,10 +255,14 @@ export default function Header() {
                                         <NavLink to="/?sort=price_desc">Giá giảm dần</NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink>
+                                        <NavLink to="/?priceFrom=5000000&priceTo=15000000">
+                                            Từ 5 triệu - 15 triệu
+                                        </NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink>
+                                        <NavLink to="/?priceFrom=15000000&priceTo=30000000">
+                                            Từ 15 triệu - 30 triệu
+                                        </NavLink>
                                     </li>
                                 </ul>
                             </div>
@@ -194,6 +277,28 @@ export default function Header() {
                         <li><NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink></li>
                     </ul>
                 </div>
+
+                <Drawer
+                    title="Danh mục"
+                    placement="left"
+                    onClose={() => setDrawerVisible(false)}
+                    open={drawerVisible}
+                >
+                    <ul className="mobile-menu">
+                        <li><NavLink to="/?sort=price_asc">Giá tăng dần</NavLink></li>
+                        <li><NavLink to="/?sort=price_desc">Giá giảm dần</NavLink></li>
+                        <li><NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink></li>
+                        <li><NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink></li>
+                        <li><NavLink to="/">Trang chủ</NavLink></li>
+                        <li><IntroduceDropDown /></li>
+                        <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
+                        <li><NavLink to="/tin-tuc">Tin tức</NavLink></li>
+                        <li><NavLink to="/tuyen-dung">Tuyển dụng</NavLink></li>
+                        <li><NavLink to="/nhuong-quyen">Nhượng quyền</NavLink></li>
+                        <li><NavLink to="/lien-he">Liên hệ</NavLink></li>
+                        <li><NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink></li>
+                    </ul>
+                </Drawer>
             </div>
         </div>
     );
