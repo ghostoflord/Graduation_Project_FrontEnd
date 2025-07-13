@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Input, Button, Typography, Divider, message } from "antd";
-import { getCart, checkoutOrder, placeOrderAPI, createVNPayURL } from "@/services/api";
+import {
+    getCart,
+    checkoutOrder,
+    placeOrderAPI,
+    createVNPayURL
+} from "@/services/api";
 import { useNavigate } from "react-router-dom";
 import "./checkout.mobile.scss";
 
@@ -75,24 +80,28 @@ const CheckoutMobile: React.FC = () => {
     const handlePlaceOrder = async () => {
         if (!userId) return message.error("Thiếu thông tin người dùng");
 
-        const orderPayload: any = {
+        const itemsToCheckout = cartItems.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+        }));
+
+        const orderPayload = {
             userId,
             name,
             address,
             phone,
+            items: itemsToCheckout,
         };
 
         try {
             if (paymentMethod === 'cod') {
                 const res = await placeOrderAPI(orderPayload);
                 if (res?.statusCode === 201) {
-                    const itemsToCheckout = cartItems.map(item => ({
-                        productId: item.productId,
-                        quantity: item.quantity,
-                    }));
                     await checkoutOrder(itemsToCheckout);
-                    message.success("Đặt hàng thành công!");
-                    navigate("/");
+                    message.success(" Đặt hàng thành công!");
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1000);
                 } else {
                     message.error(res?.message || "Đặt hàng thất bại");
                 }
@@ -173,24 +182,9 @@ const CheckoutMobile: React.FC = () => {
                     </Button>
                 </div>
 
-                <Input
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Họ và tên"
-                    className="mb-2"
-                />
-                <Input
-                    value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                    placeholder="Số điện thoại"
-                    className="mb-2"
-                />
-                <Input
-                    value={address}
-                    onChange={e => setAddress(e.target.value)}
-                    placeholder="Địa chỉ"
-                    className="mb-2"
-                />
+                <Input value={name} onChange={e => setName(e.target.value)} placeholder="Họ và tên" className="mb-2" />
+                <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Số điện thoại" className="mb-2" />
+                <Input value={address} onChange={e => setAddress(e.target.value)} placeholder="Địa chỉ" className="mb-2" />
 
                 <div className="payment-method-mobile">
                     <Text strong>Phương thức thanh toán</Text>
@@ -215,7 +209,8 @@ const CheckoutMobile: React.FC = () => {
                 <Button type="primary" block onClick={handlePlaceOrder}>
                     {paymentMethod === 'cod' ? 'Đặt hàng' : 'Thanh toán VNPAY'}
                 </Button>
-                <Button type="link" block onClick={() => navigate("/")}>
+
+                <Button type="link" block onClick={() => window.location.href = "/"}>
                     ← Quay về trang chủ
                 </Button>
             </div>
