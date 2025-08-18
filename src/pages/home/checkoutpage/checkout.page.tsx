@@ -272,23 +272,34 @@ const CheckoutPage: React.FC = () => {
                         ) : (
                             <>
                                 {cartItems.map((item) => (
-                                    <div className="product-row" key={item.productId}>
-                                        <img
-                                            src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`}
-                                            alt={item.name}
-                                            className="product-image"
-                                        />
-                                        <div className="product-info">
-                                            <Text strong>{item.name}</Text>
+                                    <div
+                                        className="product-row flex flex-col border-b border-gray-200 py-3"
+                                        key={item.productId}
+                                    >
+                                        {/* Hàng trên: Ảnh + Tên + Giá */}
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`}
+                                                    alt={item.name}
+                                                    className="product-image"
+                                                />
+                                                <Text strong className="text-base">{item.name}</Text>
+                                            </div>
+                                            <Text className="product-price text-red-500 font-semibold">
+                                                {getDiscountedPrice(item).toLocaleString("vi-VN")}₫
+                                            </Text>
+                                        </div>
+
+                                        {/* Hàng dưới: mô tả + số lượng */}
+                                        <div className="mt-2 text-sm text-gray-600">
                                             <div>{item.shortDescription}</div>
                                             <div>{item.detailDescription}</div>
-                                            <div>Số lượng: {item.quantity}</div>
+                                            <div className="mt-1">Số lượng: {item.quantity}</div>
                                         </div>
-                                        <Text className="product-price">
-                                            {getDiscountedPrice(item).toLocaleString('vi-VN')}₫
-                                        </Text>
                                     </div>
                                 ))}
+
 
                                 <Divider />
 
