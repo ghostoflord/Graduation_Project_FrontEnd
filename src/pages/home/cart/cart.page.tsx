@@ -199,12 +199,19 @@ const CartPage = () => {
                                             onChange={value =>
                                                 updateQuantity(item.productId, value || 1)
                                             }
-                                            className="mb-2"
+                                            style={{
+                                                marginRight: 5
+                                            }}
                                         />
                                         <Button
                                             danger
                                             icon={<DeleteOutlined />}
                                             onClick={() => removeItem(item.productId)}
+                                            style={{
+
+                                                height: "31px",
+                                                transform: "translateY(1px)",
+                                            }}
                                         >
                                             Xoá
                                         </Button>
@@ -215,26 +222,39 @@ const CartPage = () => {
                     />
 
                     <Card className="text-right cart-summary">
-                        <Title level={4} className="total-price">
-                            Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫
-                        </Title>
-                        <Row justify="end" gutter={16} className="cart-actions">
+                        <Row justify="space-between" align="middle" className="cart-actions">
+                            {/* Bên trái */}
                             <Col>
-                                <Button
-                                    type="primary"
-                                    size="large"
-                                    className="checkout-btn"
-                                    onClick={handleCheckout}
+                                <Title
+                                    level={4}
+                                    className="total-price"
+                                    style={{ margin: 0 }} // bỏ margin mặc định của Title cho nó thẳng hàng
                                 >
-                                    THANH TOÁN
-                                </Button>
+                                    Tổng tiền: {totalPrice.toLocaleString("vi-VN")} ₫
+                                </Title>
                             </Col>
+
+                            {/* Bên phải */}
                             <Col>
-                                <Button danger onClick={clearCart} className="clear-btn">
-                                    Xoá tất cả
-                                </Button>
+                                <Row justify="end" gutter={16}>
+                                    <Col>
+                                        <Button
+                                            type="primary"
+                                            className="checkout-btn"
+                                            onClick={handleCheckout}
+                                        >
+                                            THANH TOÁN
+                                        </Button>
+                                    </Col>
+                                    <Col>
+                                        <Button danger onClick={clearCart} className="clear-btn">
+                                            Xoá tất cả
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
+
                     </Card>
                 </>
             )}

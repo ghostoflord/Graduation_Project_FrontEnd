@@ -15,16 +15,21 @@
     text-align: center;
 
     .greeting-icon {
-      font-size: 36px;
-      margin-bottom: 8px;
+      font-size: 28px;
+      /* nhỏ lại */
+      margin-bottom: 4px;
       color: #1890ff;
+    }
+
+    h5 {
+      font-size: 14px;
+      /* nhỏ lại cho ngang order-history */
+      margin: 0;
     }
   }
 
-  .order-history {
-    .ant-typography {
-      font-weight: bold;
-    }
+  .order-history .ant-typography {
+    font-weight: bold;
   }
 
   .ant-card-head {

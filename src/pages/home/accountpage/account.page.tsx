@@ -83,21 +83,41 @@ const AccountPage = () => {
         <>
             <div className="account-page">
                 <Row gutter={[16, 16]}>
-                    <Col xs={24} md={8}>
-                        <Card className="account-card order-history">
-                            <Title level={5}>Lịch sử đơn hàng</Title>
-                            <Text>{userData.orderCount} đơn hàng</Text>
-                        </Card>
+                    {/* Cột trái */}
+                    <Col xs={24} md={12}>
+                        <Row gutter={[16, 16]}>
+                            {/* Lịch sử đơn hàng */}
+                            <Col xs={24} md={12}>
+                                <Card className="account-card order-history">
+                                    <Title level={5}>Lịch sử đơn hàng</Title>
+                                    <Text>{userData.orderCount} đơn hàng</Text>
+                                </Card>
+                            </Col>
+
+                            {/* Xin chào */}
+                            <Col xs={24} md={12}>
+                                <Card className="account-card greeting-card small-greeting">
+                                    <UserOutlined className="greeting-icon" />
+                                    <Title level={5}>Xin chào, {userData.name}!</Title>
+                                </Card>
+                            </Col>
+
+                            {/* Thông tin cá nhân (full width dưới 2 cái trên) */}
+                            <Col xs={24}>
+                                <Card title="Thông tin cá nhân" className="account-card">
+                                    <p>
+                                        <strong>Họ và tên:</strong> {userData.name}
+                                    </p>
+                                    <p>
+                                        <strong>Email:</strong> {userData.email}
+                                    </p>
+                                </Card>
+                            </Col>
+                        </Row>
                     </Col>
 
-                    <Col xs={24} md={8}>
-                        <Card className="account-card greeting-card">
-                            <UserOutlined className="greeting-icon" />
-                            <Title level={5}>Xin chào, {userData.name}!</Title>
-                        </Card>
-                    </Col>
-
-                    <Col xs={24} md={8}>
+                    {/* Cột phải */}
+                    <Col xs={24} md={12}>
                         <Card title="Thông tin tài khoản" className="account-card">
                             <Space direction="vertical" style={{ width: "100%" }}>
                                 <Button
@@ -107,7 +127,6 @@ const AccountPage = () => {
                                 >
                                     Cập nhật thông tin cá nhân
                                 </Button>
-
                                 <Button
                                     icon={<LockOutlined />}
                                     block
@@ -129,22 +148,17 @@ const AccountPage = () => {
                                 >
                                     Sản phẩm đã thích
                                 </Button>
-
                                 <Button icon={<LogoutOutlined />} block danger onClick={handleLogout}>
                                     Đăng xuất
                                 </Button>
                             </Space>
                         </Card>
                     </Col>
-
-                    <Col span={24}>
-                        <Card title="Thông tin cá nhân" className="account-card">
-                            <p><strong>Họ và tên:</strong> {userData.name}</p>
-                            <p><strong>Email:</strong> {userData.email}</p>
-                        </Card>
-                    </Col>
                 </Row>
+
+
             </div>
+
             <ModalChangePassword
                 isModalOpen={changePassword}
                 setIsModalOpen={setChangePassword}

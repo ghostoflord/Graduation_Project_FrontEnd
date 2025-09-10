@@ -29,32 +29,6 @@
     }
 }
 
-.cart-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    .clear-btn {
-        background-color: #333;
-        color: white;
-        border: none;
-
-        &:hover {
-            background-color: #111;
-        }
-    }
-
-    .checkout-btn {
-        background-color: #d32f2f;
-        color: white;
-        border: none;
-
-        &:hover {
-            background-color: #b71c1c;
-        }
-    }
-}
-
 .product-image img {
     width: 100%;
     height: auto;
