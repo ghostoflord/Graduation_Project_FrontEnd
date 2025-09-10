@@ -242,30 +242,21 @@ export default function Header() {
                 <div className="header-menu">
                     <ul>
                         <li
-                            className={`category-dropdown ${showCategory ? 'open' : ''}`}
-                            onClick={() => setShowCategory(!showCategory)}
+                            className={`category-dropdown ${showCategory ? "open" : ""}`}
+                            onMouseEnter={() => setShowCategory(true)}
+                            onMouseLeave={() => setShowCategory(false)}
                         >
                             <span className="dropdown-link">Lọc sản phẩm</span>
-                            <div className="dropdown-menu">
-                                <ul>
-                                    <li>
-                                        <NavLink to="/?sort=price_asc">Giá tăng dần</NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/?sort=price_desc">Giá giảm dần</NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/?priceFrom=5000000&priceTo=15000000">
-                                            Từ 5 triệu - 15 triệu
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/?priceFrom=15000000&priceTo=30000000">
-                                            Từ 15 triệu - 30 triệu
-                                        </NavLink>
-                                    </li>
-                                </ul>
-                            </div>
+                            {showCategory && (
+                                <div className="dropdown-menu">
+                                    <ul>
+                                        <li><NavLink to="/?sort=price_asc">Giá tăng dần</NavLink></li>
+                                        <li><NavLink to="/?sort=price_desc">Giá giảm dần</NavLink></li>
+                                        <li><NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink></li>
+                                        <li><NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink></li>
+                                    </ul>
+                                </div>
+                            )}
                         </li>
                         <li><NavLink to="/">Trang chủ</NavLink></li>
                         <li><IntroduceDropDown /></li>

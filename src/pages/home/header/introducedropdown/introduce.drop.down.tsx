@@ -22,7 +22,7 @@ const IntroduceDropDown = () => {
     return (
         <Dropdown overlay={menu} trigger={['hover']}>
             <span className="dropdown-link">
-                Giới thiệu <DownOutlined />
+                Giới thiệu
             </span>
         </Dropdown>
     );
