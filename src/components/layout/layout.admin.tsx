@@ -76,6 +76,12 @@ const LayoutAdmin = () => {
             key: '/admin/flashsale',
             icon: <MoneyCollectOutlined />
         },
+
+        {
+            label: <Link to='/admin/slide'>Manage Slide</Link>,
+            key: '/admin/slide',
+            icon: <MoneyCollectOutlined />
+        },
     ];
 
     useEffect(() => {

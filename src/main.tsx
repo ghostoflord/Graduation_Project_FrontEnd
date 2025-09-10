@@ -46,6 +46,7 @@ import CompareProductPage from './pages/compare/compare.product.page';
 import FlashSalePage from './pages/flashsale/flash.sale.page';
 import TableProductDetailResponsive from './components/admin/product/product.detail/productdetailmobile/table.product.detail.responsive';
 import OrderHistoryResponsive from './pages/home/orderhistory/orderhistorymobile/order.history.responsive';
+import SlidePage from './pages/slide/slide.page';
 
 const router = createBrowserRouter([
   {
@@ -178,6 +179,10 @@ const router = createBrowserRouter([
       {
         path: "flashsale",
         element: <FlashSalePage />,
+      },
+      {
+        path: "slide",
+        element: <SlidePage />,
       },
       {
         path: "*",

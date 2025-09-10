@@ -444,4 +444,23 @@ declare global {
         status: string;
         items: FlashSaleItemUpdateDTO[];
     }
+
+    /**
+    * 
+    Module Slide
+    */
+    export type SlideType = "HOME" | "ABOUT" | "CONTACT";
+
+    export interface ISlide {
+        id: number;
+        title: string;
+        description?: string;
+        imageUrl: string;
+        redirectUrl?: string;
+        active: boolean;
+        orderIndex: number;
+        type: SlideType;
+        createdAt?: string;
+        updatedAt?: string;
+    }
 }

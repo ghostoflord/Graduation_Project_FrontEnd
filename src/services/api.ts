@@ -592,3 +592,38 @@ export const reduceFlashSaleQuantityAPI = async (params: {
         params: params,
     });
 };
+
+/**
+* 
+Module Slide
+*/
+// Lấy slides theo type (HOME / ABOUT / CONTACT)
+export const getSlidesByTypeAPI = (type: SlideType) => {
+    const url = `/api/v1/slides/type/${type}`;
+    return axios.get<ISlide[]>(url);
+};
+
+// lấy tất cả slide
+export const getSlidesByAPI = (type: SlideType) => {
+    const url = `/api/v1/slides`;
+    return axios.get<ISlide[]>(url);
+};
+
+
+// Tạo slide
+export const createSlideAPI = (data: Partial<ISlide>) => {
+    const url = `/api/v1/slides`;
+    return axios.post<ISlide>(url, data);
+};
+
+// Cập nhật slide
+export const updateSlideAPI = (id: number, data: Partial<ISlide>) => {
+    const url = `/api/v1/slides/${id}`;
+    return axios.put<ISlide>(url, data);
+};
+
+// Xóa slide
+export const deleteSlideAPI = (id: number) => {
+    const url = `/api/v1/slides/${id}`;
+    return axios.delete(url);
+};
