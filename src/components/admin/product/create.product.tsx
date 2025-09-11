@@ -25,6 +25,7 @@ type FieldType = {
     sold: string;
     bestsell: string;
     sell: string;
+    discountPrice: number;
 };
 
 const CreateProduct = (props: IProps) => {
@@ -86,7 +87,7 @@ const CreateProduct = (props: IProps) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
-        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity, bestsell, sell, sold } = values;
+        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity, bestsell, sell, sold, discountPrice } = values;
         const imageUrl = imageFile
             ? await getBase64(imageFile.originFileObj as RcFile)
             : '';
@@ -103,7 +104,8 @@ const CreateProduct = (props: IProps) => {
                 quantity,
                 shortDescription,
                 bestsell,
-                sell
+                sell,
+                discountPrice
             );
 
             if (res && res.data) {
@@ -219,19 +221,64 @@ const CreateProduct = (props: IProps) => {
                     </Select>
                 </Form.Item>
 
-                <Form.Item<FieldType>
-                    labelCol={{ span: 24 }}
+                <Form.Item
                     label="Giá tiền"
                     name="price"
                     rules={[{ required: true, message: 'Vui lòng nhập giá tiền!' }]}
                 >
                     <InputNumber
+                        stringMode
                         min={1}
                         style={{ width: '100%' }}
                         formatter={(value) =>
-                            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                            value ? new Intl.NumberFormat('vi-VN').format(Number(value)) : ''
                         }
-                        addonAfter=" đ"
+                        parser={(value) => (value ? value.replace(/\D/g, '') : '')}
+                        addonAfter="đ"
+                        onChange={(value) => {
+                            const discountPrice = form.getFieldValue('discountPrice');
+                            if (discountPrice && value) {
+                                const percent = Math.round(((Number(value) - discountPrice) / Number(value)) * 100);
+                                form.setFieldsValue({ sell: percent });
+                            }
+                        }}
+                    />
+                </Form.Item>
+
+
+                <Form.Item
+                    label="Giá ưu đãi"
+                    name="discountPrice"
+                    rules={[{ required: true, message: 'Vui lòng nhập giá ưu đãi!' }]}
+                >
+                    <InputNumber
+                        stringMode
+                        min={1}
+                        style={{ width: '100%' }}
+                        formatter={(value) =>
+                            value ? new Intl.NumberFormat('vi-VN').format(Number(value)) : ''
+                        }
+                        parser={(value) => (value ? value.replace(/\D/g, '') : '')}
+                        onChange={(value) => {
+                            const price = form.getFieldValue('price');
+                            if (price) {
+                                const percent = Math.round(((price - value) / price) * 100);
+                                form.setFieldsValue({ sell: percent });
+                            }
+                        }}
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="Phần trăm giảm"
+                    name="sell"
+                >
+                    <InputNumber
+                        min={0}
+                        max={100}
+                        style={{ width: '100%' }}
+                        formatter={(value) => `${value}%`}
+                        disabled
                     />
                 </Form.Item>
 
@@ -248,19 +295,6 @@ const CreateProduct = (props: IProps) => {
                     </Select>
                 </Form.Item>
 
-                <Form.Item<FieldType>
-                    label="Giảm giá"
-                    name="sell"
-                    rules={[{ required: true, message: 'Vui lòng nhập phần trăm giảm giá!' }]}
-                >
-                    <InputNumber
-                        min={0}
-                        max={100}
-                        step={1}
-                        precision={0}
-                        style={{ width: '100%' }}
-                    />
-                </Form.Item>
                 <Form.Item
                     label="Ảnh sản phẩm"
                     name="image"

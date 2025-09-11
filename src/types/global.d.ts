@@ -125,6 +125,7 @@ declare global {
         averageRating: number;
         totalReviews: number;
         sku: string;
+        discountPrice: number;
     }
 
     export interface ProductDetail {

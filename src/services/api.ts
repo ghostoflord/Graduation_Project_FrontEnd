@@ -155,8 +155,8 @@ export const getProductDetailSlugAPI = (slug: string) => {
     return axios.get<IBackendRes<IProductTable>>(urlBackend);
 };
 
-export const createProductAPI = (name: string, productCode: string, detailDescription: string, guarantee: string, image: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string) => {
-    return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription, bestsell, sell });
+export const createProductAPI = (name: string, productCode: string, detailDescription: string, guarantee: string, image: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, discountPrice: number) => {
+    return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription, bestsell, sell, discountPrice });
 };
 
 export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, image?: string) => {
