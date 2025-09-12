@@ -61,11 +61,6 @@ const TableUser = () => {
     };
     const columns: ProColumns<IUserTable>[] = [
         {
-            dataIndex: 'index',
-            valueType: 'indexBorder',
-            width: 48,
-        },
-        {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,

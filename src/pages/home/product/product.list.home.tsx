@@ -189,10 +189,14 @@ const ProductList = () => {
                                             <div className="product-info">
                                                 <div className="product-name">{product.name}</div>
                                                 <div className="product-price">
-                                                    <span className="price-current">{formatPrice(product.price)}</span>
-                                                    <span className="price-old">
-                                                        {product.priceOld ? formatPrice(product.priceOld) : ''}
-                                                    </span>
+                                                    {product.discountPrice ? (
+                                                        <>
+                                                            <span className="price-current">{formatPrice(product.discountPrice)}</span>
+                                                            <span className="price-old">{formatPrice(product.price)}</span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="price-current">{formatPrice(product.price)}</span>
+                                                    )}
                                                 </div>
                                                 <div className="product-stock">Kho: {product.quantity || 0} sản phẩm</div>
                                                 <div className="product-rating-like">

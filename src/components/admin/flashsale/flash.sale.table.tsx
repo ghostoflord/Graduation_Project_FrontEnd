@@ -89,11 +89,6 @@ const FlashSaleTable = () => {
 
     const columns: ProColumns<IFlashSale>[] = [
         {
-            dataIndex: "index",
-            valueType: "indexBorder",
-            width: 48,
-        },
-        {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
@@ -123,18 +118,42 @@ const FlashSaleTable = () => {
             render: (_, record) => (
                 <Tooltip
                     placement="topLeft"
+                    color="white"
                     title={
                         <List
                             size="small"
                             dataSource={record.items}
                             renderItem={(item) => (
                                 <List.Item>
-                                    <Typography.Text>
-                                        {item.productName} - {item.salePrice.toLocaleString()}đ ({item.quantity} sp)
-                                    </Typography.Text>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        {/* Tên sản phẩm co giãn, nếu dài sẽ hiện dấu ... */}
+                                        <Typography.Text
+                                            strong
+                                            style={{
+                                                flex: 1,
+                                                marginRight: 8,
+                                            }}
+                                            ellipsis={{ tooltip: true }}
+                                        >
+                                            {item.productName}
+                                        </Typography.Text>
+
+                                        {/* Giá + số lượng cố định bên phải */}
+                                        <Typography.Text>
+                                            {item.salePrice.toLocaleString()}đ ({item.quantity} sp)
+                                        </Typography.Text>
+                                    </div>
                                 </List.Item>
                             )}
                         />
+
                     }
                 >
                     <a>Xem chi tiết</a>

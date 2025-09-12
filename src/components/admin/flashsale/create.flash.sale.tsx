@@ -9,6 +9,7 @@ import {
     Form,
     Input,
     InputNumber,
+    List,
     Modal,
     Select,
     Table,
@@ -22,12 +23,27 @@ interface IProps {
     refreshTable: () => void;
 }
 
-type FieldType = {
+interface IProductTable {
+    id: number;
     name: string;
-    time: [string, string];
+}
+
+interface IFlashSaleItemRequest {
     productId: number;
     salePrice: number;
     quantity: number;
+}
+
+interface IFlashSaleRequest {
+    name: string;
+    startTime: string;
+    endTime: string;
+    items: IFlashSaleItemRequest[];
+}
+
+type FieldType = {
+    name: string;
+    time: [string, string];
 };
 
 const CreateFlashSaleModal = ({
@@ -40,6 +56,11 @@ const CreateFlashSaleModal = ({
     const [isSubmit, setIsSubmit] = useState(false);
     const [products, setProducts] = useState<IProductTable[]>([]);
     const [items, setItems] = useState<IFlashSaleItemRequest[]>([]);
+
+    // State quản lý input thêm sản phẩm
+    const [selectedProductId, setSelectedProductId] = useState<number | undefined>();
+    const [salePrice, setSalePrice] = useState<number | undefined>();
+    const [quantity, setQuantity] = useState<number | undefined>();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -55,23 +76,38 @@ const CreateFlashSaleModal = ({
                 });
             }
         };
-
         fetchProducts();
     }, []);
 
-    const handleAddItem = async (values: any) => {
+    // Thêm item vào state
+    const handleAddItem = () => {
+        if (!selectedProductId || !salePrice || !quantity) {
+            message.error("Vui lòng nhập đầy đủ thông tin sản phẩm!");
+            return;
+        }
+
         setItems((prev) => [
             ...prev,
             {
-                productId: Number(values.productId),
-                salePrice: values.salePrice,
-                quantity: values.quantity,
+                productId: selectedProductId,
+                salePrice,
+                quantity,
             },
         ]);
-        form.resetFields(["productId", "salePrice", "quantity"]);
+
+        // reset input
+        setSelectedProductId(undefined);
+        setSalePrice(undefined);
+        setQuantity(undefined);
     };
 
+    // Submit tạo Flash Sale
     const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+        if (items.length === 0) {
+            message.error("Vui lòng thêm ít nhất 1 sản phẩm!");
+            return;
+        }
+
         const payload: IFlashSaleRequest = {
             name: values.name,
             startTime: values.time[0].toISOString(),
@@ -108,6 +144,9 @@ const CreateFlashSaleModal = ({
         setOpenModalCreate(false);
         form.resetFields();
         setItems([]);
+        setSelectedProductId(undefined);
+        setSalePrice(undefined);
+        setQuantity(undefined);
     };
 
     return (
@@ -144,70 +183,62 @@ const CreateFlashSaleModal = ({
                 >
                     <DatePicker.RangePicker showTime style={{ width: "100%" }} />
                 </Form.Item>
-
-                <Divider>Thêm sản phẩm Flash Sale</Divider>
-
-                <Form.Item noStyle>
-                    <Form
-                        layout="inline"
-                        onFinish={handleAddItem}
-                        style={{ marginBottom: 16 }}
-                    >
-                        <Form.Item<FieldType>
-                            name="productId"
-                            label="Sản phẩm"
-                            rules={[{ required: true, message: "Chọn sản phẩm!" }]}
-                        >
-                            <Select
-                                style={{ width: 200 }}
-                                placeholder="Chọn sản phẩm"
-                                showSearch
-                                optionFilterProp="label"
-                                options={products.map((p) => ({
-                                    label: p.name,
-                                    value: p.id,
-                                }))}
-                            />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            name="salePrice"
-                            label="Giá khuyến mãi"
-                            rules={[{ required: true, message: "Nhập giá!" }]}
-                        >
-                            <InputNumber min={0} />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            name="quantity"
-                            label="Số lượng"
-                            rules={[{ required: true, message: "Nhập số lượng!" }]}
-                        >
-                            <InputNumber min={1} />
-                        </Form.Item>
-
-                        <Form.Item>
-                            <Button htmlType="submit">Thêm</Button>
-                        </Form.Item>
-                    </Form>
-                </Form.Item>
-
-                <Table
-                    dataSource={items}
-                    rowKey={(r) => r.productId}
-                    pagination={false}
-                    size="small"
-                    columns={[
-                        {
-                            title: "Sản phẩm",
-                            dataIndex: "productId",
-                            render: (id) => products.find((p) => p.id === id)?.name || id,
-                        },
-                        { title: "Giá Sale", dataIndex: "salePrice" },
-                        { title: "Số lượng", dataIndex: "quantity" },
-                    ]}
-                />
             </Form>
+
+            <Divider>Thêm sản phẩm Flash Sale</Divider>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 16 }}>
+                <Select
+                    style={{ width: 200 }}
+                    placeholder="Chọn sản phẩm"
+                    value={selectedProductId}
+                    onChange={setSelectedProductId}
+                    options={products.map((p) => ({ label: p.name, value: p.id }))}
+                />
+                <InputNumber
+                    min={0}
+                    placeholder="Giá khuyến mãi"
+                    value={salePrice}
+                    onChange={setSalePrice}
+                />
+                <InputNumber
+                    min={1}
+                    placeholder="Số lượng"
+                    value={quantity}
+                    onChange={setQuantity}
+                />
+                <Button type="primary" onClick={handleAddItem}>
+                    Thêm
+                </Button>
+            </div>
+
+            {/* Hiển thị danh sách các item đã thêm */}
+            <List
+                size="small"
+                bordered
+                dataSource={items}
+                renderItem={(item) => (
+                    <List.Item>
+                        {products.find((p) => p.id === item.productId)?.name} -{" "}
+                        {item.salePrice.toLocaleString()}đ ({item.quantity} sp)
+                    </List.Item>
+                )}
+            />
+
+            <Table
+                dataSource={items}
+                rowKey={(r) => r.productId}
+                pagination={false}
+                size="small"
+                columns={[
+                    {
+                        title: "Sản phẩm",
+                        dataIndex: "productId",
+                        render: (id) => products.find((p) => p.id === id)?.name || id,
+                    },
+                    { title: "Giá Sale", dataIndex: "salePrice" },
+                    { title: "Số lượng", dataIndex: "quantity" },
+                ]}
+            />
         </Modal>
     );
 };
