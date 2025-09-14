@@ -299,6 +299,22 @@ export const markNotificationAsReadAPI = (notificationId: number) => {
     return axios.post<IBackendRes<any>>(urlBackend);
 };
 
+export const deleteNotifications = (id: string) => {
+    return axios.delete<IBackendRes<any>>(`/api/v1/notifications/${id}`);
+};
+
+export const updateNotificationAPI = (
+    id: number,
+    data: {
+        title?: string;
+        content?: string;
+        isRead?: boolean;
+        forAll?: boolean;
+    }
+) => {
+    return axios.put<IBackendRes<any>>(`/api/v1/notifications/${id}`, data);
+};
+
 /**
  * 
 Module Order

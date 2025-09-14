@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Typography, Spin, message } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { compareProductsAPI } from "@/services/api";
-
+import "./compare.product.page.scss";
 const { Title } = Typography;
 
 const fields: { key: keyof CompareProductDTO; label: string }[] = [
@@ -57,8 +57,12 @@ const CompareProductPage = () => {
         return {
             key,
             attribute: label,
-            productA: <span style={isDifferent ? { color: "red" } : {}}>{valueA}</span>,
-            productB: <span style={isDifferent ? { color: "red" } : {}}>{valueB}</span>,
+            productA: (
+                <span className={isDifferent ? "diff-value" : ""}>{valueA}</span>
+            ),
+            productB: (
+                <span className={isDifferent ? "diff-value" : ""}>{valueB}</span>
+            ),
         };
     });
 
@@ -68,6 +72,7 @@ const CompareProductPage = () => {
             dataIndex: "attribute",
             key: "attribute",
             width: "30%",
+            className: "compare-attr", // giờ chỉ in đậm chữ
         },
         {
             title: productA.name,
@@ -83,10 +88,14 @@ const CompareProductPage = () => {
         },
     ];
 
+
     return (
-        <div>
-            <Title level={3}>So sánh sản phẩm</Title>
+        <div className="compare-container">
+            <Title level={3} className="compare-title">
+                So sánh sản phẩm
+            </Title>
             <Table
+                className="compare-table"
                 columns={columns}
                 dataSource={data}
                 pagination={false}
@@ -94,6 +103,7 @@ const CompareProductPage = () => {
             />
         </div>
     );
+
 };
 
 export default CompareProductPage;

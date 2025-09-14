@@ -234,7 +234,7 @@ const UpdateProduct = ({
                     </Select>
                 </Form.Item>
 
-                <Form.Item<FieldType> label="Số lượng" name="sell" rules={[{ required: true }]}>
+                <Form.Item<FieldType> label="Phần trăm giảm giá" name="sell" rules={[{ required: true }]}>
                     <InputNumber style={{ width: "100%" }} min={0} />
                 </Form.Item>
 
