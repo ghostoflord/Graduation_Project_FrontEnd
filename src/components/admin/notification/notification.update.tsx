@@ -73,7 +73,7 @@ const UpdateNotification = (props: IProps) => {
             forAll,
         });
 
-        if (res && res.data) {
+        if (res && res?.statusCode === 200) {
             message.success("Cập nhật thông báo thành công");
             form.resetFields();
             setOpenModalUpdate(false);

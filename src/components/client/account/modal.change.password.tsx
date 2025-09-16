@@ -83,16 +83,36 @@ const ModalChangePassword = (props: ModalChangePasswordProps) => {
         setIsModalOpen(false);
         setCurrent(0);
         setUserEmail("");
+        setIsSubmit(false);
         form.resetFields();
     };
+    const handleCancel = () => {
+        Modal.confirm({
+            title: "Bạn có chắc muốn hủy lấy lại mật khẩu?",
+            content: "Nếu hủy, mọi thông tin đã nhập sẽ bị xóa.",
+            okText: "Có",
+            cancelText: "Không",
+            centered: true,
+            okButtonProps: { htmlType: "button" },
+            cancelButtonProps: { htmlType: "button" },
+            onOk: () => {
+                resetModal(); // đóng và reset trạng thái
+            },
+            onCancel: () => {
+                // giữ nguyên modal
+            },
+        });
+    };
+
 
     return (
         <Modal
             title="Quên mật khẩu"
             open={isModalOpen}
-            onCancel={resetModal}
+            onCancel={handleCancel}
             maskClosable={false}
             footer={null}
+            centered
         >
             <Steps
                 current={current}
