@@ -133,6 +133,10 @@ const router = createBrowserRouter([
         path: "lich-su-mua-hang",
         element: < OrderHistoryResponsive />
       },
+      {
+        path: "compare",
+        element: < CompareProductPage />
+      },
     ]
   },
   {
@@ -227,10 +231,6 @@ const router = createBrowserRouter([
   {
     path: "chat",
     element: < ChatWithGPT />
-  },
-  {
-    path: "compare",
-    element: < CompareProductPage />
   },
   // {
   //   path: "/test",
