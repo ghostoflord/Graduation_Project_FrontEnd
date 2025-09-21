@@ -3,80 +3,152 @@ import { Bar, Column } from "@ant-design/plots";
 import axios from "axios";
 
 interface ProductStatisticDTO {
-    productId: number;
-    productName: string;
+    productId: number | null;
+    productName: string | null;
     totalQuantity: number;
-    date?: string;   // khi thống kê theo ngày
-    month?: number;  // khi thống kê theo tháng
-    week?: number;   // khi thống kê theo tuần
+    date?: string;   // thống kê theo ngày
+    month?: number;  // thống kê theo tháng
+    week?: number;   // thống kê theo tuần
+    year?: number;   // thống kê theo năm
 }
 
-const ChartWrapper: React.FC<{
-    title: string;
-    url: string;
-    type?: "bar" | "column";
-    mode?: "day" | "week" | "month"; // <-- thêm mode
-}> = ({ title, url, type = "bar", mode }) => {
+/* 1. Chart theo ngày (top sản phẩm) */
+const TopProductsByDayChart: React.FC<{ date: string }> = ({ date }) => {
     const [data, setData] = useState<ProductStatisticDTO[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axios.get(url);
-                setData(res.data);
-            } catch (err) {
-                console.error("Error fetching top products", err);
-            }
-        };
-        fetchData();
-    }, [url]);
+        axios
+            .get(`http://localhost:8080/api/v1/statistics/top-products/day?date=${date}`)
+            .then((res) => setData(res.data));
+    }, [date]);
 
-    const commonConfig = {
+    const config = {
         data,
-        height: 250,
-    };
-
-    const barConfig = {
-        ...commonConfig,
         xField: "totalQuantity",
         yField: "productName",
         seriesField: "productName",
-        colorField: "productName",
         barWidthRatio: 0.5,
         label: {
             position: "right" as const,
             style: { fill: "#333", fontWeight: 600 },
         },
         legend: false,
+        height: 250,
     };
 
-    // Chart cột dọc cho tuần / tháng
-    const columnConfig = {
-        ...commonConfig,
-        xField: mode === "day" ? "date" : mode === "week" ? "week" : "month",
+    return (
+        <div className="bg-white shadow rounded-xl p-4 w-1/3">
+            <h3 className="text-center font-semibold mb-2">
+                Top sản phẩm ngày {date}
+            </h3>
+            <Bar {...config} />
+        </div>
+    );
+};
+
+/* 2. Chart theo tuần */
+const TopProductsByWeekChart: React.FC<{ year: number; week: number }> = ({ year, week }) => {
+    const [data, setData] = useState<ProductStatisticDTO[]>([]);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8080/api/v1/statistics/top-products/week?year=${year}&week=${week}`)
+            .then((res) => setData(res.data));
+    }, [year, week]);
+
+    const config = {
+        data,
+        xField: "week",
         yField: "totalQuantity",
         seriesField: "productName",
         isGroup: true,
         columnWidthRatio: 0.5,
         xAxis: {
             label: {
-                formatter: (v: any) => {
-                    if (mode === "month") return `Tháng ${v}`;
-                    if (mode === "week") return `Tuần ${v}`;
-                    return v;
-                },
+                formatter: (v: any) => `Tuần ${v}`,
             },
         },
+        height: 250,
     };
 
     return (
         <div className="bg-white shadow rounded-xl p-4 w-1/3">
-            <h3 className="text-center font-semibold mb-2">{title}</h3>
-            {type === "bar" ? <Bar {...barConfig} /> : <Column {...columnConfig} />}
+            <h3 className="text-center font-semibold mb-2">
+                Top sản phẩm tuần {week}/{year}
+            </h3>
+            <Column {...config} />
         </div>
     );
 };
 
+/* 3. Chart tổng sản phẩm theo tháng (cả năm) */
+const TotalByMonthChart: React.FC<{ year: number }> = ({ year }) => {
+    const [data, setData] = useState<ProductStatisticDTO[]>([]);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8080/api/v1/statistics/top-products/year?year=${year}`)
+            .then((res) => setData(res.data));
+    }, [year]);
+
+    const config = {
+        data,
+        xField: "month",
+        yField: "totalQuantity",
+        columnWidthRatio: 0.5,
+        xAxis: {
+            label: {
+                formatter: (v: any) => `Tháng ${v}`,
+            },
+        },
+        label: {
+            position: "top" as const,
+            style: { fill: "#333", fontWeight: 600 },
+        },
+        height: 250,
+    };
+
+    return (
+        <div className="bg-white shadow rounded-xl p-4 w-1/2">
+            <h3 className="text-center font-semibold mb-2">
+                Tổng sản phẩm theo tháng {year}
+            </h3>
+            <Column {...config} />
+        </div>
+    );
+};
+
+/* 4. Chart top sản phẩm theo tháng */
+const TopProductsByMonthChart: React.FC<{ year: number; month: number }> = ({ year, month }) => {
+    const [data, setData] = useState<ProductStatisticDTO[]>([]);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8080/api/v1/statistics/top-products/month?year=${year}&month=${month}`)
+            .then((res) => setData(res.data));
+    }, [year, month]);
+
+    const config = {
+        data,
+        xField: "productName",
+        yField: "totalQuantity",
+        seriesField: "productName",
+        columnWidthRatio: 0.5,
+        isGroup: true,
+        height: 250,
+    };
+
+    return (
+        <div className="bg-white shadow rounded-xl p-4 w-1/3">
+            <h3 className="text-center font-semibold mb-2">
+                Top sản phẩm tháng {month}/{year}
+            </h3>
+            <Column {...config} />
+        </div>
+    );
+};
+
+/* Dashboard */
 const TopProductsDashboard: React.FC = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -84,30 +156,11 @@ const TopProductsDashboard: React.FC = () => {
     const dd = today.toISOString().split("T")[0];
 
     return (
-        <div className="flex gap-4">
-            {/* Chart theo ngày -> Bar */}
-            <ChartWrapper
-                title="Top sản phẩm hôm nay"
-                url={`http://localhost:8080/api/v1/statistics/top-products/day?date=${dd}`}
-                type="bar"
-                mode="day"
-            />
-
-            {/* Chart theo tuần -> Column */}
-            <ChartWrapper
-                title="Top sản phẩm tuần"
-                url={`http://localhost:8080/api/v1/statistics/top-products/week?year=${yyyy}&week=37`}
-                type="column"
-                mode="week"
-            />
-
-            {/* Chart theo tháng -> Column */}
-            <ChartWrapper
-                title="Top sản phẩm tháng"
-                url={`http://localhost:8080/api/v1/statistics/top-products/month?year=${yyyy}`}
-                type="column"
-                mode="month"
-            />
+        <div className="flex flex-wrap gap-4">
+            <TopProductsByDayChart date={dd} />
+            <TopProductsByWeekChart year={yyyy} week={37} />
+            <TopProductsByMonthChart year={yyyy} month={mm} />
+            <TotalByMonthChart year={yyyy} />
         </div>
     );
 };
