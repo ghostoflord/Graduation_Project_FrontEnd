@@ -23,6 +23,7 @@ import { getCart } from '@/services/api';
 import IntroduceDropDown from './introducedropdown/introduce.drop.down';
 import logo from '@/assets/logo.png';
 import NotificationBell from '@/components/notification/notification.bell';
+import ProductSearchBar from './product.search.bar.props';
 
 export default function Header() {
     const {
@@ -184,13 +185,14 @@ export default function Header() {
                         </Button>
 
                         <div className="search-bar">
-                            <Input.Search
+                            {/* <Input.Search
                                 placeholder="Từ khóa..."
                                 allowClear
                                 value={searchValue}
                                 onChange={(e) => setSearchValue(e.target.value)}
                                 onSearch={handleSearch}
-                            />
+                            /> */}
+                            <ProductSearchBar initialValue={searchValue} />
                         </div>
 
                         <div className="news-links">

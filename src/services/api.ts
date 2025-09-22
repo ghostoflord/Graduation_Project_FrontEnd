@@ -175,6 +175,11 @@ export const getLowStockProductsAPI = async (
     return axios.get(`/api/v1/products/low-stock?threshold=${threshold}`);
 };
 
+export const getProductSuggestionsAPI = (keyword: string) => {
+    const urlBackend = `/api/v1/products/suggest?keyword=${encodeURIComponent(keyword)}`;
+    return axios.get<IBackendRes<IProductSuggestion[]>>(urlBackend);
+};
+
 
 /**
  * 

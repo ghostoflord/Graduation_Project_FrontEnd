@@ -128,6 +128,13 @@ declare global {
         discountPrice: number;
     }
 
+    export interface IProductSuggestion {
+        id: number;
+        name: string;
+        price: string;
+        image: string;
+    }
+
     export interface ProductDetail {
         id?: number;
         cpu: string;
