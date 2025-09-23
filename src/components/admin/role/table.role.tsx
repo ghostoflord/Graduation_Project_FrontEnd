@@ -10,6 +10,11 @@ import UpdateRole from './update.role';
 import CreateRole from './create.role';
 import DetailRole from './detail.role';
 
+type TSearch = {
+    name: string;
+    description: string;
+}
+
 const TableRole = () => {
     const actionRef = useRef<ActionType>();
     const [meta, setMeta] = useState({
@@ -29,6 +34,8 @@ const TableRole = () => {
 
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IRole | null>(null);
+
+    const [currentDataTable, setCurrentDataTable] = useState<IRole[]>([]);
 
     const handleDeleteUser = async (id: string) => {
         setIsDeleteRole(true);
@@ -140,22 +147,43 @@ const TableRole = () => {
 
     return (
         <>
-            <ProTable<IRole>
+            <ProTable<IRole, TSearch>
                 columns={columns}
                 actionRef={actionRef}
                 cardBordered
                 request={async (params) => {
                     let query = `current=${params.current}&pageSize=${params.pageSize}`;
+
+                    const filters: string[] = [];
+
+                    if (params.name) {
+                        filters.push(`name~'${params.name}'`);
+                    }
+
+                    if (params.description) {
+                        filters.push(`description~'${params.description}'`);
+                    }
+
+                    if (filters.length > 0) {
+                        query += `&filter=${filters.join(" and ")}`;
+                    }
+
                     const res = await callFetchRoles(query);
+
                     if (res.data) {
                         setMeta(res.data.meta);
+                        setCurrentDataTable(res.data?.result ?? []);
                     }
+
                     return {
-                        data: res.data?.result ?? [],
+                        data: res.data?.result,
+                        page: params.current,
                         success: true,
                         total: res.data?.meta.total,
                     };
                 }}
+
+
                 rowKey="id"
                 pagination={{
                     current: meta.current,

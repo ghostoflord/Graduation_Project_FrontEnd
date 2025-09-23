@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { App, Divider, Form, Input, Modal } from "antd";
+import { App, Divider, Form, Input, Modal, Select } from "antd";
 import type { FormProps } from "antd";
-import { updateProductDetailAPI } from "@/services/api";
+import { updateProductDetailAPI, getProductsAPI } from "@/services/api";
 
 interface IProps {
     openModalUpdate: boolean;
@@ -18,17 +18,38 @@ const UpdateProductDetail = ({
     setOpenModalUpdate,
     refreshTable,
     setDataUpdate,
-    dataUpdate
+    dataUpdate,
 }: IProps) => {
     const [form] = Form.useForm();
     const { message, notification } = App.useApp();
     const [isSubmit, setIsSubmit] = useState(false);
+    const [productList, setProductList] = useState<IProduct[]>([]);
 
     useEffect(() => {
         if (dataUpdate) {
-            form.setFieldsValue(dataUpdate);
+            form.setFieldsValue({
+                ...dataUpdate,
+                productId: dataUpdate.product?.id || dataUpdate.productId,
+            });
         }
     }, [dataUpdate]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await getProductsAPI("page=1&limit=1000");
+                if (res.data && Array.isArray(res.data.result)) {
+                    setProductList(res.data.result);
+                }
+            } catch (err) {
+                notification.error({ message: "Lỗi khi tải danh sách sản phẩm" });
+            }
+        };
+
+        if (openModalUpdate) {
+            fetchProducts();
+        }
+    }, [openModalUpdate]);
 
     const handleCancel = () => {
         form.resetFields();
@@ -53,7 +74,7 @@ const UpdateProductDetail = ({
         } catch (err) {
             notification.error({
                 message: "Lỗi khi cập nhật",
-                description: (err as any)?.message || "Không rõ nguyên nhân"
+                description: (err as any)?.message || "Không rõ nguyên nhân",
             });
         }
         setIsSubmit(false);
@@ -79,6 +100,20 @@ const UpdateProductDetail = ({
             >
                 <Form.Item name="id" hidden>
                     <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Chọn sản phẩm"
+                    name="productId"
+                    rules={[{ required: true, message: "Vui lòng chọn sản phẩm" }]}
+                >
+                    <Select placeholder="Chọn sản phẩm">
+                        {productList.map((product) => (
+                            <Select.Option key={product.id} value={product.id}>
+                                {product.name} ({product.productCode})
+                            </Select.Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item label="CPU" name="cpu" rules={[{ required: true }]}>
@@ -117,15 +152,15 @@ const UpdateProductDetail = ({
                     <Input />
                 </Form.Item>
 
-                <Form.Item label="Tính năng đặc biệt" name="specialFeatures" rules={[{ required: true }]}>
+                <Form.Item
+                    label="Tính năng đặc biệt"
+                    name="specialFeatures"
+                    rules={[{ required: true }]}
+                >
                     <Input />
                 </Form.Item>
 
                 <Form.Item label="Cổng kết nối" name="ports" rules={[{ required: true }]}>
-                    <Input />
-                </Form.Item>
-
-                <Form.Item label="ID sản phẩm" name="productId" rules={[{ required: true }]}>
                     <Input />
                 </Form.Item>
             </Form>

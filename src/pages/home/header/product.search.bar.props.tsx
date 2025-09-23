@@ -9,6 +9,7 @@ interface IProductSuggestion {
     name: string;
     price: string;
     image?: string;
+    slug?: string;
 }
 
 interface ProductSearchBarProps {
@@ -42,20 +43,25 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
             .finally(() => setLoading(false));
     }, [debouncedSearch]);
 
-    const handleSearch = (value: string) => {
-        const trimmed = value.trim();
-        if (trimmed) navigate(`/?search=${encodeURIComponent(trimmed)}`);
-        else navigate(`/`);
-    };
-
     return (
         <div className="relative w-full" style={{ position: "relative" }}>
             <Input.Search
                 placeholder={placeholder}
                 allowClear
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                onSearch={handleSearch}
+                onChange={(e) => {
+                    setSearchValue(e.target.value);
+                    if (!e.target.value) {
+                        setSuggestions([]); // clear khi input trống
+                    }
+                }}
+                onPressEnter={() => {
+                    const trimmed = searchValue.trim();
+                    if (trimmed) {
+                        navigate(`/?search=${encodeURIComponent(trimmed)}`);
+                        setSuggestions([]);
+                    }
+                }}
             />
 
             {/* Loading icon */}
@@ -77,8 +83,8 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                     style={{
                         position: "absolute",
                         top: "calc(100% + 8px)",
-                        left: "50%",                 // ✅ đặt gốc giữa cha
-                        transform: "translateX(-50%)", // ✅ dịch ngược lại 50% để căn giữa
+                        left: "50%",
+                        transform: "translateX(-50%)",
                         minWidth: "400px",
                         width: "max-content",
                         background: "white",
@@ -95,7 +101,11 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                         dataSource={suggestions}
                         renderItem={(item) => (
                             <List.Item
-                                onClick={() => navigate(`/product/${slug}`)}
+                                onClick={() => {
+                                    navigate(`/product/${item.slug}`);
+                                    setSearchValue("");
+                                    setSuggestions([]);
+                                }}
                                 style={{
                                     cursor: "pointer",
                                     display: "flex",
@@ -112,6 +122,7 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                                 onMouseLeave={(e) => {
                                     (e.currentTarget as HTMLDivElement).style.background = "transparent";
                                 }}
+
                             >
                                 <img
                                     src={

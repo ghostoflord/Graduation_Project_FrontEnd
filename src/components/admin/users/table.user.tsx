@@ -13,6 +13,8 @@ import ImportUser from './import.user';
 type TSearch = {
     name: string;
     email: string;
+    address: string;
+    gender: string;
     createdAt: string;
 }
 const TableUser = () => {
@@ -197,30 +199,44 @@ const TableUser = () => {
                 columns={columns}
                 actionRef={actionRef}
                 cardBordered
-                request={async (params, sort, filter) => {
-                    let query = "";
-                    if (params) {
-                        query += `current=${params.current}&pageSize=${params.pageSize}`
-                        if (params.email) {
-                            query += `&email=/${params.email}/i`
-                        }
-                        if (params.name) {
-                            query += `&name=/${params.name}/i`
-                        }
+                request={async (params) => {
+                    let query = `current=${params.current}&pageSize=${params.pageSize}`;
+
+                    const filters: string[] = [];
+
+                    if (params.name) {
+                        filters.push(`name~'${params.name}'`);
+                    }
+
+                    if (params.email) {
+                        filters.push(`email~'${params.email}'`);
+                    }
+
+                    if (params.address) {
+                        filters.push(`address~'${params.address}'`);
+                    }
+
+                    if (params.gender) {
+                        filters.push(`gender~'${params.gender}'`);
+                    }
+
+                    if (filters.length > 0) {
+                        query += `&filter=${filters.join(" and ")}`;
                     }
 
                     const res = await getUsersAPI(query);
+
                     if (res.data) {
                         setMeta(res.data.meta);
-                        setCurrentDataTable(res.data?.result ?? [])
-                    }
-                    return {
-                        data: res.data?.result,
-                        page: 1,
-                        success: true,
-                        total: res.data?.meta.total
+                        setCurrentDataTable(res.data?.result ?? []);
                     }
 
+                    return {
+                        data: res.data?.result,
+                        page: params.current,
+                        success: true,
+                        total: res.data?.meta.total,
+                    };
                 }}
                 rowKey="id"
                 pagination={

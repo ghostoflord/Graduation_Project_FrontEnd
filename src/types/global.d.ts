@@ -23,6 +23,7 @@ declare global {
         useCredentials?: boolean;
         headers?: any;
         nextOption?: any;
+        statusCode?: any;
     }
 
     interface IModelPaginate<T> {
@@ -133,6 +134,7 @@ declare global {
         name: string;
         price: string;
         image: string;
+        slug: string;
     }
 
     export interface ProductDetail {

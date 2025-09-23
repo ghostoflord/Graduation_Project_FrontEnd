@@ -15,7 +15,6 @@ type TSearch = {
     productCode: string;
     createdAt: string;
     updatedAt: string;
-    price: string;
 }
 const TableProduct = () => {
 
@@ -185,36 +184,36 @@ const TableProduct = () => {
                 columns={columns}
                 actionRef={actionRef}
                 cardBordered
-                request={async (params, sort, filter) => {
-                    let query = "";
-                    if (params) {
-                        query += `current=${params.current}&pageSize=${params.pageSize}`
-                        if (params.name) {
-                            query += `&name=/${params.name}/i`
-                        }
-                        if (params.price) {
-                            query += `&price=/${params.price}/i`
-                        }
+                request={async (params) => {
+                    let query = `current=${params.current}&pageSize=${params.pageSize}`;
+
+                    const filters: string[] = [];
+
+                    if (params.name) {
+                        filters.push(`name~'${params.name}'`);
                     }
 
-                    if (sort && sort.name) {
-                        query += `&sort=${sort.name === "ascend" ? "name" : "-name"}`
+                    if (params.productCode) {
+                        filters.push(`productCode~'${params.productCode}'`);
                     }
-                    if (sort && sort.price) {
-                        query += `&sort=${sort.price === "ascend" ? "price" : "-price"}`
+
+                    if (filters.length > 0) {
+                        query += `&filter=${filters.join(" and ")}`;
                     }
 
                     const res = await getProductsAPI(query);
+
                     if (res.data) {
                         setMeta(res.data.meta);
-                        setCurrentDataTable(res.data?.result ?? [])
+                        setCurrentDataTable(res.data?.result ?? []);
                     }
+
                     return {
                         data: res.data?.result,
-                        page: 1,
+                        page: params.current,
                         success: true,
-                        total: res.data?.meta.total
-                    }
+                        total: res.data?.meta.total,
+                    };
                 }}
                 rowKey="_id"
                 pagination={

@@ -166,7 +166,7 @@ export const updateProductAPI = (id: string, name: string, productCode: string, 
 
 export const deleteProductAPI = (id: string) => {
     const urlBackend = `/api/v1/products/${id}`;
-    return axios.delete<IBackendRes<IRegister>>(urlBackend)
+    return axios.delete<IBackendRes<IRequest>>(urlBackend)
 }
 
 export const getLowStockProductsAPI = async (
