@@ -167,16 +167,23 @@ const ProductDetail = () => {
             <div className="product-info">
                 <h1>{product.name}</h1>
                 <div className="price-box">
-                    <div className="price-current">{formatPrice(product.price)}</div>
-                    {product.originalPrice && Number(product.originalPrice) > Number(product.price) && (
+                    {product.discountPrice && Number(product.discountPrice) > 0 ? (
                         <>
-                            <div className="price-old">{formatPrice(product.originalPrice)}</div>
+                            <div className="price-current text-red-500">
+                                {formatPrice(product.discountPrice)}
+                            </div>
+                            <div className="price-old line-through text-gray-500">
+                                {formatPrice(product.price)}
+                            </div>
                             <Tag color="red">
-                                {Math.round(100 - (Number(product.price) / Number(product.originalPrice)) * 100)}%
+                                -{Math.round(100 - (Number(product.discountPrice) / Number(product.price)) * 100)}%
                             </Tag>
                         </>
+                    ) : (
+                        <div className="price-current">{formatPrice(product.price)}</div>
                     )}
                 </div>
+
                 <p className="product-desc">{product.shortDescription || 'Đang cập nhật mô tả.'}</p>
                 <p className="product-config"><b>Cấu hình:</b> {product.detailDescription || 'Đang cập nhật.'}</p>
                 <p className="product-stock">Kho còn: {product.quantity ?? 'Đang cập nhật'} sản phẩm</p>

@@ -37,12 +37,21 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
         setLoading(true);
         getProductSuggestionsAPI(debouncedSearch)
             .then((res) => {
-                console.log("suggestions response:", res.data);
                 setSuggestions(res?.data || []);
             })
             .finally(() => setLoading(false));
     }, [debouncedSearch]);
 
+    useEffect(() => {
+        if (suggestions.length > 0) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [suggestions]);
     return (
         <div className="relative w-full" style={{ position: "relative" }}>
             <Input.Search
@@ -91,20 +100,35 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                         border: "1px solid #eee",
                         borderTop: "none",
                         boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
-                        borderRadius: "0 0 8px 8px",
+                        borderRadius: "12px",
                         zIndex: 999,
                         maxHeight: 300,
                         overflowY: "auto",
                     }}
+
+                    onClick={(e) => e.stopPropagation()}
+                    className="scrollbar-hide"
                 >
                     <List
                         dataSource={suggestions}
                         renderItem={(item) => (
                             <List.Item
-                                onClick={() => {
-                                    navigate(`/product/${item.slug}`);
-                                    setSearchValue("");
-                                    setSuggestions([]);
+                                key={item.id}
+                                onMouseDownCapture={(e) => {
+                                    // Ngăn Input mất focus → không bị clear suggestions
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    if (item.slug) {
+                                        navigate(`/product/${item.slug}`);
+                                    } else {
+                                        console.warn(" Không có slug:", item);
+                                    }
+
+                                    // Clear sau khi navigate, đảm bảo navigate chạy xong
+                                    setTimeout(() => {
+                                        setSearchValue("");
+                                        setSuggestions([]);
+                                    }, 150);
                                 }}
                                 style={{
                                     cursor: "pointer",
@@ -122,7 +146,6 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                                 onMouseLeave={(e) => {
                                     (e.currentTarget as HTMLDivElement).style.background = "transparent";
                                 }}
-
                             >
                                 <img
                                     src={
@@ -170,8 +193,10 @@ const ProductSearchBar: React.FC<ProductSearchBarProps> = ({
                                     </span>
                                 </div>
                             </List.Item>
+
                         )}
                     />
+
                 </div>
             )}
         </div>

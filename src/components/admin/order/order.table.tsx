@@ -65,6 +65,22 @@ const TableOrder = () => {
             sorter: true,
         },
         {
+            title: 'Payment Method',
+            dataIndex: 'paymentMethod',
+        },
+        {
+            title: 'Payment Status',
+            dataIndex: 'paymentStatus',
+        },
+        {
+            title: 'Tracking Code',
+            dataIndex: 'trackingCode',
+        },
+        {
+            title: 'Shipping Method',
+            dataIndex: 'shippingMethod',
+        },
+        {
             title: 'Receiver Phone',
             dataIndex: 'receiverPhone',
         },
