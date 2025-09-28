@@ -189,11 +189,25 @@ const CreateProduct = (props: IProps) => {
                 </Form.Item>
 
                 <Form.Item<FieldType>
-                    label="Nhà Máy"
+                    label="Hãng máy tính"
                     name="factory"
-                    rules={[{ required: true, message: 'Vui lòng nhập nhà máy!' }]}
+                    rules={[{ required: true, message: "Vui lòng chọn hãng máy tính!" }]}
                 >
-                    <Input />
+                    <Select placeholder="Chọn nhà máy">
+                        <Select.Option value="ASUS">ASUS</Select.Option>
+                        <Select.Option value="ACER">ACER</Select.Option>
+                        <Select.Option value="DELL">DELL</Select.Option>
+                        <Select.Option value="HP">HP</Select.Option>
+                        <Select.Option value="LENOVO">LENOVO</Select.Option>
+                        <Select.Option value="APPLE">APPLE</Select.Option>
+                        <Select.Option value="MSI">MSI</Select.Option>
+                        <Select.Option value="MICROSOFT">MICROSOFT</Select.Option>
+                        <Select.Option value="RAZER">RAZER</Select.Option>
+                        <Select.Option value="SAMSUNG">SAMSUNG</Select.Option>
+                        <Select.Option value="HUAWEI">HUAWEI</Select.Option>
+                        <Select.Option value="LG">LG</Select.Option>
+                        <Select.Option value="XIAOMI">XIAOMI</Select.Option>
+                    </Select>
                 </Form.Item>
 
                 <Form.Item<FieldType>
@@ -218,8 +232,8 @@ const CreateProduct = (props: IProps) => {
                     rules={[{ required: true, message: 'Vui lòng chọn trạng thái hàng hóa!' }]}
                 >
                     <Select placeholder="Chọn trạng thái">
-                        <Select.Option value="IN_STOCK">IN STOCK</Select.Option>
-                        <Select.Option value="OUT_OF_STOCK">OUT OF STOCK</Select.Option>
+                        <Select.Option value="IN_STOCK">Còn hàng</Select.Option>
+                        <Select.Option value="OUT_OF_STOCK">Hết hàng</Select.Option>
                     </Select>
                 </Form.Item>
 

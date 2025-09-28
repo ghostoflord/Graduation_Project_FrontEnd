@@ -192,6 +192,15 @@ export const getProductSuggestionsAPI = (keyword: string) => {
     return axios.get<IBackendRes<IProductSuggestion[]>>(urlBackend);
 };
 
+// lấy list ảnh của product
+export const getProductImagesAPI = (productId: string) => {
+    return axios.get(`/api/v1/products/${productId}/images`); // trả về [{id, url}] hoặc [{id, imageUrl}]
+};
+
+
+export const deleteProductImageAPI = (imageId: number) => {
+    return axios.delete(`/api/v1/products/images/${imageId}`);
+};
 
 /**
  * 

@@ -1,7 +1,7 @@
 
 import { useRef, useState } from 'react';
 import { Popconfirm, Button, App } from 'antd';
-import { DeleteTwoTone, EditTwoTone, ExportOutlined, FileImageTwoTone, PlusOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, ExportOutlined, FileImageTwoTone, PlusOutlined, RestTwoTone } from '@ant-design/icons';
 import { CSVLink } from 'react-csv';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -11,6 +11,7 @@ import UpdateProduct from './update.product';
 import DetailProduct from './detail.product';
 import LowStockModal from './low.stock';
 import UpdateImages from './update.images';
+import ProductImagesPopup from './product.images.popup';
 type TSearch = {
     name: string;
     productCode: string;
@@ -41,7 +42,10 @@ const TableProduct = () => {
     const { message, notification } = App.useApp();
 
     const [openUpdateImages, setOpenUpdateImages] = useState(false);
+    const [openViewImages, setOpenViewImages] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+
+
 
     const [openLowStockModal, setOpenLowStockModal] = useState(false);
     const handleDeleteProduct = async (id: string) => {
@@ -186,6 +190,15 @@ const TableProduct = () => {
                                     setOpenUpdateImages(true);
                                 }}
                             />
+
+                            <RestTwoTone
+                                twoToneColor="#f50b0bff"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                    setSelectedProductId(entity.id);
+                                    setOpenViewImages(true);
+                                }}
+                            />
                         </div>
 
                     </>
@@ -303,6 +316,14 @@ const TableProduct = () => {
                 productId={selectedProductId}
                 refreshTable={refreshTable}
             />
+
+            <ProductImagesPopup
+                open={openViewImages}
+                onClose={() => setOpenViewImages(false)}
+                productId={selectedProductId}
+                refreshTable={refreshTable}
+            />
+
         </>
     )
 }

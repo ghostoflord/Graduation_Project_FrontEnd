@@ -17,19 +17,29 @@ const LowStockModal: React.FC<LowStockModalProps> = ({ open, onClose }) => {
         {
             title: "Tên sản phẩm",
             dataIndex: "name",
+            hideInSearch: true,
         },
         {
-            title: "SKU",
-            dataIndex: "sku",
+            title: "Slug",
+            dataIndex: "slug",
+            hideInSearch: true,
         },
         {
             title: "Tồn kho",
             dataIndex: "quantity",
+            hideInSearch: true,
         },
         {
             title: "Giá",
             dataIndex: "price",
-            valueType: "money",
+            render: (_, record) =>
+                record.price
+                    ? new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                    }).format(Number(record.price))
+                    : "",
+            hideInSearch: true,
         },
     ];
 
