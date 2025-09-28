@@ -1,7 +1,7 @@
 
 import { useRef, useState } from 'react';
 import { Popconfirm, Button, App } from 'antd';
-import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, ExportOutlined, FileImageTwoTone, PlusOutlined } from '@ant-design/icons';
 import { CSVLink } from 'react-csv';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -10,6 +10,7 @@ import CreateProduct from './create.product';
 import UpdateProduct from './update.product';
 import DetailProduct from './detail.product';
 import LowStockModal from './low.stock';
+import UpdateImages from './update.images';
 type TSearch = {
     name: string;
     productCode: string;
@@ -38,6 +39,9 @@ const TableProduct = () => {
 
     const [isDeleteProduct, setIsDeleteProduct] = useState<boolean>(false);
     const { message, notification } = App.useApp();
+
+    const [openUpdateImages, setOpenUpdateImages] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
     const [openLowStockModal, setOpenLowStockModal] = useState(false);
     const handleDeleteProduct = async (id: string) => {
@@ -152,26 +156,38 @@ const TableProduct = () => {
                 ></div>
                 return (
                     <>
-                        <EditTwoTone
-                            twoToneColor="#f57800" style={{ cursor: "pointer", margin: "0 10px" }}
-                            onClick={() => {
-                                setOpenModalUpdate(true);
-                                setDataUpdate(entity);
-                            }}
-                        />
-                        <Popconfirm
-                            placement="leftTop"
-                            title={"Xác nhận xóa book"}
-                            description={"Bạn có chắc chắn muốn xóa book này ?"}
-                            onConfirm={() => handleDeleteProduct(entity.id)}
-                            okText="Xác nhận"
-                            cancelText="Hủy"
-                            okButtonProps={{ loading: isDeleteProduct }}
-                        >
-                            <span style={{ cursor: "pointer" }}>
-                                <DeleteTwoTone twoToneColor="#ff4d4f" />
-                            </span>
-                        </Popconfirm>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                            <EditTwoTone
+                                twoToneColor="#f57800"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                    setOpenModalUpdate(true);
+                                    setDataUpdate(entity);
+                                }}
+                            />
+                            <Popconfirm
+                                placement="leftTop"
+                                title={"Xác nhận xóa book"}
+                                description={"Bạn có chắc chắn muốn xóa book này ?"}
+                                onConfirm={() => handleDeleteProduct(entity.id)}
+                                okText="Xác nhận"
+                                cancelText="Hủy"
+                                okButtonProps={{ loading: isDeleteProduct }}
+                            >
+                                <span style={{ cursor: "pointer" }}>
+                                    <DeleteTwoTone twoToneColor="#ff4d4f" />
+                                </span>
+                            </Popconfirm>
+                            <FileImageTwoTone
+                                twoToneColor="#1890ff"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                    setSelectedProductId(entity.id);
+                                    setOpenUpdateImages(true);
+                                }}
+                            />
+                        </div>
+
                     </>
                 )
             }
@@ -279,6 +295,13 @@ const TableProduct = () => {
             <LowStockModal
                 open={openLowStockModal}
                 onClose={() => setOpenLowStockModal(false)}
+            />
+
+            <UpdateImages
+                open={openUpdateImages}
+                onClose={() => setOpenUpdateImages(false)}
+                productId={selectedProductId}
+                refreshTable={refreshTable}
             />
         </>
     )

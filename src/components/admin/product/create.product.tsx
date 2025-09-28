@@ -26,6 +26,7 @@ type FieldType = {
     bestsell: string;
     sell: string;
     discountPrice: number;
+    category: string;
 };
 
 const CreateProduct = (props: IProps) => {
@@ -87,7 +88,7 @@ const CreateProduct = (props: IProps) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
-        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity, bestsell, sell, sold, discountPrice } = values;
+        const { name, productCode, price, detailDescription, guarantee, factory, shortDescription, quantity, bestsell, sell, sold, discountPrice, category } = values;
         const imageUrl = imageFile
             ? await getBase64(imageFile.originFileObj as RcFile)
             : '';
@@ -105,7 +106,8 @@ const CreateProduct = (props: IProps) => {
                 shortDescription,
                 bestsell,
                 sell,
-                discountPrice
+                discountPrice,
+                category
             );
 
             if (res && res.data) {
@@ -220,6 +222,27 @@ const CreateProduct = (props: IProps) => {
                         <Select.Option value="OUT_OF_STOCK">OUT OF STOCK</Select.Option>
                     </Select>
                 </Form.Item>
+
+                <Form.Item
+                    label="Danh Mục Sản Phẩm"
+                    name="category"
+                    rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm!' }]}
+                >
+                    <Select placeholder="Chọn danh mục">
+                        <Select.Option value="OFFICE">Laptop Văn Phòng</Select.Option>
+                        <Select.Option value="GAMING">Laptop Gaming</Select.Option>
+                        <Select.Option value="DESIGN">Laptop Đồ Họa / Multimedia</Select.Option>
+                        <Select.Option value="BUSINESS">Laptop Doanh Nhân / Bền bỉ</Select.Option>
+                        <Select.Option value="ULTRABOOK">Ultrabook Mỏng Nhẹ</Select.Option>
+                        <Select.Option value="STUDENT">Laptop Học Sinh - Sinh Viên</Select.Option>
+                        <Select.Option value="CONVERTIBLE">2-trong-1 / Gập 360° (Yoga, Surface...)</Select.Option>
+                        <Select.Option value="WORKSTATION">Laptop Trạm / Hiệu năng cao cho kỹ sư</Select.Option>
+                        <Select.Option value="BUDGET">Laptop Giá Rẻ / Phổ thông</Select.Option>
+                        <Select.Option value="PREMIUM">Laptop Cao Cấp (MacBook Pro, XPS...)</Select.Option>
+                        <Select.Option value="CHROMEBOOK">Chromebook (chạy ChromeOS)</Select.Option>
+                    </Select>
+                </Form.Item>
+
 
                 <Form.Item
                     label="Giá tiền"

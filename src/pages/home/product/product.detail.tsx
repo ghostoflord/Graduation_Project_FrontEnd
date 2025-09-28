@@ -15,6 +15,12 @@ const ProductDetail = () => {
     const { setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
 
+    // ảnh đang chọn
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    // fetch sản phẩm
     useEffect(() => {
         const fetchProductDetail = async () => {
             if (!slug) {
@@ -33,6 +39,40 @@ const ProductDetail = () => {
         };
         fetchProductDetail();
     }, [slug]);
+
+    // khi product thay đổi thì set ảnh mặc định
+    useEffect(() => {
+        if (product?.image) {
+            const defaultImg = `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`;
+            setSelectedImage(defaultImg);
+            setCurrentIndex(0);
+        }
+    }, [product]);
+
+    // list ảnh
+    const images = [
+        product?.image
+            ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
+            : "/default-product.jpg",
+        ...(product?.images?.map(
+            (img) => `${import.meta.env.VITE_BACKEND_URL}/upload/products/${img.imageUrl}`
+        ) || []),
+    ];
+
+    // xử lý prev/next
+    const handlePrevImage = () => {
+        if (!images.length) return;
+        const newIndex = (currentIndex - 1 + images.length) % images.length;
+        setCurrentIndex(newIndex);
+        setSelectedImage(images[newIndex]);
+    };
+
+    const handleNextImage = () => {
+        if (!images.length) return;
+        const newIndex = (currentIndex + 1) % images.length;
+        setCurrentIndex(newIndex);
+        setSelectedImage(images[newIndex]);
+    };
 
     const formatPrice = (price: any) => {
         const num = Number(price);
@@ -73,7 +113,6 @@ const ProductDetail = () => {
         }
 
         try {
-            // Lấy giỏ hàng hiện tại để kiểm tra số lượng đã có
             const res = await getCart(userId);
             const existingItem = res?.data?.items?.find((item: any) => item.productId === product.id);
             const currentQtyInCart = existingItem?.quantity || 0;
@@ -85,7 +124,7 @@ const ProductDetail = () => {
             }
 
             const cartData = {
-                quantity, // bạn có thể đổi thành quantity: 1 nếu muốn mỗi lần chỉ thêm 1
+                quantity,
                 price: Number(product.price),
                 productId: product.id,
                 userId,
@@ -150,20 +189,38 @@ const ProductDetail = () => {
         }
     };
 
-
     if (loading) return <div className="product-detail-loading">Đang tải chi tiết sản phẩm...</div>;
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
 
     return (
         <div className="product-detail">
             <div className="product-images">
-                <img
-                    src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`}
-                    alt={product.name}
-                    onError={(e) => (e.currentTarget.src = '/default-product.jpg')}
-                />
+                <div className="main-image">
+                    <button className="nav-btn left" onClick={handlePrevImage}>‹</button>
+                    <img
+                        src={selectedImage || "/default-product.jpg"}
+                        alt={product.name}
+                        onError={(e) => (e.currentTarget.src = "/default-product.jpg")}
+                    />
+                    <button className="nav-btn right" onClick={handleNextImage}>›</button>
+                </div>
+
+
+                <div className="thumbnail-list">
+                    {images.map((url, idx) => (
+                        <img
+                            key={idx}
+                            src={url}
+                            alt={`thumb-${idx}`}
+                            className={selectedImage === url ? "active" : ""}
+                            onClick={() => setSelectedImage(url)}
+                            onError={(e) => (e.currentTarget.src = "/default-product.jpg")}
+                        />
+                    ))}
+                </div>
             </div>
 
+            {/* phần info giữ nguyên của ông */}
             <div className="product-info">
                 <h1>{product.name}</h1>
                 <div className="price-box">
@@ -212,7 +269,6 @@ const ProductDetail = () => {
                         Mua ngay
                     </button>
                 </div>
-
             </div>
 
             <div className="product-info-wrapper">

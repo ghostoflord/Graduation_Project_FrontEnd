@@ -155,8 +155,20 @@ export const getProductDetailSlugAPI = (slug: string) => {
     return axios.get<IBackendRes<IProductTable>>(urlBackend);
 };
 
-export const createProductAPI = (name: string, productCode: string, detailDescription: string, guarantee: string, image: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, discountPrice: number) => {
-    return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription, bestsell, sell, discountPrice });
+export const createProductAPI = (name: string, productCode: string, detailDescription: string, guarantee: string, image: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, discountPrice: number, category: string) => {
+    return axios.post("/api/v1/products", { name, productCode, detailDescription, guarantee, image, factory, price, sold, quantity, shortDescription, bestsell, sell, discountPrice, category });
+};
+
+export const uploadSubImagesAPI = (productId: number | string, formData: FormData) => {
+    return axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/products/${productId}/images`,
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        }
+    );
 };
 
 export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, image?: string) => {
