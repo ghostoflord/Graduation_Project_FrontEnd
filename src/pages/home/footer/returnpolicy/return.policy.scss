@@ -1,4 +1,8 @@
 .return-policy-container {
+    max-width: 900px;
+    /* giới hạn chiều rộng nội dung */
+    margin: 40px auto;
+    /* canh giữa màn hình */
     padding: 40px 20px;
     background-color: #ffffff;
     border-radius: 12px;

@@ -76,39 +76,72 @@
 
     .social-icons {
         display: flex;
-        gap: 10px;
-        margin: 10px 0;
-
-        .social-icon {
-            font-size: 32px;
-            cursor: pointer;
-            transition: transform 0.2s;
-
-            &:hover {
-                transform: scale(1.1);
-            }
-
-            &.fb {
-                color: #1877f2;
-            }
-
-            &.ig {
-                color: #e1306c;
-            }
-
-            &.yt {
-                color: #ff0000;
-            }
-
-            &.tiktok {
-                color: #010101;
-            }
-
-            &.lazada {
-                color: #f57224;
-            }
-        }
+        gap: 12px;
+        margin-top: 8px;
     }
+
+    .social-icon {
+        font-size: 28px;
+        cursor: pointer;
+        padding: 8px;
+        /* để icon có khung tròn cân đối */
+        border-radius: 50%;
+        /* bo tròn khung */
+        background-color: #fff;
+        /* nền trắng mặc định */
+        transition: all 0.3s ease;
+    }
+
+    /* Facebook */
+    .social-icon.fb {
+        color: #1877f2;
+    }
+
+    .social-icon.fb:hover {
+        color: #fff;
+        background-color: #1877f2;
+    }
+
+    /* Instagram */
+    .social-icon.ig {
+        color: #e1306c;
+    }
+
+    .social-icon.ig:hover {
+        color: #fff;
+        background-color: #e1306c;
+    }
+
+    /* YouTube */
+    .social-icon.yt {
+        color: #ff0000;
+    }
+
+    .social-icon.yt:hover {
+        color: #fff;
+        background-color: #ff0000;
+    }
+
+    /* TikTok */
+    .social-icon.tiktok {
+        color: #000;
+    }
+
+    .social-icon.tiktok:hover {
+        color: #fff;
+        background-color: #000;
+    }
+
+    /* Lazada */
+    .social-icon.lazada {
+        color: #ff5a00;
+    }
+
+    .social-icon.lazada:hover {
+        color: #fff;
+        background-color: #ff5a00;
+    }
+
 
     .admin-menu-item {
         font-weight: bold;

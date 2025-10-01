@@ -1,4 +1,8 @@
 .payment-policy-container {
+    max-width: 900px;
+    /* Giới hạn độ rộng */
+    margin: 40px auto;
+    /* Căn giữa ngang màn hình + thêm khoảng cách top/bottom */
     padding: 40px 20px;
     background-color: #ffffff;
     border-radius: 12px;
