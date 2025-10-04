@@ -10,22 +10,22 @@ const aboutSections: AboutSection[] = [
         title: "GIỚI THIỆU",
         content: [
             "Tên Công ty: CÔNG TY TNHH CÔNG NGHỆ VÀ TIN HỌC HỒNG PHÁT",
-            "Tên giao dịch: LAPTOPNEW.vn",
+            "Tên giao dịch: LAPTOPSHOP.vn",
             "Văn phòng: 54/205/8 Phạm Hùng, xã Bình Hưng, Huyện Bình Chánh, Tp.HCM",
             "Giấy phép ĐKKD: 0318111456",
             "Hệ thống cửa hàng:",
             "- Chi nhánh 1: 29 Tân Thành, P12, Q5, Tp.HCM",
             "- Chi nhánh 2: 399 Xô Viết Nghệ Tĩnh, P14, Q.Bình Thạnh, Tp.HCM",
             "- Chi nhánh 3: Quận 10 sắp khai trương",
-            "CallCenter: 1900.8946 - Email: khachhang@laptopnew.vn"
+            "CallCenter: 1900.8946 - Email: khachhang@laptopshop.vn"
         ]
     },
     {
         title: "1. Quá trình hình thành và phát triển",
         content: [
-            "✓ Laptopnew chính thức được thành lập vào năm 2010...",
-            "✓ Trong quá trình phát triển, Laptopnew mở rộng hoạt động kinh doanh đa dạng...",
-            "✓ Với nền tảng vững chắc, Laptopnew chính thức đặt nền móng trở thành công ty phân phối và bán lẻ Laptop hàng đầu Việt Nam..."
+            "✓ LAPTOPSHOP chính thức được thành lập vào năm 2010...",
+            "✓ Trong quá trình phát triển, LAPTOPSHOP mở rộng hoạt động kinh doanh đa dạng...",
+            "✓ Với nền tảng vững chắc, LAPTOPSHOP chính thức đặt nền móng trở thành công ty phân phối và bán lẻ Laptop hàng đầu Việt Nam..."
         ]
     },
     {
@@ -51,7 +51,7 @@ const aboutSections: AboutSection[] = [
         content: [
             "• Trở thành hệ thống showroom Laptop chuyên nghiệp, thân thiện hàng đầu Việt Nam.",
             "• Xây dựng môi trường làm việc chuyên nghiệp, phát triển cá nhân tối đa.",
-            "• Laptopnew là ngôi nhà chung, chia sẻ quyền lợi và trách nhiệm công bằng."
+            "• LAPTOPSHOP là ngôi nhà chung, chia sẻ quyền lợi và trách nhiệm công bằng."
         ]
     },
     {

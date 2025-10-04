@@ -11,7 +11,7 @@ const sections: Section[] = [
         content: [
             "Hàng chính hãng, Mới 100%, Đầy đủ phụ kiện.",
             "Thời gian bảo hành theo tiêu chuẩn quy định của từng Nhà sản xuất. Vui lòng xem thời gian bảo hành trong mục chi tiết từng sản phẩm.",
-            "Sản phẩm được bảo hành tại các trung tâm bảo hành của Nhà sản xuất trên toàn quốc (hoặc nhà phân phối tại Việt Nam) và hệ thống LAPTOPNEW."
+            "Sản phẩm được bảo hành tại các trung tâm bảo hành của Nhà sản xuất trên toàn quốc (hoặc nhà phân phối tại Việt Nam) và hệ thống LAPTOPSHOP."
         ]
     },
     {
@@ -33,8 +33,8 @@ const SalesPolicy = () => {
         <div className="sales-policy-container">
             <h2 className="title">CHÍNH SÁCH BÁN HÀNG</h2>
             <p className="thank-you">
-                Chân thành cảm ơn quý khách đã cho LAPTOPNEW.vn cơ hội được phục vụ.
-                Nhằm mang lại sự yên tâm và hài lòng của quý khách, LAPTOPNEW thông tin về chính sách bán hàng.
+                Chân thành cảm ơn quý khách đã cho LAPTOPSHOP.vn cơ hội được phục vụ.
+                Nhằm mang lại sự yên tâm và hài lòng của quý khách, LAPTOPSHOP thông tin về chính sách bán hàng.
             </p>
             {sections.map((section, index) => (
                 <div key={index} className="sales-policy-item">

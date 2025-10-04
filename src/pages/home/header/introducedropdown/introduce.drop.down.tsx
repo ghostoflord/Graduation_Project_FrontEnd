@@ -2,7 +2,7 @@ import { Dropdown, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
 const gioiThieuSubItems = [
-    { label: "Giới thiệu LaptopNew", path: "/gioi-thieu" },
+    { label: "Giới thiệu LAPTOPSHOP", path: "/gioi-thieu" },
     { label: "Tầm nhìn - Sứ mệnh", path: "/tam-nhin-su-menh" },
     { label: "Giá trị cốt lõi", path: "/gia-tri-cot-loi" }
 ];

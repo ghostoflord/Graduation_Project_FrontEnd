@@ -4,7 +4,7 @@ const PrivacyPolicy = () => {
     return (
         <div className="privacy-policy">
             <h1>CHÍNH SÁCH BẢO VỆ THÔNG TIN CÁ NHÂN CỦA NGƯỜI TIÊU DÙNG</h1>
-            <p><strong>Đăng bởi: Laptopnew - 09/08/2020</strong></p>
+            <p><strong>Đăng bởi: LAPTOPSHOP - 09/08/2020</strong></p>
 
             <p>
                 Cảm ơn bạn đã truy cập vào trang website được vận hành bởi CÔNG TY TNHH TM DV TIN HỌC XUÂN ÂN.
@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                 <li>Cung cấp các dịch vụ đến Người Tiêu Dùng;</li>
                 <li>Gửi các thông báo về hoạt động trao đổi thông tin;</li>
                 <li>Liên lạc và giải quyết khiếu nại;</li>
-                <li>Xác nhận giao dịch tại Laptopnew;</li>
+                <li>Xác nhận giao dịch tại LAPTOPSHOP;</li>
                 <li>Cung cấp cho cơ quan nhà nước khi có yêu cầu.</li>
             </ul>
 
@@ -32,7 +32,7 @@ const PrivacyPolicy = () => {
 
             <h2>4. CÁC ĐỐI TƯỢNG ĐƯỢC TIẾP CẬN THÔNG TIN</h2>
             <ul>
-                <li>Ban quản trị website laptopnew.vn</li>
+                <li>Ban quản trị website latopshop.vn</li>
                 <li>Bên thứ ba tích hợp dịch vụ</li>
                 <li>Cơ quan nhà nước có thẩm quyền</li>
                 <li>Bên khiếu nại có chứng cứ</li>
@@ -53,7 +53,7 @@ const PrivacyPolicy = () => {
 
             <h2>7. CAM KẾT BẢO MẬT</h2>
             <p>
-                Laptopnew cam kết bảo mật thông tin người dùng tuyệt đối, kể cả trong trường hợp bị tấn công...
+                LAPTOPSHOP cam kết bảo mật thông tin người dùng tuyệt đối, kể cả trong trường hợp bị tấn công...
             </p>
 
             <h2>8. GIẢI QUYẾT KHIẾU NẠI</h2>

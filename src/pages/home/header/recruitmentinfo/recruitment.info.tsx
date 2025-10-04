@@ -3,18 +3,18 @@ import "./recruitment.info.scss";
 const RecruitmentInfo = () => {
     return (
         <div className="recruitment-info-container">
-            <h2 className="title">TUYỂN DỤNG & VIỆC LÀM | LAPTOPNEW.vn</h2>
-            <p className="posted-by">Đăng bởi: Laptopnew - 08/10/2020</p>
+            <h2 className="title">TUYỂN DỤNG & VIỆC LÀM | LAPTOPSHOP.vn</h2>
+            <p className="posted-by">Đăng bởi: LAPTOPSHOP - 08/10/2020</p>
 
             <div className="intro">
-                <p><strong>★ LAPTOPNEW.vn ★</strong></p>
-                <p>XIN HOAN NGHÊNH VÀ CHÀO ĐÓN ANH/CHỊ ĐẾN MỤC TUYỂN DỤNG CỦA LAPTOPNEW.</p>
+                <p><strong>★ LAPTOPSHOP.vn ★</strong></p>
+                <p>XIN HOAN NGHÊNH VÀ CHÀO ĐÓN ANH/CHỊ ĐẾN MỤC TUYỂN DỤNG CỦA LAPTOPSHOP.</p>
                 <p>
-                    Nếu bạn là một người đam mê công nghệ, thích trải nghiệm sản phẩm mới và muốn làm việc trong môi trường trẻ, năng động và chuyên nghiệp, hãy tham gia Team Laptopnew.
+                    Nếu bạn là một người đam mê công nghệ, thích trải nghiệm sản phẩm mới và muốn làm việc trong môi trường trẻ, năng động và chuyên nghiệp, hãy tham gia Team LAPTOPSHOP.
                     Với hơn 10 năm phát triển, chúng tôi luôn xem "Mỗi nhân viên là tài sản quý giá và là nhân tố quan trọng tạo nên sự thành công".
                 </p>
                 <p>
-                    BAN LÃNH ĐẠO luôn tạo ra môi trường để nhân viên phát huy tối đa kỹ năng và sáng tạo, cùng chung tay xây dựng LAPTOPNEW thành thương hiệu IT hàng đầu Việt Nam.
+                    BAN LÃNH ĐẠO luôn tạo ra môi trường để nhân viên phát huy tối đa kỹ năng và sáng tạo, cùng chung tay xây dựng LAPTOPSHOP thành thương hiệu IT hàng đầu Việt Nam.
                 </p>
             </div>
 
@@ -57,7 +57,7 @@ const RecruitmentInfo = () => {
             </div>
 
             <div className="mission">
-                <h3>SỨ MỆNH CỦA LAPTOPNEW</h3>
+                <h3>SỨ MỆNH CỦA LAPTOPSHOP</h3>
                 <ul>
                     <li>TOP 5 đại lý máy tính chính hãng tại Việt Nam.</li>
                     <li>Thương hiệu máy tính được yêu thích số 1 Việt Nam.</li>
@@ -82,7 +82,7 @@ const RecruitmentInfo = () => {
                 <ul>
                     <li>Chuyên viên tuyển dụng</li>
                     <li>Phụ trách nhân sự: <strong>Mr.An</strong> - SĐT/Zalo: <strong>0948377986</strong></li>
-                    <li>Email: <strong>tuyendung@laptopnew.vn</strong></li>
+                    <li>Email: <strong>tuyendung@laptopshop.vn</strong></li>
                 </ul>
                 <p className="slogan">HỘI TỤ NHÂN TÀI - VỮNG BƯỚC TƯƠNG LAI</p>
             </div>

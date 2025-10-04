@@ -10,14 +10,14 @@ const FranchiseInfo = () => {
                     Đồng thời chia sẻ và mang lại thu nhập, cùng đồng hành trên con đường chinh phục các dấu mốc của đại lý toàn quốc.
                 </p>
                 <p>
-                    LAPTOPNEW chính thức tuyển chọn đại lý uỷ quyền / điểm giao dịch trên khắp Tp/tỉnh trên toàn quốc.
+                    LAPTOPSHOP chính thức tuyển chọn đại lý uỷ quyền / điểm giao dịch trên khắp Tp/tỉnh trên toàn quốc.
                 </p>
 
                 <div className="section">
                     <h3>1 - QUYỀN LỢI:</h3>
                     <ul>
                         <li>Được cung cấp các sản phẩm chính hãng, Mới 100% và các chính sách bán hàng cho đại lý.</li>
-                        <li>Được hỗ trợ truyền thông và giới thiệu hình ảnh địa điểm của đại lý uỷ quyền trên hệ thống của LAPTOPNEW.</li>
+                        <li>Được hỗ trợ truyền thông và giới thiệu hình ảnh địa điểm của đại lý uỷ quyền trên hệ thống của LAPTOPSHOP.</li>
                         <li>Được đào tạo, hướng dẫn, định hướng và chia sẻ thông tin thị trường.</li>
                         <li>Được hỗ trợ khách hàng khu vực của đại lý uỷ quyền.</li>
                         <li>Được hỗ trợ chương trình bán hàng, chiết khấu và hình ảnh của đại lý.</li>
@@ -27,8 +27,8 @@ const FranchiseInfo = () => {
                 <div className="section">
                     <h3>2 - TRÁCH NHIỆM:</h3>
                     <ul>
-                        <li>Hỗ trợ và phục vụ khách hàng của LAPTOPNEW tại khu vực đại lý / điểm giao dịch.</li>
-                        <li>Giữ gìn và bảo vệ hình ảnh thương hiệu LAPTOPNEW.</li>
+                        <li>Hỗ trợ và phục vụ khách hàng của LAPTOPSHOP tại khu vực đại lý / điểm giao dịch.</li>
+                        <li>Giữ gìn và bảo vệ hình ảnh thương hiệu LAPTOPSHOP.</li>
                         <li>Cùng tham gia và xây dựng chung cộng đồng.</li>
                     </ul>
                 </div>

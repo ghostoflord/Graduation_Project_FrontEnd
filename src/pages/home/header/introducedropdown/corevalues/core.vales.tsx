@@ -18,7 +18,7 @@ const coreValues: CoreValue[] = [
     {
         title: "CHÍNH TRỰC",
         content: [
-            "Tuân thủ nguyên tắc đạo đức và pháp luật: Đảm bảo rằng mọi hoạt động của Laptopnew đều được thực hiện đúng đắn, không vi phạm quy định và luôn tuân thủ các tiêu chuẩn cao nhất.",
+            "Tuân thủ nguyên tắc đạo đức và pháp luật: Đảm bảo rằng mọi hoạt động của LAPTOPSHOP đều được thực hiện đúng đắn, không vi phạm quy định và luôn tuân thủ các tiêu chuẩn cao nhất.",
             "Nói gì làm đấy.",
             "Khi bạn đã thật sự nỗ lực hết sức để giữ lời mà vẫn không thể giữ lời, ngay lập tức bạn thông tin cho những người liên quan chịu trách nhiệm về việc không giữ lời, dọn dẹp hậu quả gây ra và đưa ra cam kết mới.",
         ],

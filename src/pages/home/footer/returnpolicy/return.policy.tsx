@@ -5,14 +5,14 @@ const ReturnPolicy = () => {
         <div className="return-policy-container">
             <h2 className="title">CHÍNH SÁCH ĐỔI TRẢ</h2>
             <div className="policy-details">
-                <p><strong>Kính gửi: quý khách hàng thân thiết LAPTOPNEW.</strong></p>
+                <p><strong>Kính gửi: quý khách hàng thân thiết LAPTOPSHOP.</strong></p>
                 <p>
-                    Nhằm đảm bảo quyền lợi cho các khách hàng mua các sản phẩm tại hệ thống LAPTOPNEW (hoặc mua hàng trực tuyến). LAPTOPNEW xin thông báo về điều khoản đổi trả và bảo hành như sau:
+                    Nhằm đảm bảo quyền lợi cho các khách hàng mua các sản phẩm tại hệ thống LAPTOPSHOP (hoặc mua hàng trực tuyến). LAPTOPSHOP xin thông báo về điều khoản đổi trả và bảo hành như sau:
                 </p>
 
                 <h3>1. CHÍNH SÁCH 1 ĐỔI 1</h3>
                 <ul>
-                    <li>LAPTOPNEW sẽ thực hiện đổi sản phẩm tương tự khi:
+                    <li>LAPTOPSHOP sẽ thực hiện đổi sản phẩm tương tự khi:
                         <ul>
                             <li>Sản phẩm phát sinh lỗi linh kiện phần cứng do NSX trong vòng 30 ngày kể từ ngày mua đối với các dòng Laptop Notebook, PC Desktop, Linh phụ kiện, Gaming Gear.</li>
                         </ul>
@@ -20,22 +20,22 @@ const ReturnPolicy = () => {
                 </ul>
                 <p><strong>ĐIỀU KIỆN:</strong></p>
                 <ul>
-                    <li>Sản phẩm do LAPTOPNEW cung cấp, đầy đủ thùng hộp, không bị trầy xước hay dán keo.</li>
+                    <li>Sản phẩm do LAPTOPSHOP cung cấp, đầy đủ thùng hộp, không bị trầy xước hay dán keo.</li>
                     <li>Sản phẩm được thẩm định lỗi phần cứng từ NSX.</li>
-                    <li>Sản phẩm được đổi mới khi LAPTOPNEW còn hàng (hoặc Đổi qua sản phẩm khác tương đương hoặc chênh lệch).</li>
+                    <li>Sản phẩm được đổi mới khi LAPTOPSHOP còn hàng (hoặc Đổi qua sản phẩm khác tương đương hoặc chênh lệch).</li>
                 </ul>
 
                 <h3>2. CHÍNH SÁCH BẢO HÀNH</h3>
                 <ul>
-                    <li>Sản phẩm được bảo hành trực tiếp tại TTBH của NSX trên toàn quốc (hoặc tại hệ thống cửa hàng LAPTOPNEW).</li>
-                    <li>LAPTOPNEW không chịu trách nhiệm, đảm bảo về phần mềm và dữ liệu khách hàng khi nhận bảo hành sản phẩm.</li>
+                    <li>Sản phẩm được bảo hành trực tiếp tại TTBH của NSX trên toàn quốc (hoặc tại hệ thống cửa hàng LAPTOPSHOP).</li>
+                    <li>LAPTOPSHOP không chịu trách nhiệm, đảm bảo về phần mềm và dữ liệu khách hàng khi nhận bảo hành sản phẩm.</li>
                 </ul>
 
                 <p><strong>CÁC TRƯỜNG HỢP BỊ TỪ CHỐI BẢO HÀNH:</strong></p>
                 <ul>
-                    <li>Sản phẩm không phải cung cấp bởi LAPTOPNEW.</li>
+                    <li>Sản phẩm không phải cung cấp bởi LAPTOPSHOP.</li>
                     <li>Sản phẩm đã hết thời hạn Bảo hành.</li>
-                    <li>Không có tem LAPTOPNEW hoặc tem NSX.</li>
+                    <li>Không có tem LAPTOPSHOP hoặc tem NSX.</li>
                     <li>Sản phẩm hư hỏng do người dùng hoặc tác động bên ngoài.</li>
                     <li>Do thiên tai, nguồn điện sai, BIOS thay đổi, hoặc do nâng/hạ cấp không đúng.</li>
                     <li>Không bảo hành với quà tặng khuyến mãi.</li>
@@ -44,7 +44,7 @@ const ReturnPolicy = () => {
 
                 <h3>3. CHÍNH SÁCH ĐỔI / NÂNG ĐỜI SẢN PHẨM KHÁC</h3>
                 <ul>
-                    <li>Sản phẩm phải do LAPTOPNEW cung cấp (hoặc có hóa đơn chính hãng).</li>
+                    <li>Sản phẩm phải do LAPTOPSHOP cung cấp (hoặc có hóa đơn chính hãng).</li>
                     <li>Không bị rơi rớt, va đập, vô nước, đã từng bảo hành.</li>
                     <li>Nguyên tem NSX, chưa tháo hoặc nâng cấp máy.</li>
                 </ul>
