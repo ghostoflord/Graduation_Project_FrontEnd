@@ -3,6 +3,7 @@ import { Table, Typography, Spin, message } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { compareProductsAPI } from "@/services/api";
 import "./compare.product.page.scss";
+import PageWarning from "../home/header/pageunderconstruction/pagewarning/page.warning";
 const { Title } = Typography;
 
 const fields: { key: keyof CompareProductDTO; label: string }[] = [
@@ -43,28 +44,88 @@ const CompareProductPage = () => {
         });
     }, [params]);
 
-    if (loading) return <Spin />;
-    if (products.length < 2) {
-        return <div>Không đủ sản phẩm để so sánh.</div>;
+    if (loading) {
+        return (
+            <div className="compare-message">
+                <Spin size="large" tip="Đang tải dữ liệu..." />
+            </div>
+        );
     }
+
+    if (products.length < 2) {
+        return (
+            <div className="compare-message">
+                <PageWarning />
+            </div>
+        );
+    }
+
     const [productA, productB] = products;
 
-    const data = fields.map(({ key, label }) => {
-        const valueA = productA[key] ?? "";
-        const valueB = productB[key] ?? "";
-        const isDifferent = valueA !== valueB;
-
-        return {
-            key,
-            attribute: label,
+    const data = [
+        {
+            key: "image",
+            attribute: "Ảnh sản phẩm",
             productA: (
-                <span className={isDifferent ? "diff-value" : ""}>{valueA}</span>
+                <img
+                    src={
+                        productA.image?.startsWith("http")
+                            ? productA.image
+                            : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${productA.image}`
+                    }
+                    alt={productA.name}
+                    style={{
+                        width: 100,
+                        height: 100,
+                        objectFit: "cover",
+                        borderRadius: 8,
+                    }}
+                />
             ),
             productB: (
-                <span className={isDifferent ? "diff-value" : ""}>{valueB}</span>
+                <img
+                    src={
+                        productB.image?.startsWith("http")
+                            ? productB.image
+                            : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${productB.image}`
+                    }
+                    alt={productB.name}
+                    style={{
+                        width: 100,
+                        height: 100,
+                        objectFit: "cover",
+                        borderRadius: 8,
+                    }}
+                />
             ),
-        };
-    });
+        },
+        {
+            key: "name",
+            attribute: "Tên sản phẩm",
+            productA: <strong>{productA.name}</strong>,
+            productB: <strong>{productB.name}</strong>,
+        },
+        ...fields.map(({ key, label }) => {
+            const valueA = productA[key] ?? "";
+            const valueB = productB[key] ?? "";
+            const isDifferent = valueA !== valueB;
+
+            return {
+                key,
+                attribute: label,
+                productA: (
+                    <span className={isDifferent ? "diff-value" : ""}>
+                        {valueA}
+                    </span>
+                ),
+                productB: (
+                    <span className={isDifferent ? "diff-value" : ""}>
+                        {valueB}
+                    </span>
+                ),
+            };
+        }),
+    ];
 
     const columns = [
         {
@@ -72,22 +133,23 @@ const CompareProductPage = () => {
             dataIndex: "attribute",
             key: "attribute",
             width: "30%",
-            className: "compare-attr", // giờ chỉ in đậm chữ
+            className: "compare-attr",
         },
         {
-            title: productA.name,
+            title: "Sản phẩm 1",
             dataIndex: "productA",
             key: "productA",
             width: "35%",
+            align: "center" as const,
         },
         {
-            title: productB.name,
+            title: "Sản phẩm 2",
             dataIndex: "productB",
             key: "productB",
             width: "35%",
+            align: "center" as const,
         },
     ];
-
 
     return (
         <div className="compare-container">
@@ -100,10 +162,11 @@ const CompareProductPage = () => {
                 dataSource={data}
                 pagination={false}
                 bordered
+                rowKey="key"
             />
         </div>
     );
-
 };
+
 
 export default CompareProductPage;
