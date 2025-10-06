@@ -354,9 +354,9 @@ export const fetchOrderSummaryById = async (id: string): Promise<IOrderTable> =>
     return response.data;
 };
 
-export const fetchAllOrders = async (): Promise<IOrderTable[]> => {
-    const response = await axios.get<IOrderTable[]>('/api/v1/orders/all');
-    return response.data;
+export const getOrdersAPI = (query: string) => {
+    const urlBackend = `/api/v1/orders/all?${query}`;
+    return axios.get<IBackendRes<IModelPaginate<IOrderTable>>>(urlBackend);
 };
 
 export const fetchMyOrders = async (): Promise<IOrderTable[]> => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, List, Spin, Button, Row, Col, Pagination, Popconfirm, App } from 'antd';
-import { deleteOrderAPI, fetchAllOrders } from '@/services/api';
+import { deleteOrderAPI, getOrdersAPI } from '@/services/api';
 import { DownloadOutlined, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 import { CSVLink } from 'react-csv';
 import DetailOrder from '../order.detail';
@@ -29,7 +29,7 @@ const TableOrderMobile = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const data = await fetchAllOrders();
+            const data = await getOrdersAPI();
             setOrders(data);
             setLoading(false);
         };

@@ -1,4 +1,4 @@
-import { deleteOrderAPI, fetchAllOrders } from '@/services/api';
+import { deleteOrderAPI, getOrdersAPI } from '@/services/api';
 import { ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { App, Popconfirm, Tag } from 'antd';
@@ -9,7 +9,6 @@ import UpdateOrder from './order.update';
 
 const TableOrder = () => {
     const actionRef = useRef<ActionType>();
-    const [dataSource, setDataSource] = useState<IOrderTable[]>([]);
     const { message, notification } = App.useApp();
 
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
@@ -18,6 +17,13 @@ const TableOrder = () => {
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [dataUpdate, setDataUpdate] = useState<IOrderTable | null>(null);
 
+    const [currentDataTable, setCurrentDataTable] = useState<IOrderTable[]>([]);
+    const [meta, setMeta] = useState({
+        current: 1,
+        pageSize: 5,
+        pages: 0,
+        total: 0
+    });
     const [isDeleteOrder, setIsDeleteOrder] = useState<boolean>(false);
 
     const handleDeleteOrder = async (id: string) => {
@@ -187,19 +193,45 @@ const TableOrder = () => {
                         <div>{range[0]}-{range[1]} trên {total} đơn hàng</div>
                     ),
                 }}
-                request={async () => {
+                request={async (params) => {
                     try {
-                        const data = await fetchAllOrders();
-                        setDataSource(data);
+                        let query = `current=${params.current}&pageSize=${params.pageSize}`;
+
+                        const filters: string[] = [];
+
+                        if (params.receiverName) {
+                            filters.push(`receiverName~'${params.receiverName}'`);
+                        }
+
+                        if (params.receiverPhone) {
+                            filters.push(`receiverPhone~'${params.receiverPhone}'`);
+                        }
+
+                        if (params.status) {
+                            filters.push(`status='${params.status}'`);
+                        }
+
+                        if (filters.length > 0) {
+                            query += `&filter=${filters.join(" and ")}`;
+                        }
+
+                        const res = await getOrdersAPI(query);
+
+                        if (res.data) {
+                            setMeta(res.data.meta);
+                            setCurrentDataTable(res.data?.result ?? []);
+                        }
+
                         return {
-                            data: data,
+                            data: res.data?.result,
+                            page: params.current,
                             success: true,
-                            total: data.length,
+                            total: res.data?.meta.total,
                         };
                     } catch (error) {
                         notification.error({
-                            message: 'Lỗi tải đơn hàng',
-                            description: 'Không thể lấy danh sách đơn hàng',
+                            message: "Lỗi tải đơn hàng",
+                            description: "Không thể lấy danh sách đơn hàng",
                         });
                         return {
                             data: [],

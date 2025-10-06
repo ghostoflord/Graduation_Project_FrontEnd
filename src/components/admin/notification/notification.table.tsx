@@ -131,12 +131,21 @@ const NotificationTable = () => {
                 loading={loading}
                 request={async (params) => {
                     let query = `current=${params.current}&pageSize=${params.pageSize}`;
-                    if (params.title) query += `&title=/${params.title}/i`;
+
+                    const filters: string[] = [];
+
+                    if (params.title) {
+                        filters.push(`title~'${params.title}'`);
+                    }
+
+                    if (filters.length > 0) {
+                        query += `&filter=${filters.join(" and ")}`;
+                    }
 
                     try {
                         setLoading(true);
                         const res = await callFetchNotifications(query);
-                        if (res?.statusCode === 200) {
+                        if (res?.statusCode === 200 && res.data) {
                             setMeta(res.data.meta);
                             return {
                                 data: res.data.result,
@@ -146,8 +155,8 @@ const NotificationTable = () => {
                         }
                     } catch (error) {
                         notification.error({
-                            message: 'Lỗi khi load dữ liệu thông báo',
-                            description: 'Không thể fetch dữ liệu thông báo',
+                            message: "Lỗi khi load dữ liệu thông báo",
+                            description: "Không thể fetch dữ liệu thông báo",
                         });
                     } finally {
                         setLoading(false);
@@ -159,6 +168,7 @@ const NotificationTable = () => {
                         total: 0,
                     };
                 }}
+
                 pagination={{
                     current: meta.current,
                     pageSize: meta.pageSize,
