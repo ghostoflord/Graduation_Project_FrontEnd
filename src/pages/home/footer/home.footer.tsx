@@ -1,6 +1,6 @@
 import { FacebookOutlined, YoutubeOutlined, TikTokOutlined, InstagramOutlined, ShoppingCartOutlined, } from '@ant-design/icons';
 import "./home.footer.scss";
-import logo from '@/assets/logo.png';
+import footer from '@/assets/footer.png';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -10,7 +10,7 @@ const Footer = () => {
                 <div className="container">
                     <div className="footer-top">
                         <div className="footer-column about">
-                            <img src={logo} alt="LaptopNew" />
+                            <img src={footer} alt="LaptopNew" />
                             <div className="contact-info">
                                 <p><strong>Trụ sở chính:</strong></p>
                                 <p>- Showroom 1: Cầu Giấy,Thành Phố Hà Nội</p>

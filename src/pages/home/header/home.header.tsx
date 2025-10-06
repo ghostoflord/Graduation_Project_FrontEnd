@@ -185,13 +185,6 @@ export default function Header() {
                         </Button>
 
                         <div className="search-bar">
-                            {/* <Input.Search
-                                placeholder="Từ khóa..."
-                                allowClear
-                                value={searchValue}
-                                onChange={(e) => setSearchValue(e.target.value)}
-                                onSearch={handleSearch}
-                            /> */}
                             <ProductSearchBar initialValue={searchValue} />
                         </div>
 

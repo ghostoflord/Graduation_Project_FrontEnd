@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
-import { Table, Typography, Spin, message } from "antd";
+import {
+    Table,
+    Typography,
+    Spin,
+    message,
+    Button,
+    AutoComplete,
+} from "antd";
 import { useSearchParams } from "react-router-dom";
-import { compareProductsAPI } from "@/services/api";
+import { CloseOutlined } from "@ant-design/icons";
+import {
+    compareProductsAPI,
+    getProductDetailAPI,
+    getProductSuggestionsAPI,
+} from "@/services/api";
 import "./compare.product.page.scss";
-import PageWarning from "../home/header/pageunderconstruction/pagewarning/page.warning";
+
 const { Title } = Typography;
 
 const fields: { key: keyof CompareProductDTO; label: string }[] = [
@@ -22,27 +34,49 @@ const fields: { key: keyof CompareProductDTO; label: string }[] = [
 
 const CompareProductPage = () => {
     const [params] = useSearchParams();
-    const [products, setProducts] = useState<CompareProductDTO[]>([]);
+    const [products, setProducts] = useState<(CompareProductDTO | null)[]>([
+        null,
+        null,
+    ]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const idsParam = params.get("ids");
         if (!idsParam) {
-            message.warning("Vui lòng chọn 2 sản phẩm để so sánh");
+            setLoading(false);
             return;
         }
 
         const ids = idsParam.split(",").map(Number);
         if (ids.length !== 2) {
             message.warning("Bạn phải chọn đúng 2 sản phẩm để so sánh");
+            setLoading(false);
             return;
         }
 
         compareProductsAPI(ids).then((res) => {
-            setProducts(res.data || []);
+            const data = res.data || [];
+            setProducts([data[0] || null, data[1] || null]);
             setLoading(false);
         });
     }, [params]);
+
+    const handleRemove = (index: number) => {
+        const newProducts = [...products];
+        newProducts[index] = null;
+        setProducts(newProducts);
+    };
+
+    const handleSelectSuggestion = async (productId: number, index: number) => {
+        try {
+            const res = await getProductDetailAPI(productId);
+            const newProducts = [...products];
+            newProducts[index] = res.data;
+            setProducts(newProducts);
+        } catch {
+            message.error("Không lấy được chi tiết sản phẩm");
+        }
+    };
 
     if (loading) {
         return (
@@ -52,75 +86,49 @@ const CompareProductPage = () => {
         );
     }
 
-    if (products.length < 2) {
-        return (
-            <div className="compare-message">
-                <PageWarning />
-            </div>
-        );
-    }
-
-    const [productA, productB] = products;
-
     const data = [
         {
             key: "image",
             attribute: "Ảnh sản phẩm",
             productA: (
-                <img
-                    src={
-                        productA.image?.startsWith("http")
-                            ? productA.image
-                            : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${productA.image}`
-                    }
-                    alt={productA.name}
-                    style={{
-                        width: 100,
-                        height: 100,
-                        objectFit: "cover",
-                        borderRadius: 8,
-                    }}
+                <ProductCell
+                    product={products[0]}
+                    index={0}
+                    handleRemove={handleRemove}
+                    handleSelectSuggestion={handleSelectSuggestion}
                 />
             ),
             productB: (
-                <img
-                    src={
-                        productB.image?.startsWith("http")
-                            ? productB.image
-                            : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${productB.image}`
-                    }
-                    alt={productB.name}
-                    style={{
-                        width: 100,
-                        height: 100,
-                        objectFit: "cover",
-                        borderRadius: 8,
-                    }}
+                <ProductCell
+                    product={products[1]}
+                    index={1}
+                    handleRemove={handleRemove}
+                    handleSelectSuggestion={handleSelectSuggestion}
                 />
             ),
         },
         {
             key: "name",
             attribute: "Tên sản phẩm",
-            productA: <strong>{productA.name}</strong>,
-            productB: <strong>{productB.name}</strong>,
+            productA: products[0] ? <strong>{products[0].name}</strong> : "-",
+            productB: products[1] ? <strong>{products[1].name}</strong> : "-",
         },
         ...fields.map(({ key, label }) => {
-            const valueA = productA[key] ?? "";
-            const valueB = productB[key] ?? "";
-            const isDifferent = valueA !== valueB;
+            const valueA = products[0]?.[key] ?? "";
+            const valueB = products[1]?.[key] ?? "";
+            const isDifferent = valueA !== valueB && valueA && valueB;
 
             return {
                 key,
                 attribute: label,
                 productA: (
                     <span className={isDifferent ? "diff-value" : ""}>
-                        {valueA}
+                        {valueA || "-"}
                     </span>
                 ),
                 productB: (
                     <span className={isDifferent ? "diff-value" : ""}>
-                        {valueB}
+                        {valueB || "-"}
                     </span>
                 ),
             };
@@ -168,5 +176,73 @@ const CompareProductPage = () => {
     );
 };
 
+type ProductCellProps = {
+    product: CompareProductDTO | null;
+    index: number;
+    handleRemove: (i: number) => void;
+    handleSelectSuggestion: (id: number, i: number) => void;
+};
+
+const ProductCell = ({
+    product,
+    index,
+    handleRemove,
+    handleSelectSuggestion,
+}: ProductCellProps) => {
+    const [options, setOptions] = useState<{ value: number; label: string }[]>([]);
+
+    const handleSearchSuggest = async (value: string) => {
+        if (!value) return;
+        const res = await getProductSuggestionsAPI(value);
+        setOptions(
+            res.data.map((p) => ({
+                value: p.id,
+                label: p.name,
+            }))
+        );
+    };
+
+    if (!product) {
+        return (
+            <AutoComplete
+                style={{ width: 200 }}
+                options={options}
+                onSearch={handleSearchSuggest}
+                onSelect={(val) => handleSelectSuggestion(Number(val), index)}
+                placeholder="Tìm sản phẩm..."
+            />
+        );
+    }
+
+    return (
+        <div style={{ position: "relative" }}>
+            <img
+                src={
+                    product.image?.startsWith("http")
+                        ? product.image
+                        : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
+                }
+                alt={product.name}
+                style={{
+                    width: 100,
+                    height: 100,
+                    objectFit: "cover",
+                    borderRadius: 8,
+                }}
+            />
+            <Button
+                type="text"
+                icon={<CloseOutlined />}
+                onClick={() => handleRemove(index)}
+                style={{
+                    position: "absolute",
+                    top: -8,
+                    right: -8,
+                    color: "red",
+                }}
+            />
+        </div>
+    );
+};
 
 export default CompareProductPage;
