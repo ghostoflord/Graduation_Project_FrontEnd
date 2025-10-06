@@ -45,9 +45,9 @@ const FranchiseInfo = () => {
                 <div className="contact">
                     <p>Mọi chi tiết và thắc mắc về nhượng quyền thương hiệu / Điểm giao dịch, vui lòng liên hệ Bộ phận phát triển đại lý để được giải đáp:</p>
                     <ul>
-                        <li>Nhân viên phụ trách. SDT/Zalo: <strong>1900.8946</strong></li>
-                        <li>Phụ trách chung. SDT/Zalo: <strong>0364058781</strong> (Ms.Như Ngọc)</li>
-                        <li>Chăm sóc Đại lý / Điểm giao dịch: SDT/Zalo: <strong>0948377986</strong> (Mr.Xuân An)</li>
+                        <li>Nhân viên phụ trách. SDT/Zalo: <strong>0123456789</strong></li>
+                        <li>Phụ trách chung. SDT/Zalo: <strong>0123456789</strong> (Mr.Hiep)</li>
+                        <li>Chăm sóc Đại lý / Điểm giao dịch: SDT/Zalo: <strong>0123456789</strong> (Mr.Hiep)</li>
                     </ul>
                 </div>
             </div>

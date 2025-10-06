@@ -13,11 +13,11 @@ const Footer = () => {
                             <img src={logo} alt="LaptopNew" />
                             <div className="contact-info">
                                 <p><strong>Trụ sở chính:</strong></p>
-                                <p>- Showroom 1: 29 Tân Thành, P12, Q5, Tp.HCM</p>
-                                <p>- Showroom 2: 399 Xô Viết Nghệ Tĩnh, P14, Q.Bình Thạnh, Tp.HCM</p>
-                                <p>- Showroom 3: Q11 sắp khai trương</p>
-                                <p><strong>Email:</strong> khachhang@laptopnew.vn</p>
-                                <p><strong>Hotline:</strong> 1900.8946</p>
+                                <p>- Showroom 1: Cầu Giấy,Thành Phố Hà Nội</p>
+                                <p>- Showroom 2: Khuất Duy Tiến,Quận Thanh Xuân,Thành Phố Hà Nội</p>
+                                <p>- Showroom 3: Quốc Oai sắp khai trương</p>
+                                <p><strong>Email:</strong> khachhang@laptopshop.vn</p>
+                                <p><strong>Hotline:</strong> 0123456789</p>
                             </div>
                         </div>
                         <div className="footer-column">

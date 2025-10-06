@@ -9,21 +9,21 @@ const aboutSections: AboutSection[] = [
     {
         title: "GIỚI THIỆU",
         content: [
-            "Tên Công ty: CÔNG TY TNHH CÔNG NGHỆ VÀ TIN HỌC HỒNG PHÁT",
+            "Tên Công ty: CÔNG TY TNHH CÔNG NGHỆ VÀ TIN HỌC NGUYỄN QUANG HIỆP",
             "Tên giao dịch: LAPTOPSHOP.vn",
-            "Văn phòng: 54/205/8 Phạm Hùng, xã Bình Hưng, Huyện Bình Chánh, Tp.HCM",
-            "Giấy phép ĐKKD: 0318111456",
+            "Văn phòng: Cầu Giấy,Thành Phố Hà Nội",
+            "Giấy phép ĐKKD: 0123456789",
             "Hệ thống cửa hàng:",
-            "- Chi nhánh 1: 29 Tân Thành, P12, Q5, Tp.HCM",
-            "- Chi nhánh 2: 399 Xô Viết Nghệ Tĩnh, P14, Q.Bình Thạnh, Tp.HCM",
-            "- Chi nhánh 3: Quận 10 sắp khai trương",
-            "CallCenter: 1900.8946 - Email: khachhang@laptopshop.vn"
+            "- Chi nhánh 1: Cầu Giấy,Thành Phố Hà Nội",
+            "- Chi nhánh 2: Khuất Duy Tiến,Quận Thanh Xuân,Thành Phố Hà Nội",
+            "- Chi nhánh 3: Quốc Oai sắp khai trương",
+            "CallCenter: 0123456789 - Email: khachhang@laptopshop.vn"
         ]
     },
     {
         title: "1. Quá trình hình thành và phát triển",
         content: [
-            "✓ LAPTOPSHOP chính thức được thành lập vào năm 2010...",
+            "✓ LAPTOPSHOP chính thức được thành lập vào năm 2025...",
             "✓ Trong quá trình phát triển, LAPTOPSHOP mở rộng hoạt động kinh doanh đa dạng...",
             "✓ Với nền tảng vững chắc, LAPTOPSHOP chính thức đặt nền móng trở thành công ty phân phối và bán lẻ Laptop hàng đầu Việt Nam..."
         ]
@@ -32,10 +32,10 @@ const aboutSections: AboutSection[] = [
         title: "NHỮNG DẤU MỐC QUAN TRỌNG VÀ THÀNH TỰU",
         content: [
             "✓ Được chứng nhận đại lý uỷ quyền của Dell, HP, Asus, Acer, MSI, Lenovo, LG, Rapoo...",
-            "✓ Năm 2015: Top 10 nhà cung cấp Laptop chính hãng uy tín tại Việt Nam.",
-            "✓ T4/2017: Hợp tác cùng MSI mở Concept Store đầu tiên tại Việt Nam.",
-            "✓ T7/2018: Nhà phân phối uỷ quyền chính thức của AverMedia.",
-            "✓ T10/2023: Hợp nhất thành Công ty TNHH Công nghệ và Tin học Hồng Phát."
+            "✓ Năm 2025: Top 10 nhà cung cấp Laptop chính hãng uy tín tại Việt Nam.",
+            "✓ T4/2025: Hợp tác cùng MSI mở Concept Store đầu tiên tại Việt Nam.",
+            "✓ T7/2025: Nhà phân phối uỷ quyền chính thức của AverMedia.",
+            "✓ T10/2025: Hợp nhất thành Công ty TNHH Công nghệ và Tin học Nguyễn Quang Hệp."
         ]
     },
     {

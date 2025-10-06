@@ -49,7 +49,7 @@ const SalesPolicy = () => {
                 </div>
             ))}
             <p className="contact-info">
-                Để tư vấn và giải đáp, quý khách liên hệ CallCenter: <strong>1900.8946</strong>.
+                Để tư vấn và giải đáp, quý khách liên hệ CallCenter: <strong>0123456789</strong>.
                 Thời gian phục vụ: Thứ 2 - Chủ nhật (09:00 - 21:00).
             </p>
         </div>

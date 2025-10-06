@@ -203,7 +203,7 @@ export default function Header() {
 
                         <div className="call-phone">
                             <div>Gọi mua hàng</div>
-                            <div className="phone-number">1900.8946</div>
+                            <div className="phone-number">0123456789</div>
                         </div>
 
                         <div className="actions">
