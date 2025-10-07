@@ -6,6 +6,7 @@ import { message, Tag } from 'antd';
 import './product.detail.scss';
 import { useCurrentApp } from '@/components/context/app.context';
 import ProductInfo from '@/components/client/product.info/product.info';
+import ProductBreadcrumb from '@/pages/productbreadcrumb/product.bread.crumb';
 
 const ProductDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -193,88 +194,93 @@ const ProductDetail = () => {
     if (!product) return <div>Không tìm thấy sản phẩm.</div>;
 
     return (
-        <div className="product-detail">
-            <div className="product-images">
-                <div className="main-image">
-                    <button className="nav-btn left" onClick={handlePrevImage}>‹</button>
-                    <img
-                        src={selectedImage || "/default-product.jpg"}
-                        alt={product.name}
-                        onError={(e) => (e.currentTarget.src = "/default-product.jpg")}
-                    />
-                    <button className="nav-btn right" onClick={handleNextImage}>›</button>
-                </div>
-
-
-                <div className="thumbnail-list">
-                    {images.map((url, idx) => (
+        <>
+            {product && (
+                <ProductBreadcrumb brand={product.slug} name={product.name} />
+            )}
+            <div className="product-detail">
+                <div className="product-images">
+                    <div className="main-image">
+                        <button className="nav-btn left" onClick={handlePrevImage}>‹</button>
                         <img
-                            key={idx}
-                            src={url}
-                            alt={`thumb-${idx}`}
-                            className={selectedImage === url ? "active" : ""}
-                            onClick={() => setSelectedImage(url)}
+                            src={selectedImage || "/default-product.jpg"}
+                            alt={product.name}
                             onError={(e) => (e.currentTarget.src = "/default-product.jpg")}
                         />
-                    ))}
+                        <button className="nav-btn right" onClick={handleNextImage}>›</button>
+                    </div>
+
+
+                    <div className="thumbnail-list">
+                        {images.map((url, idx) => (
+                            <img
+                                key={idx}
+                                src={url}
+                                alt={`thumb-${idx}`}
+                                className={selectedImage === url ? "active" : ""}
+                                onClick={() => setSelectedImage(url)}
+                                onError={(e) => (e.currentTarget.src = "/default-product.jpg")}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* phần info giữ nguyên của ông */}
+                <div className="product-info">
+                    <h1>{product.name}</h1>
+                    <div className="price-box">
+                        {product.discountPrice && Number(product.discountPrice) > 0 ? (
+                            <>
+                                <div className="price-current text-red-500">
+                                    {formatPrice(product.discountPrice)}
+                                </div>
+                                <div className="price-old line-through text-gray-500">
+                                    {formatPrice(product.price)}
+                                </div>
+                                <Tag color="red">
+                                    -{Math.round(100 - (Number(product.discountPrice) / Number(product.price)) * 100)}%
+                                </Tag>
+                            </>
+                        ) : (
+                            <div className="price-current">{formatPrice(product.price)}</div>
+                        )}
+                    </div>
+
+                    <p className="product-desc">{product.shortDescription || 'Đang cập nhật mô tả.'}</p>
+                    <p className="product-config"><b>Cấu hình:</b> {product.detailDescription || 'Đang cập nhật.'}</p>
+                    <p className="product-stock">Kho còn: {product.quantity ?? 'Đang cập nhật'} sản phẩm</p>
+
+                    <div className="quantity-control">
+                        <button onClick={decreaseQty}><MinusOutlined /></button>
+                        <span>{quantity}</span>
+                        <button onClick={increaseQty}><PlusOutlined /></button>
+                    </div>
+
+                    <div className="action-buttons">
+                        <button
+                            className="add-to-cart-btn"
+                            onClick={handleAddToCart}
+                            disabled={!product.quantity || Number(product.quantity) <= 0}
+                        >
+                            <ShoppingCartOutlined style={{ marginRight: 8 }} />
+                            {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
+                        </button>
+
+                        <button
+                            className="buy-now-btn"
+                            disabled={!product.quantity || Number(product.quantity) <= 0}
+                            onClick={handleBuyNow}
+                        >
+                            Mua ngay
+                        </button>
+                    </div>
+                </div>
+
+                <div className="product-info-wrapper">
+                    <ProductInfo productId={product.id} />
                 </div>
             </div>
-
-            {/* phần info giữ nguyên của ông */}
-            <div className="product-info">
-                <h1>{product.name}</h1>
-                <div className="price-box">
-                    {product.discountPrice && Number(product.discountPrice) > 0 ? (
-                        <>
-                            <div className="price-current text-red-500">
-                                {formatPrice(product.discountPrice)}
-                            </div>
-                            <div className="price-old line-through text-gray-500">
-                                {formatPrice(product.price)}
-                            </div>
-                            <Tag color="red">
-                                -{Math.round(100 - (Number(product.discountPrice) / Number(product.price)) * 100)}%
-                            </Tag>
-                        </>
-                    ) : (
-                        <div className="price-current">{formatPrice(product.price)}</div>
-                    )}
-                </div>
-
-                <p className="product-desc">{product.shortDescription || 'Đang cập nhật mô tả.'}</p>
-                <p className="product-config"><b>Cấu hình:</b> {product.detailDescription || 'Đang cập nhật.'}</p>
-                <p className="product-stock">Kho còn: {product.quantity ?? 'Đang cập nhật'} sản phẩm</p>
-
-                <div className="quantity-control">
-                    <button onClick={decreaseQty}><MinusOutlined /></button>
-                    <span>{quantity}</span>
-                    <button onClick={increaseQty}><PlusOutlined /></button>
-                </div>
-
-                <div className="action-buttons">
-                    <button
-                        className="add-to-cart-btn"
-                        onClick={handleAddToCart}
-                        disabled={!product.quantity || Number(product.quantity) <= 0}
-                    >
-                        <ShoppingCartOutlined style={{ marginRight: 8 }} />
-                        {Number(product.quantity) <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
-                    </button>
-
-                    <button
-                        className="buy-now-btn"
-                        disabled={!product.quantity || Number(product.quantity) <= 0}
-                        onClick={handleBuyNow}
-                    >
-                        Mua ngay
-                    </button>
-                </div>
-            </div>
-
-            <div className="product-info-wrapper">
-                <ProductInfo productId={product.id} />
-            </div>
-        </div>
+        </>
     );
 };
 
