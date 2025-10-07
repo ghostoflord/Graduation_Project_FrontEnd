@@ -11,10 +11,16 @@
     gap: 15px;
 
     .logo img {
-      height: 50px; // tăng kích thước logo
-      width: auto; // giữ đúng tỉ lệ gốc
-      max-width: 180px; // tránh logo phóng to quá
-      object-fit: contain; // giúp ảnh không bị méo
+      height: 80px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+      // filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); // hiệu ứng đổ bóng nhẹ cho nổi bật
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.05); // hiệu ứng hover nhẹ, hiện đại hơn
     }
 
     .store-button {
@@ -231,7 +237,8 @@
       }
 
       .logo img {
-        height: 32px;
+        height: 45px;
+        max-width: 180px;
       }
 
       .search-bar {

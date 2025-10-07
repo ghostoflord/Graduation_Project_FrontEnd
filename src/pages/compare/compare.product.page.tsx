@@ -7,7 +7,7 @@ import {
     Button,
     AutoComplete,
 } from "antd";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { CloseOutlined } from "@ant-design/icons";
 import {
     compareProductsAPI,
@@ -33,6 +33,7 @@ const fields: { key: keyof CompareProductDTO; label: string }[] = [
 ];
 
 const CompareProductPage = () => {
+    const navigate = useNavigate();
     const [params] = useSearchParams();
     const [products, setProducts] = useState<(CompareProductDTO | null)[]>([
         null,
@@ -70,8 +71,28 @@ const CompareProductPage = () => {
     const handleSelectSuggestion = async (productId: number, index: number) => {
         try {
             const res = await getProductDetailAPI(productId);
+            const raw = res.data;
+
+            const normalized = {
+                id: raw.id,
+                slug: raw.slug,
+                name: raw.name,
+                image: raw.image,
+                cpu: raw.detail?.cpu || "",
+                ram: raw.detail?.ram || "",
+                storage: raw.detail?.storage || "",
+                gpu: raw.detail?.gpu || "",
+                screen: raw.detail?.screen || "",
+                battery: raw.detail?.battery || "",
+                weight: raw.detail?.weight || "",
+                material: raw.detail?.material || "",
+                os: raw.detail?.os || "",
+                specialFeatures: raw.detail?.specialFeatures || "",
+                ports: raw.detail?.ports || "",
+            };
+
             const newProducts = [...products];
-            newProducts[index] = res.data;
+            newProducts[index] = normalized;
             setProducts(newProducts);
         } catch {
             message.error("Không lấy được chi tiết sản phẩm");
@@ -110,12 +131,58 @@ const CompareProductPage = () => {
         {
             key: "name",
             attribute: "Tên sản phẩm",
-            productA: products[0] ? <strong>{products[0].name}</strong> : "-",
-            productB: products[1] ? <strong>{products[1].name}</strong> : "-",
+            productA: products[0] ? (
+                <span className="clickable-name">
+                    {products[0].name}
+                </span>
+            ) : (
+                "-"
+            ),
+            productB: products[1] ? (
+                <span className="clickable-name">
+                    {products[1].name}
+                </span>
+            ) : (
+                "-"
+            ),
         },
+
+        {
+            key: "buy",
+            attribute: "Hành động",
+            productA: products[0] ? (
+                <Button
+                    type="primary"
+                    size="middle"
+                    style={{ borderRadius: 8 }}
+                    onClick={() =>
+                        navigate(`/product/${products[0].slug || products[0].id}`)
+                    }
+                >
+                    Mua sản phẩm
+                </Button>
+            ) : (
+                "-"
+            ),
+            productB: products[1] ? (
+                <Button
+                    type="primary"
+                    size="middle"
+                    style={{ borderRadius: 8 }}
+                    onClick={() =>
+                        navigate(`/product/${products[1].slug || products[1].id}`)
+                    }
+                >
+                    Mua sản phẩm
+                </Button>
+            ) : (
+                "-"
+            ),
+        },
+
         ...fields.map(({ key, label }) => {
-            const valueA = products[0]?.[key] ?? "";
-            const valueB = products[1]?.[key] ?? "";
+            const valueA = products[0]?.[key] ?? products[0]?.detail?.[key] ?? "";
+            const valueB = products[1]?.[key] ?? products[1]?.detail?.[key] ?? "";
             const isDifferent = valueA !== valueB && valueA && valueB;
 
             return {
@@ -222,13 +289,7 @@ const ProductCell = ({
                         ? product.image
                         : `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
                 }
-                alt={product.name}
-                style={{
-                    width: 100,
-                    height: 100,
-                    objectFit: "cover",
-                    borderRadius: 8,
-                }}
+                alt={product.name} style={{ width: 100, height: 100, objectFit: "cover", borderRadius: 8, }}
             />
             <Button
                 type="text"

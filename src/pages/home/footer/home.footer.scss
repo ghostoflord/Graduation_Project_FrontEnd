@@ -3,7 +3,6 @@
     font-family: Arial, sans-serif;
     color: #000;
 
-    // NEW: đảm bảo footer chiếm toàn chiều ngang và căn giữa nội dung bên trong
     width: 100%;
 
     .container {
@@ -53,8 +52,9 @@
 
         .about {
             img {
-                width: 160px;
-                margin-bottom: 16px;
+                height: 65px;
+                width: auto;
+                max-width: 220px;
             }
 
             .contact-info {
