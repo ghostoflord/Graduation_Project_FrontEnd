@@ -1,3 +1,4 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./core.values.scss";
 type CoreValue = {
     title: string;
@@ -64,6 +65,7 @@ const coreValues: CoreValue[] = [
 const CoreValues = () => {
     return (
         <div className="core-values-container">
+            <CommonBreadcrumb current="Giá trị cốt lõi" />
             <h2 className="title">GIÁ TRỊ CỐT LÕI</h2>
             {coreValues.map((value, index) => (
                 <div key={index} className="core-value-item">

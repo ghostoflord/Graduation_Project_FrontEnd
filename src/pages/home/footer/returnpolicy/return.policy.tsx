@@ -1,8 +1,10 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./return.policy.scss";
 
 const ReturnPolicy = () => {
     return (
         <div className="return-policy-container">
+            <CommonBreadcrumb current="đổi trả" />
             <h2 className="title">CHÍNH SÁCH ĐỔI TRẢ</h2>
             <div className="policy-details">
                 <p><strong>Kính gửi: quý khách hàng thân thiết LAPTOPSHOP.</strong></p>

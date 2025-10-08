@@ -1,8 +1,10 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./contact.info.scss";
 
 const ContactInfo = () => {
     return (
         <div className="contact-info-container">
+            <CommonBreadcrumb current="Liên hệ" />
             <h2 className="title">LIÊN HỆ</h2>
             <div className="contact-details">
                 <p><strong>CÔNG TY TNHH CÔNG NGHỆ VÀ TIN HỌC NGUYỄN QUANG HIỆP</strong></p>

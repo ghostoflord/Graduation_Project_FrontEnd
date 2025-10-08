@@ -1,3 +1,4 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./vision.mission.scss";
 
 type Section = {
@@ -26,6 +27,7 @@ const sections: Section[] = [
 const VisionMission = () => {
     return (
         <div className="vision-mission-container">
+            <CommonBreadcrumb current="TẦM NHÌN - SỨ MỆNH" />
             <h2 className="title">TẦM NHÌN - SỨ MỆNH</h2>
             {sections.map((section, index) => (
                 <div key={index} className="vision-mission-item">

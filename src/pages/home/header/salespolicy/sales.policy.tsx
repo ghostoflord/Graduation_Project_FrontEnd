@@ -1,3 +1,4 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./sales.policy.scss";
 
 type Section = {
@@ -31,6 +32,7 @@ const sections: Section[] = [
 const SalesPolicy = () => {
     return (
         <div className="sales-policy-container">
+            <CommonBreadcrumb current="Chính sách bán hàng" />
             <h2 className="title">CHÍNH SÁCH BÁN HÀNG</h2>
             <p className="thank-you">
                 Chân thành cảm ơn quý khách đã cho LAPTOPSHOP.vn cơ hội được phục vụ.

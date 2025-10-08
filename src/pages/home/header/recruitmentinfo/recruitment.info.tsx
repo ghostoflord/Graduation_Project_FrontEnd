@@ -1,8 +1,10 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./recruitment.info.scss";
 
 const RecruitmentInfo = () => {
     return (
         <div className="recruitment-info-container">
+            <CommonBreadcrumb current="Tuyển dụng" />
             <h2 className="title">TUYỂN DỤNG & VIỆC LÀM | LAPTOPSHOP.vn</h2>
             <p className="posted-by">Đăng bởi: LAPTOPSHOP - 08/10/2020</p>
 

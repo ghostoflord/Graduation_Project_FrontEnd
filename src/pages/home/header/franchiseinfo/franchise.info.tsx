@@ -1,8 +1,10 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./franchise.info.scss";
 
 const FranchiseInfo = () => {
     return (
         <div className="franchise-info-container">
+            <CommonBreadcrumb current="Nhượng quyền thương hiệu" />
             <h2 className="title">NHƯỢNG QUYỀN THƯƠNG HIỆU</h2>
             <div className="franchise-details">
                 <p>

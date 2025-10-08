@@ -1,3 +1,4 @@
+import CommonBreadcrumb from "@/pages/productbreadcrumb/aboutbreadcrumb/about.breadcrumb";
 import "./about.company.scss";
 
 type AboutSection = {
@@ -81,6 +82,7 @@ const aboutSections: AboutSection[] = [
 const AboutCompany = () => {
     return (
         <div className="about-company-container">
+            <CommonBreadcrumb current="Giới thiệu" />
             <h2 className="title">GIỚI THIỆU CÔNG TY</h2>
             {aboutSections.map((section, index) => (
                 <div key={index} className="about-section-item">
