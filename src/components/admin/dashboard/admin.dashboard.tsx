@@ -3,6 +3,7 @@ import { Card, Col, Row, Statistic } from "antd";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import TopProductsChart from "./top.products.chart";
+import Dashboard from "./dash.board.t";
 
 const AdminDashboard = () => {
     const [dataDashboard, setDataDashboard] = useState({
@@ -80,6 +81,11 @@ const AdminDashboard = () => {
             <Col span={24}>
                 <Card bordered={false} title="Top sản phẩm bán chạy hôm nay">
                     <TopProductsChart type="day" date={today} />
+                </Card>
+            </Col>
+            <Col span={24}>
+                <Card bordered={false} title="Doanh thu theo tháng & Top sản phẩm">
+                    <Dashboard />
                 </Card>
             </Col>
         </Row>

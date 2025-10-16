@@ -247,8 +247,8 @@ export default function Header() {
                                     <ul>
                                         <li><NavLink to="/?sort=price_asc">Giá tăng dần</NavLink></li>
                                         <li><NavLink to="/?sort=price_desc">Giá giảm dần</NavLink></li>
-                                        <li><NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink></li>
-                                        <li><NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink></li>
+                                        <li><NavLink to={`/?filter=${encodeURIComponent('price >= 5000000 and price <= 15000000')}`}>Từ 5 triệu - 15 triệu</NavLink></li>
+                                        <li><NavLink to={`/?filter=${encodeURIComponent('price >= 15000000 and price <= 30000000')}`}>Từ 15 triệu - 30 triệu</NavLink></li>
                                     </ul>
                                 </div>
                             )}

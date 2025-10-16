@@ -415,6 +415,12 @@ export const getShipperStats = (shipperId: number) => {
     });
 };
 
+//Lấy doanh thu theo tháng thành công
+export const getRevenueMonthly = (month: string, revenue: number) => {
+    return axios.get('/api/v1/orders/revenue/monthly', {
+        params: { month, revenue },
+    });
+};
 
 /**
  * 
