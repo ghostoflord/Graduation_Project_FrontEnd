@@ -6,7 +6,7 @@ const RecruitmentInfo = () => {
         <div className="recruitment-info-container">
             <CommonBreadcrumb current="Tuyển dụng" />
             <h2 className="title">TUYỂN DỤNG & VIỆC LÀM | LAPTOPSHOP.vn</h2>
-            <p className="posted-by">Đăng bởi: LAPTOPSHOP - 08/10/2020</p>
+            <p className="posted-by">Đăng bởi: LAPTOPSHOP - 08/10/2025</p>
 
             <div className="intro">
                 <p><strong>★ LAPTOPSHOP.vn ★</strong></p>
@@ -23,21 +23,21 @@ const RecruitmentInfo = () => {
             <div className="position-list">
                 <h3>Vị trí tuyển dụng:</h3>
                 <ul>
-                    <li>1 - <a href="https://laptopnew.vn/nhan-vien-tu-van-ban-hang" target="_blank" rel="noopener noreferrer">Nhân viên Showroom và tư vấn bán hàng</a> - SL: 10 ứng viên.</li>
-                    <li>2 - <a href="https://laptopnew.vn/nhan-vien-ho-tro-showroom" target="_blank" rel="noopener noreferrer">Nhân viên showroom và hỗ trợ khách hàng</a> - SL: 5 ứng viên.</li>
-                    <li>3 - <a href="https://laptopnew.vn/cua-hang-truong" target="_blank" rel="noopener noreferrer">Cửa Hàng Trưởng</a> - SL: 3 ứng viên.</li>
-                    <li>4 - <a href="https://laptopnew.vn/nhan-vien-telesale-cskh" target="_blank" rel="noopener noreferrer">Nhân viên SaleOnline & CSKH</a> - SL: 5 ứng viên.</li>
-                    <li>5 - <a href="https://laptopnew.vn/chuyen-vien-kiem-soat-showroom" target="_blank" rel="noopener noreferrer">Nhân viên kiểm soát showroom</a> - SL: 2 ứng viên.</li>
-                    <li>6 - <a href="https://laptopnew.vn/nhan-vien-ecommerce" target="_blank" rel="noopener noreferrer">Nhân viên kinh doanh và TMĐT</a> - SL: 2 ứng viên.</li>
+                    <li>1 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên Showroom và tư vấn bán hàng</a> - SL: 10 ứng viên.</li>
+                    <li>2 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên showroom và hỗ trợ khách hàng</a> - SL: 5 ứng viên.</li>
+                    <li>3 - <a href="" target="_blank" rel="noopener noreferrer">Cửa Hàng Trưởng</a> - SL: 3 ứng viên.</li>
+                    <li>4 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên SaleOnline & CSKH</a> - SL: 5 ứng viên.</li>
+                    <li>5 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên kiểm soát showroom</a> - SL: 2 ứng viên.</li>
+                    <li>6 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên kinh doanh và TMĐT</a> - SL: 2 ứng viên.</li>
                     <li>7 - Trưởng Phòng Kinh Doanh - SL: 1 ứng viên (Đang cập nhật).</li>
-                    <li>8 - <a href="https://laptopnew.vn/nhan-vien-digital-marketing" target="_blank" rel="noopener noreferrer">Nhân viên Marketing Digital</a> - SL: 2 ứng viên.</li>
-                    <li>9 - <a href="https://laptopnew.vn/nhan-vien-social-marketing" target="_blank" rel="noopener noreferrer">Nhân viên Marketing Social</a> - SL: 2 ứng viên.</li>
-                    <li>10 - <a href="https://laptopnew.vn/nhan-vien-content" target="_blank" rel="noopener noreferrer">Nhân viên Content</a> - SL: 2 ứng viên.</li>
-                    <li>11 - <a href="https://laptopnew.vn/nhan-vien-design-media" target="_blank" rel="noopener noreferrer">Nhân viên Design & Media</a> - SL: 2 ứng viên.</li>
-                    <li>12 - <a href="https://laptopnew.vn/nhan-vien-hanh-chanh-nhan-su" target="_blank" rel="noopener noreferrer">Nhân viên Hành Chánh Nhân sự</a> - SL: 2 ứng viên.</li>
-                    <li>13 - <a href="https://laptopnew.vn/chuyen-vien-nghien-cuu-phat-trien" target="_blank" rel="noopener noreferrer">Chuyên viên nghiên cứu & phát triển</a> - SL: 2 ứng viên.</li>
+                    <li>8 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên Marketing Digital</a> - SL: 2 ứng viên.</li>
+                    <li>9 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên Marketing Social</a> - SL: 2 ứng viên.</li>
+                    <li>10 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên Content</a> - SL: 2 ứng viên.</li>
+                    <li>11 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên Design & Media</a> - SL: 2 ứng viên.</li>
+                    <li>12 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên Hành Chánh Nhân sự</a> - SL: 2 ứng viên.</li>
+                    <li>13 - <a href="" target="_blank" rel="noopener noreferrer">Chuyên viên nghiên cứu & phát triển</a> - SL: 2 ứng viên.</li>
                     <li>14 - Nhân viên giao nhận - SL: 2 ứng viên (Đang cập nhật).</li>
-                    <li>15 - <a href="https://laptopnew.vn/nhan-vien-ke-toan-vien" target="_blank" rel="noopener noreferrer">Nhân viên kế toán</a> - SL: 2 ứng viên.</li>
+                    <li>15 - <a href="" target="_blank" rel="noopener noreferrer">Nhân viên kế toán</a> - SL: 2 ứng viên.</li>
                 </ul>
             </div>
 

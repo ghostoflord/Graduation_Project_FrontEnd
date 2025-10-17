@@ -67,7 +67,6 @@ const CheckoutPage: React.FC = () => {
 
     const flashSaleItem = location.state?.flashSaleItem;
     const isFlashSale = !!flashSaleItem;
-
     const finalTotal = Math.max(totalPrice - (isFlashSale ? 0 : voucherDiscount), 0);
 
     useEffect(() => {
@@ -91,8 +90,7 @@ const CheckoutPage: React.FC = () => {
             getCart(uid)
                 .then((cartRes) => {
                     if (cartRes?.data?.items) {
-                        const rawItems: CartItem[] = cartRes.data.items;
-                        const mergedItems = mergeDuplicateItems(rawItems);
+                        const mergedItems = mergeDuplicateItems(cartRes.data.items);
                         setCartItems(mergedItems);
                         const total = mergedItems.reduce(
                             (sum, item) => sum + item.price * item.quantity,
@@ -103,12 +101,8 @@ const CheckoutPage: React.FC = () => {
                         message.warning('Giỏ hàng trống');
                     }
                 })
-                .catch((err) => {
-                    console.error('Lỗi khi lấy giỏ hàng:', err);
-                    message.error('Không thể lấy giỏ hàng');
-                });
-        } catch (e) {
-            console.error('Lỗi khi phân tích user từ localStorage:', e);
+                .catch(() => message.error('Không thể lấy giỏ hàng'));
+        } catch {
             message.error('Dữ liệu người dùng không hợp lệ');
         }
     }, []);
@@ -116,17 +110,15 @@ const CheckoutPage: React.FC = () => {
     const handlePlaceOrder = async (values: any) => {
         if (!userId) return message.error('Thiếu thông tin người dùng');
 
-        const itemsToCheckout = cartItems.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-        }));
-
         const orderPayload: any = {
             userId,
             name: values.name,
             address: values.address,
             phone: values.phone,
-            items: itemsToCheckout,
+            items: cartItems.map((item) => ({
+                productId: item.productId,
+                quantity: item.quantity,
+            })),
         };
 
         if (isFlashSale && flashSaleItem?.flashSaleItemId && flashSaleItem?.productId) {
@@ -134,207 +126,159 @@ const CheckoutPage: React.FC = () => {
             orderPayload.flashSaleProductId = flashSaleItem.productId;
         }
 
-        if (voucherCode && !isFlashSale) {
-            orderPayload.voucherCode = voucherCode;
-        }
+        if (voucherCode && !isFlashSale) orderPayload.voucherCode = voucherCode;
 
-        if (paymentMethod === 'cod') {
-            try {
+        try {
+            if (paymentMethod === 'cod') {
                 const res = await placeOrderAPI(orderPayload);
                 if (res?.statusCode === 201) {
-                    // await checkoutOrder(itemsToCheckout);
                     message.success('Đặt hàng thành công!');
                     setCartSummary({ sum: 0 });
-                    setTimeout(() => navigate('/'), 1000);
-                } else {
-                    message.error(res?.message || 'Đặt hàng thất bại');
-                }
-            } catch (err) {
-                console.error(err);
-                message.error('Lỗi khi xử lý đơn hàng');
-            }
-        } else if (paymentMethod === 'vnpay') {
-            try {
+                    setTimeout(() => navigate('/'), 800);
+                } else message.error(res?.message || 'Đặt hàng thất bại');
+            } else {
                 const paymentRef = `ORDER_${Date.now()}`;
-                const res = await createVNPayURL({
-                    ...orderPayload,
-                    amount: finalTotal,
-                    paymentRef,
-                });
-                if (res?.data) {
-                    window.location.href = res.data;
-                } else {
-                    message.error('Không thể tạo URL thanh toán');
-                }
-            } catch (err) {
-                console.error(err);
-                message.error('Lỗi khi tạo thanh toán VNPAY');
+                const res = await createVNPayURL({ ...orderPayload, amount: finalTotal, paymentRef });
+                res?.data ? (window.location.href = res.data) : message.error('Không thể tạo URL thanh toán');
             }
+        } catch {
+            message.error('Lỗi khi xử lý đơn hàng');
         }
     };
 
-
     const handleApplyVoucher = async (code: string) => {
         if (!userId || isFlashSale) return;
-
         try {
             const res = await applyVoucherAPI(userId, code, totalPrice);
             const discount = res?.data?.discountAmount;
-            const messageFromBackend = res?.data?.message || res?.message;
-
             if (discount !== undefined && discount >= 0) {
                 setVoucherCode(code);
                 setVoucherDiscount(discount);
                 message.success(`Đã áp dụng mã: -${discount.toLocaleString('vi-VN')}₫`);
                 setVoucherModalVisible(false);
-            } else {
-                message.error(messageFromBackend || 'Mã giảm giá không hợp lệ');
-            }
-        } catch (err) {
-            console.error('Lỗi khi gọi API voucher:', err);
+            } else message.error(res?.data?.message || 'Mã giảm giá không hợp lệ');
+        } catch {
             message.error('Không thể áp dụng mã giảm giá');
         }
     };
 
-    const getDiscountedPrice = (item: CartItem) => {
-        if (!voucherCode || voucherDiscount <= 0 || isFlashSale) {
-            return item.price * item.quantity;
-        }
-        const discountRatio = voucherDiscount / totalPrice;
-        const original = item.price * item.quantity;
-        const discounted = original - original * discountRatio;
-        return Math.round(discounted);
-    };
-
     return (
-        <div className="checkout-container">
-            <Row gutter={32}>
-                <Col span={14} className="checkout-left">
-                    <Title level={4}>Thông tin nhận hàng</Title>
-                    <Form
-                        layout="vertical"
-                        form={form}
-                        onFinish={handlePlaceOrder}
-                        initialValues={{ paymentMethod: 'cod' }}
+        <div className="checkout-page">
+            <div className="left-panel">
+                <h2>Thông tin nhận hàng</h2>
+                <Form
+                    layout="vertical"
+                    form={form}
+                    onFinish={handlePlaceOrder}
+                    initialValues={{ paymentMethod: 'cod' }}
+                >
+                    <Form.Item
+                        name="name"
+                        label="Họ và tên"
+                        rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
                     >
-                        <Form.Item
-                            name="name"
-                            label="Họ và tên"
-                            rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+                        <Input placeholder="Họ và tên" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="phone"
+                        label="Số điện thoại"
+                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
+                    >
+                        <Input placeholder="Số điện thoại" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="address"
+                        label="Địa chỉ"
+                        rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+                    >
+                        <Input placeholder="Địa chỉ nhận hàng" />
+                    </Form.Item>
+
+                    <h2>Phương thức thanh toán</h2>
+                    <Form.Item name="paymentMethod">
+                        <Radio.Group
+                            className="payment-methods"
+                            value={paymentMethod}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
                         >
-                            <Input placeholder="Họ và tên" />
-                        </Form.Item>
-                        <Form.Item
-                            name="phone"
-                            label="Số điện thoại"
-                            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
-                        >
-                            <Input placeholder="Số điện thoại" />
-                        </Form.Item>
-                        <Form.Item
-                            name="address"
-                            label="Địa chỉ"
-                            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
-                        >
-                            <Input placeholder="Địa chỉ" />
-                        </Form.Item>
+                            <Radio.Button value="vnpay">VNPAY</Radio.Button>
+                            <Radio.Button value="cod">COD (Thanh toán khi nhận)</Radio.Button>
+                        </Radio.Group>
+                    </Form.Item>
 
-                        <Title level={4}>Thanh toán</Title>
-                        <Form.Item name="paymentMethod">
-                            <Radio.Group
-                                className="payment-methods"
-                                value={paymentMethod}
-                                onChange={(e) => setPaymentMethod(e.target.value)}
-                            >
-                                <Radio.Button value="vnpay">VNPAY</Radio.Button>
-                                <Radio.Button value="cod">Thanh toán khi nhận (COD)</Radio.Button>
-                            </Radio.Group>
-                        </Form.Item>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="order-btn"
+                        size="large"
+                        disabled={!cartItems.length}
+                    >
+                        {paymentMethod === 'cod' ? 'ĐẶT HÀNG' : 'THANH TOÁN VNPAY'}
+                    </Button>
+                </Form>
+            </div>
 
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            block
-                            size="large"
-                            className="place-order-btn"
-                            disabled={cartItems.length === 0}
-                        >
-                            {paymentMethod === 'cod' ? 'ĐẶT HÀNG' : 'THANH TOÁN VNPAY'}
-                        </Button>
-                    </Form>
-                </Col>
-
-                <Col span={10} className="checkout-right">
-                    <Card className="order-summary">
-                        <Title level={5}>Đơn hàng</Title>
-                        {cartItems.length === 0 ? (
-                            <Text type="secondary">Không có sản phẩm trong giỏ hàng</Text>
-                        ) : (
-                            <>
-                                {cartItems.map((item) => (
-                                    <div
-                                        className="product-row flex flex-col border-b border-gray-200 py-3"
-                                        key={item.productId}
-                                    >
-                                        {/* Hàng trên: Ảnh + Tên + Giá */}
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <img
-                                                    src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`}
-                                                    alt={item.name}
-                                                    className="product-image"
-                                                />
-                                                <Text strong className="text-base">{item.name}</Text>
-                                            </div>
-                                            <Text className="product-price text-red-500 font-semibold">
-                                                {getDiscountedPrice(item).toLocaleString("vi-VN")}₫
-                                            </Text>
-                                        </div>
-
-                                        {/* Hàng dưới: mô tả + số lượng */}
-                                        <div className="mt-2 text-sm text-gray-600">
-                                            <div>{item.shortDescription}</div>
-                                            <div>{item.detailDescription}</div>
-                                            <div className="mt-1">Số lượng: {item.quantity}</div>
-                                        </div>
-                                    </div>
-                                ))}
-
-
-                                <Divider />
-
-                                {!isFlashSale && voucherCode && (
-                                    <div className="summary-voucher">
-                                        <Text>Mã giảm giá: </Text>
-                                        <Text type="success">{voucherCode}</Text>
-                                        <br />
-                                        <Text>Giảm: </Text>
-                                        <Text type="danger">
-                                            - {voucherDiscount.toLocaleString('vi-VN')}₫
-                                        </Text>
-                                    </div>
-                                )}
-
-                                <div className="summary-total">
-                                    <Text strong>Tổng cộng</Text>
-                                    <Text strong className="total-amount">
-                                        {finalTotal.toLocaleString('vi-VN')}₫
-                                    </Text>
+            <div className="right-panel">
+                <h3>Đơn hàng của bạn</h3>
+                {cartItems.length === 0 ? (
+                    <Text type="secondary">Giỏ hàng trống</Text>
+                ) : (
+                    <>
+                        {cartItems.map((item) => (
+                            <div key={item.productId} className="order-item">
+                                <img
+                                    src={`${import.meta.env.VITE_BACKEND_URL}/upload/products/${item.image}`}
+                                    alt={item.name}
+                                />
+                                <div className="item-info">
+                                    <Text strong>{item.name}</Text>
+                                    <div className="text-gray">{item.shortDescription}</div>
+                                    <div>Số lượng: {item.quantity}</div>
                                 </div>
+                                <div className="item-price text-red-500">
+                                    {item.price.toLocaleString('vi-VN')}₫
+                                </div>
+                            </div>
+                        ))}
 
-                                {!isFlashSale && (
-                                    <Button type="dashed" block onClick={() => setVoucherModalVisible(true)}>
-                                        + Nhập mã giảm giá
-                                    </Button>
-                                )}
-                            </>
+                        <Divider />
+
+                        {!isFlashSale && voucherCode && (
+                            <div className="discount">
+                                <Text>Mã giảm giá:</Text>
+                                <Text type="success">{voucherCode}</Text>
+                                <Text type="danger">
+                                    -{voucherDiscount.toLocaleString('vi-VN')}₫
+                                </Text>
+                            </div>
                         )}
-                        <Button type="link" block onClick={() => navigate('/')}>
-                            ← Quay về trang chủ
-                        </Button>
-                    </Card>
-                </Col>
-            </Row>
+
+                        <div className="summary">
+                            <div className="total">
+                                <span>Tổng cộng:</span>
+                                <span>{finalTotal.toLocaleString('vi-VN')}₫</span>
+                            </div>
+                            {!isFlashSale && (
+                                <Button
+                                    type="dashed"
+                                    block
+                                    onClick={() => setVoucherModalVisible(true)}
+                                >
+                                    + Nhập mã giảm giá
+                                </Button>
+                            )}
+                            <div
+                                className="back-link"
+                                onClick={() => navigate('/')}
+                            >
+                                ← Quay về trang chủ
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
 
             {!isFlashSale && (
                 <Modal
