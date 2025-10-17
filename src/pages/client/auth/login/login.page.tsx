@@ -7,7 +7,7 @@ import { useCurrentApp } from '@/components/context/app.context';
 import { loginAPI, resendVerificationAPI } from '@/services/api';
 import ModalChangePassword from '../../../../components/client/account/modal.change.password';
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons';
-
+import loginBg from '@/assets/dang_nhap.png';
 type FieldType = {
     username: string;
     password: string;
@@ -103,82 +103,82 @@ const LoginPage = () => {
 
     return (
         <>
-            <div className="login-page">
-                <main className="main">
-                    <div className="container">
-                        <section className="wrapper">
-                            <div className="heading">
-                                <h2 className="text text-large">Đăng Nhập</h2>
-                                <Divider />
-                            </div>
+            <div
+                className="login-page"
+                style={{
+                    backgroundImage: `url(${loginBg})`,
+                }}
+            >
+                <div className="login-overlay"></div>
+                <div className="login-box">
+                    <h2 className="login-title">Đăng nhập</h2>
+                    <Divider />
 
-                            <Form name="login-form" onFinish={onFinish} autoComplete="off">
-                                <Form.Item<FieldType>
-                                    labelCol={{ span: 24 }}
-                                    label="Email"
-                                    name="username"
-                                    rules={[{ required: true, message: 'Email không được để trống!' }, { type: 'email', message: 'Email không đúng định dạng!' }]}
-                                >
-                                    <Input />
-                                </Form.Item>
+                    <Form name="login-form" onFinish={onFinish} autoComplete="off">
+                        <Form.Item<FieldType>
+                            labelCol={{ span: 24 }}
+                            label="E-mail"
+                            name="username"
+                            rules={[
+                                { required: true, message: 'Email không được để trống!' },
+                                { type: 'email', message: 'Email không đúng định dạng!' },
+                            ]}
+                        >
+                            <Input placeholder="Nhập email" />
+                        </Form.Item>
 
-                                <Form.Item<FieldType>
-                                    labelCol={{ span: 24 }}
-                                    label="Mật khẩu"
-                                    name="password"
-                                    rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
-                                >
-                                    <Input.Password />
-                                </Form.Item>
+                        <Form.Item<FieldType>
+                            labelCol={{ span: 24 }}
+                            label="Mật khẩu"
+                            name="password"
+                            rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
+                        >
+                            <Input.Password placeholder="Nhập mật khẩu" />
+                        </Form.Item>
 
-                                <Form.Item>
-                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                        <Button type="primary" htmlType="submit" loading={isSubmit}>
-                                            Đăng Nhập
-                                        </Button>
-                                        <Button type='link' onClick={() => setChangePassword(true)}>Quên mật khẩu ?</Button>
-                                    </div>
-                                </Form.Item>
+                        <div className="login-actions">
+                            <Button type="primary" htmlType="submit" loading={isSubmit}>
+                                Đăng nhập
+                            </Button>
+                            <Button type="link" onClick={() => setChangePassword(true)}>
+                                Quên mật khẩu?
+                            </Button>
+                        </div>
 
-                                <div className="oauth-wrapper">
-                                    <Button
-                                        icon={<GithubOutlined />}
-                                        className="oauth-button github"
-                                        onClick={() =>
-                                            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`
-                                        }
-                                    >
-                                        <span className="btn-text">Đăng nhập với GitHub</span>
-                                    </Button>
-                                    <Button
-                                        icon={<GoogleOutlined />}
-                                        className="oauth-button google"
-                                        onClick={() =>
-                                            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`
-                                        }
-                                    >
-                                        <span className="btn-text">Đăng nhập với Google</span>
-                                    </Button>
-                                </div>
+                        <Divider>Hoặc đăng nhập qua</Divider>
 
-                                <Divider>Or</Divider>
-                                <p className="text text-normal" style={{ textAlign: 'center' }}>
-                                    Chưa có tài khoản?
-                                    <span>
-                                        <Link to="/register"> Đăng Ký </Link>
-                                    </span>
-                                </p>
-                            </Form>
-                        </section>
-                    </div>
-                </main>
+                        <div className="oauth-wrapper">
+                            <Button
+                                icon={<GithubOutlined />}
+                                className="oauth-button github"
+                                onClick={() =>
+                                    (window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/github`)
+                                }
+                            >
+                                GitHub
+                            </Button>
+                            <Button
+                                icon={<GoogleOutlined />}
+                                className="oauth-button google"
+                                onClick={() =>
+                                    (window.location.href = `${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`)
+                                }
+                            >
+                                Google
+                            </Button>
+                        </div>
+
+                        <Divider />
+                        <p className="register-text">
+                            Chưa có tài khoản? <Link to="/register">Đăng ký</Link>
+                        </p>
+                    </Form>
+                </div>
             </div>
 
-            <ModalChangePassword
-                isModalOpen={changePassword}
-                setIsModalOpen={setChangePassword}
-            />
+            <ModalChangePassword isModalOpen={changePassword} setIsModalOpen={setChangePassword} />
         </>
     );
+
 };
 export default LoginPage;
