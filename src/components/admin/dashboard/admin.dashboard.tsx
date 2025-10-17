@@ -2,7 +2,6 @@ import { getDashboardAPI } from "@/services/api";
 import { Card, Col, Row, Statistic } from "antd";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
-import TopProductsChart from "./top.products.chart";
 import Dashboard from "./dash.board.t";
 
 const AdminDashboard = () => {
@@ -14,7 +13,11 @@ const AdminDashboard = () => {
         totalCanceledQuantity: 0,
     });
 
-    const formatter = (value: number) => <CountUp end={value} separator="," />;
+    const formatter = (value?: number | string) => {
+        const n = Number(value ?? 0);
+        return <CountUp end={isNaN(n) ? 0 : n} separator="," />;
+    };
+
 
     useEffect(() => {
         const initDashboard = async () => {
@@ -25,8 +28,6 @@ const AdminDashboard = () => {
         };
         initDashboard();
     }, []);
-
-    const today = new Date().toISOString().slice(0, 10); // yyyy-MM-dd
 
     return (
         <Row gutter={[24, 24]}>
@@ -77,12 +78,6 @@ const AdminDashboard = () => {
                 </Card>
             </Col>
 
-            {/* Chart Top sản phẩm bán chạy trong ngày */}
-            <Col span={24}>
-                <Card bordered={false} title="Top sản phẩm bán chạy hôm nay">
-                    <TopProductsChart type="day" date={today} />
-                </Card>
-            </Col>
             <Col span={24}>
                 <Card bordered={false} title="Doanh thu theo tháng & Top sản phẩm">
                     <Dashboard />

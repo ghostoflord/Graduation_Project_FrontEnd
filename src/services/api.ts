@@ -422,6 +422,12 @@ export const getRevenueMonthly = (month: string, revenue: number) => {
     });
 };
 
+export const getProductTsopSelling = (productName: string, totalQuantity: number, totalRevenue: number) => {
+    return axios.get('/api/v1/orders/products/top-selling', {
+        params: { productName, totalQuantity, totalRevenue },
+    });
+};
+
 /**
  * 
 Module Dashboard
