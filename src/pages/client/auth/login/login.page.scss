@@ -1,6 +1,6 @@
 .login-page {
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     background-size: cover;
     background-position: center;
@@ -9,46 +9,78 @@
     justify-content: flex-end;
     align-items: center;
     padding-right: 6vw;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
-/* lớp mờ nhẹ toàn màn hình (tối nền một chút) */
+/* Lớp phủ tối nhẹ toàn màn hình */
 .login-overlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.35);
+    /* tăng độ tối để form nổi bật hơn */
     z-index: 0;
 }
 
-/* Form nổi trên ảnh */
+/* Hộp login có hiệu ứng kính mờ */
 .login-box {
     position: relative;
     z-index: 1;
     width: 90%;
     max-width: 420px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 16px;
-    padding: 2rem 2.5rem;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    padding: 2.5rem 3rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
     color: #fff;
+    animation: fadeInUp 0.7s ease both;
 }
 
-/* Title */
+/* Tiêu đề */
 .login-title {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     font-weight: 700;
     color: #fff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Form */
+/* Input label */
+.ant-form-item-label>label {
+    color: #e8e8e8 !important;
+    font-weight: 500;
+}
+
+/* Nút chính */
+.ant-btn-primary {
+    background: linear-gradient(135deg, #1890ff, #40a9ff);
+    border: none;
+    font-weight: 600;
+
+    &:hover {
+        background: linear-gradient(135deg, #40a9ff, #69c0ff);
+    }
+}
+
+/* Khu vực button */
 .login-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .ant-btn-link {
+        color: #91d5ff;
+        font-weight: 500;
+
+        &:hover {
+            color: #69c0ff;
+        }
+    }
 }
 
+/* OAuth buttons */
 .oauth-wrapper {
     display: flex;
     justify-content: center;
@@ -59,30 +91,59 @@
         flex: 1;
         border-radius: 8px;
         color: #fff;
+        font-weight: 600;
 
         &.github {
-            background: #333;
+            background: #24292e;
             border: none;
+
+            &:hover {
+                background: #3b4046;
+            }
         }
 
         &.google {
             background: #db4437;
             border: none;
+
+            &:hover {
+                background: #e35d4d;
+            }
         }
     }
 }
 
+/* Text dưới cùng */
 .register-text {
     text-align: center;
-    color: #ddd;
+    color: #f0f0f0;
     margin-top: 1rem;
+    font-size: 0.95rem;
 
     a {
-        color: #1890ff;
+        color: #40a9ff;
         font-weight: 600;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
+/* Hiệu ứng xuất hiện form */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
 @media (max-width: 768px) {
     .login-page {
         justify-content: center;
@@ -92,6 +153,6 @@
     .login-box {
         width: 100%;
         max-width: 360px;
-        padding: 1.5rem;
+        padding: 1.8rem;
     }
 }

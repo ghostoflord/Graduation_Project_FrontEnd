@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './register.scss';
 import { registerAPI } from '@/services/api';
+import loginBg from '@/assets/dang_nhap.png';
 
 type FieldType = {
     name: string;
@@ -24,95 +25,92 @@ const RegisterPage = () => {
 
         const res = await registerAPI(name, email, password, address, age);
         if (res.data) {
-            message.success("Đăng ký user thành công. Vui lòng kiểm tra email để xác thực!")
+            message.success('Đăng ký user thành công. Vui lòng kiểm tra email để xác thực!');
             setTimeout(() => {
-                navigate("/login");
+                navigate('/login');
             }, 1200);
         } else {
-            message.error(res.message)
+            message.error(res.message);
         }
         setIsSubmit(false);
     };
 
     return (
-        <div className="register-page">
-            <main className="main">
-                <div className="container">
-                    <section className="wrapper">
-                        <div className="heading">
-                            <h2 className="text text-large">Đăng Ký Tài Khoản</h2>
-                            <Divider />
-                        </div>
-                        <Form
-                            name="form-register"
-                            onFinish={onFinish}
-                            autoComplete="off"
-                        >
-                            <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Họ tên"
-                                name="name"
-                                rules={[{ required: true, message: 'Họ tên không được để trống!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
+        <div
+            className="register-page"
+            style={{
+                backgroundImage: `url(${loginBg})`,
+            }}
+        >
+            <div className="register-overlay"></div>
 
+            <div className="register-box">
+                <h2 className="register-title">Đăng ký tài khoản</h2>
+                <Divider />
+                <Form name="form-register" onFinish={onFinish} autoComplete="off">
+                    <Form.Item<FieldType>
+                        labelCol={{ span: 24 }}
+                        label="Họ tên"
+                        name="name"
+                        rules={[{ required: true, message: 'Họ tên không được để trống!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                            <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Email"
-                                name="email"
-                                rules={[
-                                    { required: true, message: 'Email không được để trống!' },
-                                    { type: "email", message: "Email không đúng định dạng!" }
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
+                    <Form.Item<FieldType>
+                        labelCol={{ span: 24 }}
+                        label="Email"
+                        name="email"
+                        rules={[
+                            { required: true, message: 'Email không được để trống!' },
+                            { type: 'email', message: 'Email không đúng định dạng!' },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                            <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Mật khẩu"
-                                name="password"
-                                rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
-                            <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Địa chỉ"
-                                name="address"
-                                rules={[{ required: true, message: 'Địa chỉ không được để trống!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
+                    <Form.Item<FieldType>
+                        labelCol={{ span: 24 }}
+                        label="Mật khẩu"
+                        name="password"
+                        rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
+                    >
+                        <Input.Password />
+                    </Form.Item>
 
-                            <Form.Item<FieldType>
-                                labelCol={{ span: 24 }}
-                                label="Tuổi"
-                                name="age"
-                                rules={[{ required: true, message: 'Tuổi không được để trống!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
+                    <Form.Item<FieldType>
+                        labelCol={{ span: 24 }}
+                        label="Địa chỉ"
+                        name="address"
+                        rules={[{ required: true, message: 'Địa chỉ không được để trống!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit" loading={isSubmit}>
-                                    Đăng ký
-                                </Button>
-                            </Form.Item>
-                            <Divider>Or</Divider>
-                            <p className="text text-normal" style={{ textAlign: "center" }}>
-                                Đã có tài khoản ?
-                                <span>
-                                    <Link to='/login' > Đăng Nhập </Link>
-                                </span>
-                            </p>
-                        </Form>
-                    </section>
-                </div>
-            </main>
+                    <Form.Item<FieldType>
+                        labelCol={{ span: 24 }}
+                        label="Tuổi"
+                        name="age"
+                        rules={[{ required: true, message: 'Tuổi không được để trống!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={isSubmit} block>
+                            Đăng ký
+                        </Button>
+                    </Form.Item>
+
+                    <Divider>Hoặc</Divider>
+                    <p className="register-text">
+                        Đã có tài khoản?
+                        <Link to="/login"> Đăng nhập</Link>
+                    </p>
+                </Form>
+            </div>
         </div>
-    )
-}
+    );
+};
+
 export default RegisterPage;
