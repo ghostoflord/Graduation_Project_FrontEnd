@@ -141,6 +141,10 @@ const router = createBrowserRouter([
         path: "/order-success",
         element: <OrderSuccess />
       },
+      {
+        path: "/order-fail",
+        element: <OrderFail />
+      },
     ]
   },
   {
@@ -217,10 +221,6 @@ const router = createBrowserRouter([
     element: <PaymentReturn />
   },
 
-  {
-    path: "/order-fail",
-    element: <OrderFail />
-  },
   {
     path: "shipper",
     element: < ShipperPage />

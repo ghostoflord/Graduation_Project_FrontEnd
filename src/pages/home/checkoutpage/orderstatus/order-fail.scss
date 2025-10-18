@@ -1,0 +1,76 @@
+.order-fail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background: linear-gradient(135deg, #f3f8ff, #e9f5ff);
+    font-family: 'Poppins', sans-serif;
+}
+
+.order-fail-card {
+    background: #fff;
+    padding: 60px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(237, 233, 233, 0.15);
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+    animation: fadeInUp 0.8s ease;
+
+    h2 {
+        color: #ff4d4f;
+        font-weight: 600;
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #666;
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+
+    .icon-wrap {
+        width: 90px;
+        height: 90px;
+        background: #ffecec;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+
+        .fail-icon {
+            font-size: 45px;
+            color: #ff4d4f;
+        }
+    }
+
+    .retry-btn {
+        background-color: #0040f8 !important;
+        border-color: #0040f8 !important;
+        color: #fff !important;
+        border-radius: 8px;
+        font-weight: 500;
+        height: 45px;
+        width: 100%;
+        transition: all 0.25s ease;
+
+        &:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
