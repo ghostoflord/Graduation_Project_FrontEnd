@@ -8,6 +8,7 @@ import { useCurrentApp } from "@/components/context/app.context";
 import ModalChangePassword from "../../../components/client/account/modal.change.password";
 import UserProfileForm from "./user.profile.form";
 import LikedProducts from "./liked.products";
+import AccountBreadcrumb from "@/pages/productbreadcrumb/accountbreadcrumb/account.bread.crumb";
 
 
 const { Title, Text } = Typography;
@@ -82,6 +83,7 @@ const AccountPage = () => {
     return (
         <>
             <div className="account-page">
+                <AccountBreadcrumb />
                 <Row gutter={[16, 16]}>
                     {/* Cột trái */}
                     <Col xs={24} md={12}>

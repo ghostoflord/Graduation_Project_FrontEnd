@@ -1,0 +1,31 @@
+.account-breadcrumb {
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background-color: #f9fafc;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+
+    .ant-breadcrumb {
+        font-size: 14px;
+
+        a {
+            color: #1890ff;
+            font-weight: 500;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #0040f8;
+            }
+        }
+
+        span {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .ant-breadcrumb-separator {
+            color: #999;
+            margin: 0 8px;
+        }
+    }
+}

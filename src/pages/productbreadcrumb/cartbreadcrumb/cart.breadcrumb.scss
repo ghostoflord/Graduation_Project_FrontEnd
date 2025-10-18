@@ -1,0 +1,49 @@
+.cart-breadcrumb {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 18px; // cân chuẩn với menu trên
+    background: transparent;
+    display: flex;
+    align-items: center;
+
+    .ant-breadcrumb {
+        font-size: 15px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+
+        a {
+            color: #1890ff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #0040f8;
+            }
+
+            svg,
+            i {
+                font-size: 16px;
+                position: relative;
+                top: 1px; // căn icon giữa text
+            }
+        }
+
+        span {
+            color: #555;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ant-breadcrumb-separator {
+            color: #aaa;
+            margin: 0 8px;
+            font-weight: 400;
+            transform: translateY(1px);
+        }
+    }
+}

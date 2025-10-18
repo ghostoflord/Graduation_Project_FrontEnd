@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { clearCartAPI, getCart, removeCartItemAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
+import CartBreadcrumb from '@/pages/productbreadcrumb/cartbreadcrumb/cart.bread.crumb';
 
 const { Title, Text } = Typography;
 
@@ -128,6 +129,7 @@ const CartPage = () => {
 
     return (
         <div className="p-6 max-w-screen-lg mx-auto cart-container">
+            <CartBreadcrumb />
             <div
                 style={{
                     display: 'flex',
@@ -202,6 +204,7 @@ const CartPage = () => {
                                             style={{
                                                 marginRight: 5
                                             }}
+                                            disabled
                                         />
                                         <Button
                                             danger
