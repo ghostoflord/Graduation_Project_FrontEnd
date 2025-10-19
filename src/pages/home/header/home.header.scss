@@ -7,34 +7,35 @@
   .header-top {
     display: flex;
     align-items: center;
-    padding: 5px 20px;
-    gap: 15px;
+    justify-content: space-between;
+    padding: 6px 20px; // giảm từ 10px → 6px cho co lại
+    gap: 10px; // giảm khoảng cách giữa các nhóm
 
     .logo img {
-      height: 80px;
+      height: 65px; // nhỏ lại nhẹ cho cân menu
       width: auto;
-      max-width: 220px;
+      max-width: 200px;
       object-fit: contain;
-      // filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); // hiệu ứng đổ bóng nhẹ cho nổi bật
       transition: transform 0.3s ease;
     }
 
     .logo img:hover {
-      transform: scale(1.05); // hiệu ứng hover nhẹ, hiện đại hơn
+      transform: scale(1.05);
     }
 
     .store-button {
       background: #fff;
       color: #0040f8;
       border-radius: 999px;
-      padding: 0 15px;
+      padding: 2px 12px; // thu gọn
       font-weight: 500;
       border: none;
+      font-size: 14px;
     }
 
     .search-bar {
       flex: 1;
-      max-width: 400px;
+      max-width: 360px;
 
       .ant-input-search {
         border-radius: 999px;
@@ -44,12 +45,12 @@
 
     .news-links {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
 
       a {
         color: #fff;
-        font-size: 14px;
+        font-size: 13px;
       }
     }
 
@@ -58,14 +59,14 @@
 
       .phone-number {
         font-weight: bold;
-        font-size: 16px;
+        font-size: 15px;
       }
     }
 
     .actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
 
       .login-button {
         background: #fff;
@@ -73,6 +74,8 @@
         border-radius: 999px;
         font-weight: 500;
         border: none;
+        font-size: 14px;
+        padding: 4px 12px;
       }
 
       .cart-button {
@@ -87,8 +90,8 @@
         color: #0040f8;
         border: none;
         border-radius: 50%;
-        width: 36px;
-        height: 36px;
+        width: 34px;
+        height: 34px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -123,7 +126,7 @@
       .user-info {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         cursor: pointer;
 
         .ant-avatar {
@@ -138,18 +141,19 @@
         }
       }
     }
-
   }
 
+  // Header menu
   .header-menu {
     background: linear-gradient(90deg, #0040f8 0%, #0040f8 100%);
-    padding: 6px 20px;
+    padding: 4px 20px; // giảm từ 6px → 4px để sát top hơn
+    margin-top: -2px; // kéo sát lại với header-top
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 
     ul {
       display: flex;
       justify-content: center;
-      gap: 28px;
+      gap: 22px; // giảm khoảng cách giữa các mục menu
       list-style: none;
       margin: 0;
       padding: 0;
@@ -162,12 +166,11 @@
           color: #fff;
           font-weight: 500;
           font-size: 15px;
-          padding: 8px 6px;
+          padding: 6px 4px;
           display: inline-block;
           position: relative;
           transition: color 0.3s ease;
 
-          // underline animation
           &::after {
             content: "";
             position: absolute;

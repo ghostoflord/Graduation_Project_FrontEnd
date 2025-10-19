@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getProductDetailSlugAPI, addToCartAPI, getCart, useCartStore } from '@/services/api';
 import { ShoppingCartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { message, Tag } from 'antd';
+import { message, Modal, Tag } from 'antd';
 import './product.detail.scss';
 import { useCurrentApp } from '@/components/context/app.context';
 import ProductInfo from '@/components/client/product.info/product.info';
@@ -15,6 +15,7 @@ const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
     const { setCartSummary } = useCurrentApp();
     const navigate = useNavigate();
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     // ảnh đang chọn
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -206,6 +207,7 @@ const ProductDetail = () => {
                             src={selectedImage || "/default-product.jpg"}
                             alt={product.name}
                             onError={(e) => (e.currentTarget.src = "/default-product.jpg")}
+                            onClick={() => setIsPreviewOpen(true)}
                         />
                         <button className="nav-btn right" onClick={handleNextImage}>›</button>
                     </div>
@@ -280,6 +282,27 @@ const ProductDetail = () => {
                     <ProductInfo productId={product.id} />
                 </div>
             </div>
+
+            <Modal
+                open={isPreviewOpen}
+                onCancel={() => setIsPreviewOpen(false)}
+                footer={null}
+                centered
+                width={800}
+                className="image-preview-modal"
+            >
+                <img
+                    src={selectedImage || "/default-product.jpg"}
+                    alt="preview"
+                    style={{
+                        width: '100%',
+                        height: 'auto',
+                        borderRadius: 8,
+                        objectFit: 'contain',
+                    }}
+                />
+            </Modal>
+
         </>
     );
 };
