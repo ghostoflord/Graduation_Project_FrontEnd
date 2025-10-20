@@ -183,8 +183,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 24px;
-    gap: 6px;
+    gap: 8px;
+    margin: 15px auto 20px;
+    width: 100%;
+    text-align: center;
 
     .page-btn,
     .page-number {
