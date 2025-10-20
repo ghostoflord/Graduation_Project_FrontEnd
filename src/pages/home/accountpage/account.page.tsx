@@ -141,7 +141,7 @@ const AccountPage = () => {
                                     block
                                     onClick={() => navigate("/lich-su-mua-hang")}
                                 >
-                                    Lịch sử giao hàng
+                                    Lịch sử mua hàng
                                 </Button>
                                 <Button
                                     icon={<UserOutlined />}

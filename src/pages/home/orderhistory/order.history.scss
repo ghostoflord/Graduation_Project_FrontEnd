@@ -1,0 +1,31 @@
+.order-history-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    /* tạo khoảng cách với header & footer */
+    padding: 24px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.order-history-title {
+    text-align: center;
+    margin-bottom: 32px;
+    color: #0040f8;
+    font-weight: 600;
+}
+
+.order-history-table {
+    .ant-table {
+        border-radius: 8px;
+    }
+
+    .ant-table-thead>tr>th {
+        background: #f0f5ff;
+        font-weight: 600;
+    }
+
+    .ant-btn-link {
+        padding: 0;
+    }
+}

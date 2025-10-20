@@ -42,7 +42,7 @@ function LikedProducts({ userId }: LikedProductsProps) {
     }, [userId]);
 
     return (
-        <Card title="Sản phẩm đã thích">
+        <Card>
             {loading ? (
                 <Spin />
             ) : (
@@ -70,7 +70,7 @@ function LikedProducts({ userId }: LikedProductsProps) {
                                         <Text style={{ whiteSpace: 'pre-line' }}>{item.productDescription}</Text>
                                         <br />
                                         <Text strong style={{ color: '#f5222d' }}>
-                                            {item.productPrice.toLocaleString('vi-VN')}₫
+                                            Giá tiền: {Number(item.productPrice).toLocaleString('vi-VN')}₫
                                         </Text>
                                         <br />
                                         <Text type="secondary">Người thích: {item.userName}</Text>
