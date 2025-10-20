@@ -5,6 +5,7 @@
     overflow: hidden;
     border-radius: 12px;
     background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
     .slider-inner {
         display: flex;
@@ -16,17 +17,23 @@
         min-width: 100%;
         height: 100%;
         display: flex;
-        gap: 10px; // 👉 khoảng cách giữa 2 ảnh
-        padding: 5px;
+        gap: 12px;
+        padding: 8px 12px;
         box-sizing: border-box;
     }
 
     .slide-item {
         flex: 1;
-        border-radius: 10px;
+        border-radius: 12px;
         overflow: hidden;
-        background: #f5f5f5;
+        background: #f8f9fa;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
         img {
             width: 100%;
@@ -44,32 +51,34 @@
         display: flex;
         justify-content: space-between;
         transform: translateY(-50%);
-        padding: 0 15px;
+        padding: 0 16px;
+        z-index: 2;
 
         button {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.45);
             border: none;
-            color: white;
+            color: #fff;
             padding: 8px 12px;
-            font-size: 20px;
+            font-size: 18px;
             border-radius: 50%;
             cursor: pointer;
             transition: background 0.3s;
 
             &:hover {
-                background: rgba(0, 0, 0, 0.6);
+                background: rgba(0, 0, 0, 0.65);
             }
         }
     }
 
     .dots {
         position: absolute;
-        bottom: 12px;
+        bottom: 10px;
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 8px;
+        z-index: 2;
 
         .dot {
             width: 8px;
@@ -83,6 +92,76 @@
                 background: #fff;
                 width: 12px;
                 height: 12px;
+            }
+        }
+    }
+
+    /* Tablet: 700px–999px */
+    @media (max-width: 999px) and (min-width: 700px) {
+        height: 150px;
+
+        .slide {
+            gap: 8px;
+            padding: 6px 10px;
+        }
+
+        .slide-item {
+            border-radius: 10px;
+        }
+
+        /* Tablet vẫn hiển thị 2 slide */
+        .slide-item {
+            flex: 0 0 50%;
+        }
+
+        .nav-buttons button {
+            font-size: 16px;
+            padding: 6px 10px;
+        }
+
+        .dots .dot {
+            width: 7px;
+            height: 7px;
+        }
+    }
+
+    /* Mobile: <700px */
+    @media (max-width: 700px) {
+        height: 130px;
+        border-radius: 10px;
+
+        .slide {
+            gap: 6px;
+            padding: 4px 8px;
+        }
+
+        /* Mobile chỉ hiển thị 1 slide (full width) */
+        .slide-item {
+            flex: 0 0 100%;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-buttons {
+            padding: 0 10px;
+
+            button {
+                font-size: 14px;
+                padding: 5px 8px;
+            }
+        }
+
+        .dots {
+            bottom: 6px;
+
+            .dot {
+                width: 6px;
+                height: 6px;
+
+                &.active {
+                    width: 9px;
+                    height: 9px;
+                }
             }
         }
     }
