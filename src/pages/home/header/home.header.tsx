@@ -13,6 +13,7 @@ import {
     ShoppingCartOutlined,
     UserOutlined,
     MenuOutlined,
+    SearchOutlined,
 } from '@ant-design/icons';
 import './home.header.scss';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
@@ -128,19 +129,34 @@ export default function Header() {
         <div className="container">
             <div className="header-wrapper">
                 {isMobile ? (
-                    <div className="header-top mobile-layout">
-                        {/* Hàng TRÊN: Logo trái | Notification + Cart phải */}
+                    <div className="header-mobile">
+                        {/* Hàng trên: menu, logo, bell, cart */}
                         <div className="top-row">
-                            <div className="logo">
+                            <div className="left">
+                                <Button
+                                    icon={<MenuOutlined />}
+                                    className="menu-btn"
+                                    onClick={() => setDrawerOpen(true)}
+                                />
+                            </div>
+
+                            <div className="center">
                                 <Link to="/">
-                                    <img src={logo} alt="LaptopNew" />
+                                    <img
+                                        src={logo}
+                                        alt="LaptopNew"
+                                        className="logo"
+                                        style={{ height: 36 }}
+                                    />
                                 </Link>
                             </div>
-                            <div className="right-icons">
-                                <NotificationBell userId={user?.id} />
-                                <Badge count={cartSummary?.sum || 0} size="small">
+
+                            <div className="right">
+                                {isAuthenticated && <NotificationBell userId={user?.id} />}
+
+                                <Badge count={cartSummary?.sum || 0} size="small" offset={[-4, 4]}>
                                     <Button
-                                        type="text"
+                                        shape="circle"
                                         icon={<ShoppingCartOutlined />}
                                         className="cart-button"
                                         onClick={() => navigate('/gio-hang')}
@@ -149,29 +165,30 @@ export default function Header() {
                             </div>
                         </div>
 
-                        {/* Hàng DƯỚI: Burger trái | Avatar phải */}
+                        {/* Hàng dưới: search + avatar */}
                         <div className="bottom-row">
-                            <Button
-                                type="text"
-                                icon={<MenuOutlined />}
-                                onClick={() => setDrawerVisible(true)}
-                            />
-                            {isAuthenticated ? (
-                                <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                                    <Avatar
-                                        size="small"
-                                        src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`}
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                </Dropdown>
-                            ) : (
-                                <Link to="/login">
-                                    <Button icon={<UserOutlined />} type="text" />
-                                </Link>
-                            )}
+                            <div className="search-bar">
+                                <ProductSearchBar placeholder="Tìm kiếm sản phẩm..." />
+                            </div>
+
+                            <div className="avatar">
+                                {isAuthenticated ? (
+                                    <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                                        <Space style={{ cursor: 'pointer' }}>
+                                            <Avatar
+                                                size={36}
+                                                src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`}
+                                            />
+                                        </Space>
+                                    </Dropdown>
+                                ) : (
+                                    <Link to="/login">
+                                        <Avatar size={36} icon={<UserOutlined />} />
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </div>
-
                 ) : (
                     <div className="header-top">
                         <div className="logo">

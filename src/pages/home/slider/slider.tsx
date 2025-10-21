@@ -1,28 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import slide1 from "@/assets/slide1.png";
+import slide2 from "@/assets/slide2.png";
+import slide3 from "@/assets/slide3.png";
+import slide4 from "@/assets/slide4.png";
 import "./slider.scss";
 
 interface Slide {
     id: number;
-    imageUrl: string;
-    title: string;
-    redirectUrl?: string;
+    image: string;
+    alt: string;
 }
 
-const HomeSlider = ({ slides }: { slides: Slide[] }) => {
-    const [visibleSlides, setVisibleSlides] = useState(1);
+const Slider: React.FC = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
+
+    const allSlides: Slide[] = [
+        { id: 1, image: slide1, alt: "Slider 1" },
+        { id: 2, image: slide2, alt: "Slider 2" },
+        { id: 3, image: slide3, alt: "Slider 3" },
+        { id: 4, image: slide4, alt: "Slider 4" },
+    ];
+
+    // nhóm slide: 2 ảnh/slide nếu không phải mobile
+    const slides: Slide[][] = isMobile
+        ? allSlides.map((s) => [s])
+        : [
+            [allSlides[0], allSlides[1]],
+            [allSlides[2], allSlides[3]],
+        ];
+
+    const goToNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % slides.length);
+    };
+
+    const goToPrev = () => {
+        setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    };
+
+    useEffect(() => {
+        const timer = setInterval(goToNext, 5000);
+        return () => clearInterval(timer);
+    }, [slides.length]);
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 700) {
-                setVisibleSlides(4); // Mobile
-            } else if (window.innerWidth < 1000) {
-                setVisibleSlides(2); // Tablet
-            } else {
-                setVisibleSlides(1); // Desktop
-            }
+            setIsMobile(window.innerWidth < 500);
         };
-
-        handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
@@ -31,30 +55,35 @@ const HomeSlider = ({ slides }: { slides: Slide[] }) => {
         <div className="slider">
             <div
                 className="slider-inner"
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: `repeat(${slides.length}, 1fr)`,
-                    gap: "12px",
-                    transform: `translateX(0)`,
-                }}
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-                {slides.map((slide) => (
-                    <div
-                        key={slide.id}
-                        className="slide-item"
-                        style={{
-                            flex: `0 0 ${100 / visibleSlides}%`,
-                            maxWidth: `${100 / visibleSlides}%`,
-                        }}
-                    >
-                        <a href={slide.redirectUrl || "#"}>
-                            <img src={slide.imageUrl} alt={slide.title} />
-                        </a>
+                {slides.map((group, idx) => (
+                    <div key={idx} className="slide">
+                        {group.map((slide) => (
+                            <div key={slide.id} className="slide-item">
+                                <img src={slide.image} alt={slide.alt} />
+                            </div>
+                        ))}
                     </div>
+                ))}
+            </div>
+
+            <div className="nav-buttons">
+                <button onClick={goToPrev}>‹</button>
+                <button onClick={goToNext}>›</button>
+            </div>
+
+            <div className="dots">
+                {slides.map((_, index) => (
+                    <span
+                        key={index}
+                        className={index === currentIndex ? "dot active" : "dot"}
+                        onClick={() => setCurrentIndex(index)}
+                    ></span>
                 ))}
             </div>
         </div>
     );
 };
 
-export default HomeSlider;
+export default Slider;
