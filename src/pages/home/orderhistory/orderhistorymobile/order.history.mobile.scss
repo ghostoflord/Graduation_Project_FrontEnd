@@ -1,0 +1,41 @@
+.order-history-container {
+    padding: 16px; // giãn 2 bên trái phải
+    padding-top: 20px; // giãn cách header
+    padding-bottom: 60px; // giãn cách footer
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.order-history-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.order-card {
+    margin-bottom: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.small-button {
+    font-size: 13px;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 6px;
+}
+
+.order-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: left;
+}
+
+.order-pagination {
+    margin-top: 20px;
+    text-align: center;
+
+    .ant-pagination-item {
+        border-radius: 6px;
+    }
+}

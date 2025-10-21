@@ -3,6 +3,7 @@ import { List, Card, Tag, Button, message, Popconfirm, Pagination } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from '@/services/axios.customize';
 import { fetchMyOrders } from '@/services/api';
+import './order.history.mobile.scss';
 
 interface OrderSummary {
     id: number;
@@ -72,7 +73,7 @@ const OrderHistoryMobile = () => {
                     okText="Đồng ý"
                     cancelText="Hủy"
                 >
-                    <Button danger block>
+                    <Button danger className="small-button">
                         Hủy đơn
                     </Button>
                 </Popconfirm>
@@ -86,7 +87,7 @@ const OrderHistoryMobile = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <Button type="primary" block>
+                    <Button type="primary" className="small-button">
                         Lấy Hóa Đơn
                     </Button>
                 </a>
@@ -103,11 +104,11 @@ const OrderHistoryMobile = () => {
     const paginatedOrders = orders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
-        <>
-            <div style={{ marginBottom: 16 }}>
+        <div className="order-history-container">
+            <div className="order-history-header">
                 <Link to="/">
-                    <Button type="default" block>
-                        ⬅️ Quay về trang chủ
+                    <Button type="default" className="small-button">
+                        ← Quay về trang chủ
                     </Button>
                 </Link>
             </div>
@@ -117,7 +118,7 @@ const OrderHistoryMobile = () => {
                 dataSource={paginatedOrders}
                 renderItem={(order) => (
                     <Card
-                        style={{ marginBottom: 12 }}
+                        className="order-card"
                         title={`Mã đơn hàng: ${order.id}`}
                         extra={renderStatus(order.status)}
                     >
@@ -125,19 +126,19 @@ const OrderHistoryMobile = () => {
                         <p><strong>SĐT:</strong> {order.receiverPhone}</p>
                         <p><strong>Số lượng SP:</strong> {order.totalQuantity.toLocaleString()}</p>
                         <p><strong>Ngày tạo:</strong> {new Date(order.createdAt).toLocaleString()}</p>
-                        <div style={{ marginTop: 8 }}>{renderActions(order)}</div>
+                        <div className="order-actions">{renderActions(order)}</div>
                     </Card>
                 )}
             />
 
             <Pagination
-                style={{ textAlign: 'center', marginTop: 12 }}
+                className="order-pagination"
                 current={currentPage}
                 pageSize={pageSize}
                 total={orders.length}
                 onChange={(page) => setCurrentPage(page)}
             />
-        </>
+        </div>
     );
 };
 
