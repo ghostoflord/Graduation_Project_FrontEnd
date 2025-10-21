@@ -18,7 +18,6 @@ const AdminDashboard = () => {
         return <CountUp end={isNaN(n) ? 0 : n} separator="," />;
     };
 
-
     useEffect(() => {
         const initDashboard = async () => {
             const res = await getDashboardAPI();
@@ -33,51 +32,32 @@ const AdminDashboard = () => {
         <Row gutter={[24, 24]}>
             <Col xs={24} sm={24} md={12} lg={8}>
                 <Card bordered={false}>
-                    <Statistic
-                        title="Tổng Users"
-                        value={dataDashboard.countUser}
-                        formatter={formatter}
-                    />
+                    <Statistic title="Tổng Users" value={dataDashboard.countUser} formatter={formatter} />
                 </Card>
             </Col>
             <Col xs={24} sm={24} md={12} lg={8}>
                 <Card bordered={false}>
-                    <Statistic
-                        title="Tổng Đơn hàng"
-                        value={dataDashboard.countOrder}
-                        formatter={formatter}
-                    />
+                    <Statistic title="Tổng Đơn hàng" value={dataDashboard.countOrder} formatter={formatter} />
                 </Card>
             </Col>
             <Col xs={24} sm={24} md={12} lg={8}>
                 <Card bordered={false}>
-                    <Statistic
-                        title="Tổng Products"
-                        value={dataDashboard.countProduct}
-                        formatter={formatter}
-                    />
-                </Card>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-                <Card bordered={false}>
-                    <Statistic
-                        title="Tổng Doanh thu (VNĐ)"
-                        value={dataDashboard.totalRevenue}
-                        precision={0}
-                        formatter={formatter}
-                    />
-                </Card>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-                <Card bordered={false}>
-                    <Statistic
-                        title="Tổng SL sản phẩm bị huỷ"
-                        value={dataDashboard.totalCanceledQuantity}
-                        formatter={formatter}
-                    />
+                    <Statistic title="Tổng Products" value={dataDashboard.countProduct} formatter={formatter} />
                 </Card>
             </Col>
 
+            <Col xs={24} sm={24} md={12} lg={12}>
+                <Card bordered={false}>
+                    <Statistic title="Tổng Doanh thu (VNĐ)" value={dataDashboard.totalRevenue} precision={0} formatter={formatter} />
+                </Card>
+            </Col>
+            <Col xs={24} sm={24} md={12} lg={12}>
+                <Card bordered={false}>
+                    <Statistic title="Tổng SL sản phẩm bị huỷ" value={dataDashboard.totalCanceledQuantity} formatter={formatter} />
+                </Card>
+            </Col>
+
+            {/* Fix: Bọc Dashboard trong Col */}
             <Col span={24}>
                 <Card bordered={false} title="Doanh thu theo tháng & Top sản phẩm">
                     <Dashboard />
