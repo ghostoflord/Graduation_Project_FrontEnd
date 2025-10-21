@@ -25,16 +25,18 @@ const TableOrderMobile = () => {
     const [isDeleteOrder, setIsDeleteOrder] = useState<boolean>(false);
 
     const paginatedOrders = orders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const data = await getOrdersAPI();
-            setOrders(data);
+            const res = await getOrdersAPI();
+            // nếu backend trả về res.data.result
+            const orderList = res?.data?.result ?? res?.result ?? [];
+            setOrders(orderList);
             setLoading(false);
         };
         fetchData();
     }, []);
+
 
     const refreshTable = () => {
         actionRef.current?.reload();
