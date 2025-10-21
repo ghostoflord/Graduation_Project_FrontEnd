@@ -13,7 +13,8 @@ import {
     Popconfirm,
     Button,
     Space,
-    notification
+    notification,
+    Popover
 } from 'antd';
 import {
     EditTwoTone,
@@ -174,8 +175,8 @@ const TableFlashSaleMobile = () => {
                                         <div><strong>Thời gian:</strong> {fs.startTime} → {fs.endTime}</div>
                                         <div>{renderStatus(fs.status)}</div>
                                         <div style={{ marginTop: 8 }}>
-                                            <Tooltip
-                                                title={
+                                            <Popover
+                                                content={
                                                     <List
                                                         size="small"
                                                         dataSource={fs.items}
@@ -188,9 +189,11 @@ const TableFlashSaleMobile = () => {
                                                         )}
                                                     />
                                                 }
+                                                title="Sản phẩm Flash Sale"
+                                                trigger="click"
                                             >
                                                 <a>Xem chi tiết sản phẩm ({fs.items.length})</a>
-                                            </Tooltip>
+                                            </Popover>
                                         </div>
                                     </Card>
                                 </Col>
