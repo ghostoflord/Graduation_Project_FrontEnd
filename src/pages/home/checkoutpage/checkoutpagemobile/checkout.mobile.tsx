@@ -128,7 +128,7 @@ const CheckoutMobile: React.FC = () => {
     return (
         <div className="checkout-mobile">
             <div className="checkout-header">
-                <Title level={3}>LAPTOPNEW</Title>
+                <Title level={3}>LAPTOPSHOP</Title>
             </div>
 
             <div className="checkout-section">
@@ -206,7 +206,9 @@ const CheckoutMobile: React.FC = () => {
                     </div>
                 </div>
 
-                <Button type="primary" block onClick={handlePlaceOrder}>
+                <Button
+                    className="checkout-button"
+                    block onClick={handlePlaceOrder}>
                     {paymentMethod === 'cod' ? 'Đặt hàng' : 'Thanh toán VNPAY'}
                 </Button>
 
