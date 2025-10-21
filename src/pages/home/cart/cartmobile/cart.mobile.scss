@@ -2,6 +2,40 @@
     padding: 16px;
     background-color: #fff;
     font-family: "Roboto", sans-serif;
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.cart-mobile-container h4.ant-typography {
+    text-align: center;
+    margin: 10px 0 24px;
+    font-weight: 600;
+    color: #090909;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.empty-container {
+    text-align: center;
+    margin-top: 40px;
+
+    .ant-empty-description {
+        font-size: 15px;
+        color: #666;
+        margin-bottom: 12px;
+    }
+
+    button {
+        display: inline-block;
+        margin-top: 8px;
+        border-radius: 999px;
+        padding: 0 18px;
+    }
 }
 
 .cart-mobile-item-wrapper {
@@ -36,4 +70,26 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 8px;
+}
+
+.checkout-footer {
+    display: flex;
+    justify-content: space-between; // Tổng tiền bên trái, nút bên phải
+    align-items: center; // Căn giữa theo chiều dọc
+    margin-top: 1rem;
+    padding: 0 8px;
+
+    .total-price {
+        margin: 0;
+        font-weight: 600;
+        color: #fa0a0a;
+    }
+
+    .checkout-btn {
+        width: auto;
+        padding: 0 24px;
+        background: #0040f8 !important;
+        color: #fff !important;
+        border: none !important;
+    }
 }

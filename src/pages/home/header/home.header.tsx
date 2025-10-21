@@ -136,7 +136,7 @@ export default function Header() {
                                 <Button
                                     icon={<MenuOutlined />}
                                     className="menu-btn"
-                                    onClick={() => setDrawerOpen(true)}
+                                    onClick={() => setDrawerVisible(true)}
                                 />
                             </div>
 
@@ -280,7 +280,6 @@ export default function Header() {
                         <li><NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink></li>
                     </ul>
                 </div>
-
                 <Drawer
                     title="Danh mục"
                     placement="left"
@@ -288,18 +287,21 @@ export default function Header() {
                     open={drawerVisible}
                 >
                     <ul className="mobile-menu">
-                        <li><NavLink to="/?sort=price_asc">Giá tăng dần</NavLink></li>
-                        <li><NavLink to="/?sort=price_desc">Giá giảm dần</NavLink></li>
-                        <li><NavLink to="/?priceFrom=5000000&priceTo=15000000">Từ 5 triệu - 15 triệu</NavLink></li>
-                        <li><NavLink to="/?priceFrom=15000000&priceTo=30000000">Từ 15 triệu - 30 triệu</NavLink></li>
-                        <li><NavLink to="/">Trang chủ</NavLink></li>
-                        <li><IntroduceDropDown /></li>
-                        <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
-                        <li><NavLink to="/tin-tuc">Tin tức</NavLink></li>
-                        <li><NavLink to="/tuyen-dung">Tuyển dụng</NavLink></li>
-                        <li><NavLink to="/nhuong-quyen">Nhượng quyền</NavLink></li>
-                        <li><NavLink to="/lien-he">Liên hệ</NavLink></li>
-                        <li><NavLink to="/tra-cuu-bao-hanh">Tra cứu bảo hành</NavLink></li>
+                        <li><NavLink to="/?sort=price_asc" onClick={() => setDrawerVisible(false)}>Giá tăng dần</NavLink></li>
+                        <li><NavLink to="/?sort=price_desc" onClick={() => setDrawerVisible(false)}>Giá giảm dần</NavLink></li>
+                        <li><NavLink to="/?priceFrom=5000000&priceTo=15000000" onClick={() => setDrawerVisible(false)}>Từ 5 triệu - 15 triệu</NavLink></li>
+                        <li><NavLink to="/?priceFrom=15000000&priceTo=30000000" onClick={() => setDrawerVisible(false)}>Từ 15 triệu - 30 triệu</NavLink></li>
+                        <li><NavLink to="/" onClick={() => setDrawerVisible(false)}>Trang chủ</NavLink></li>
+
+                        {/* ✅ Thằng này không auto đóng, để component tự xử lý */}
+                        <li><IntroduceDropDown onItemClick={() => setDrawerVisible(false)} /></li>
+
+                        <li><NavLink to="/chinh-sach-ban-hang" onClick={() => setDrawerVisible(false)}>Chính sách bán hàng</NavLink></li>
+                        <li><NavLink to="/tin-tuc" onClick={() => setDrawerVisible(false)}>Tin tức</NavLink></li>
+                        <li><NavLink to="/tuyen-dung" onClick={() => setDrawerVisible(false)}>Tuyển dụng</NavLink></li>
+                        <li><NavLink to="/nhuong-quyen" onClick={() => setDrawerVisible(false)}>Nhượng quyền</NavLink></li>
+                        <li><NavLink to="/lien-he" onClick={() => setDrawerVisible(false)}>Liên hệ</NavLink></li>
+                        <li><NavLink to="/tra-cuu-bao-hanh" onClick={() => setDrawerVisible(false)}>Tra cứu bảo hành</NavLink></li>
                     </ul>
                 </Drawer>
             </div>

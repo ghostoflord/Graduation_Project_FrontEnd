@@ -107,9 +107,11 @@ const CartMobile = () => {
             <Title level={4} className="text-center">Giỏ Hàng</Title>
 
             {cartItems.length === 0 ? (
-                <div className="text-center">
+                <div className="empty-container">
                     <Empty description="Giỏ hàng trống" />
-                    <Button type="primary" onClick={() => navigate('/')}>Về trang chủ</Button>
+                    <Button type="primary" onClick={() => navigate('/')}>
+                        Về trang chủ
+                    </Button>
                 </div>
             ) : (
                 <>
@@ -128,16 +130,16 @@ const CartMobile = () => {
                                     />
                                 </div>
                                 <div className="cart-mobile-info">
-                                    <Text strong>{item.name}</Text>
-                                    <div>{item.shortDescription}</div>
+                                    <Text strong>Tên sản phẩm: {item.name}</Text>
+                                    <div>Miêu tả ngắn: {item.shortDescription}</div>
                                     <div>
                                         <Text type="secondary" style={{ fontSize: 12 }}>
-                                            {item.detailDescription}
+                                            Chi tiết sản phẩm: {item.detailDescription}
                                         </Text>
                                     </div>
                                     <div className="cart-mobile-bottom-row">
                                         <Text strong>
-                                            {item.price.toLocaleString('vi-VN')} ₫
+                                            Giá: {item.price.toLocaleString('vi-VN')} ₫
                                         </Text>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                             <InputNumber
@@ -162,18 +164,19 @@ const CartMobile = () => {
                         </Card>
                     ))}
 
-                    <div className="text-center mt-4">
-                        <Title level={5}>Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫</Title>
+                    <div className="checkout-footer">
+                        <Title level={5} className="total-price">
+                            Tổng tiền: {totalPrice.toLocaleString('vi-VN')} ₫
+                        </Title>
                         <Button
-                            type="primary"
-                            block
                             size="large"
                             onClick={handleCheckout}
-                            className="mt-2"
+                            className="checkout-btn"
                         >
                             Thanh toán
                         </Button>
                     </div>
+
                 </>
             )}
         </div>
