@@ -194,17 +194,19 @@ const CartPage = () => {
                                             Giá: {item.price.toLocaleString('vi-VN')} ₫
                                         </Text>
                                     </Col>
-                                    <Col xs={12} sm={4} className="text-center">
+                                    <Col xs={12} sm={4} className="text-center"
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: 8
+                                        }}>
                                         <InputNumber
                                             min={1}
                                             value={item.quantity}
                                             onChange={value =>
                                                 updateQuantity(item.productId, value || 1)
                                             }
-                                            style={{
-                                                marginRight: 5
-                                            }}
-                                            disabled
                                         />
                                         <Button
                                             danger

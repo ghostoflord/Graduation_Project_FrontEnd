@@ -123,7 +123,7 @@ const TableUser = () => {
         },
         {
             title: 'Update At',
-            dataIndex: 'updateAt',
+            dataIndex: 'updatedAt',
             valueType: 'date',
             hideInSearch: true
         },
