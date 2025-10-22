@@ -196,17 +196,27 @@ const TableSlideMobile = () => {
                                     <div>
                                         <strong>Hình ảnh:</strong>
                                         <br />
-                                        <img
-                                            src={item.imageUrl}
-                                            alt={item.title}
-                                            style={{
-                                                width: "100%",
-                                                height: 120,
-                                                objectFit: "cover",
-                                                borderRadius: 8,
-                                                marginTop: 4,
-                                            }}
-                                        />
+                                        {(() => {
+                                            const imageUrl = item.imageUrl?.startsWith('http')
+                                                ? item.imageUrl
+                                                : `${import.meta.env.VITE_BACKEND_URL}/upload/slides/${item.imageUrl}`;
+                                            return imageUrl ? (
+                                                <img
+                                                    src={imageUrl}
+                                                    alt={item.title}
+                                                    style={{
+                                                        width: 120,
+                                                        height: 80,
+                                                        objectFit: "cover",
+                                                        borderRadius: 8,
+                                                        marginTop: 4,
+                                                        border: "1px solid #ddd",
+                                                    }}
+                                                />
+                                            ) : (
+                                                <span>No Slide</span>
+                                            );
+                                        })()}
                                     </div>
 
                                     <div>

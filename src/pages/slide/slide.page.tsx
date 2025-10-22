@@ -1,11 +1,10 @@
-import TableSlide from "@/components/admin/slide/slide.table";
-import TableSlideMobile from "@/components/admin/slide/slidemobile/slide.table.mobile";
 
+import SlideTableResponsive from "@/components/admin/slide/slidemobile/slide.reponsive.table";
 const SlidePage = () => {
     return (
         <>
             <div>
-                <TableSlide />
+                <SlideTableResponsive />
             </div>
         </>
     )
