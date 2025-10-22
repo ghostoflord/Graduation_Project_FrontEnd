@@ -113,6 +113,11 @@ export const getUserByIdAPI = (id: number) => {
     return axios.get<IBackendRes<IUserTable>>(url);
 };
 
+export const getUserById = (id: number) => {
+    const url = `/api/v1/users/${id}`;
+    return axios.get<IBackendRes<IUserTable>>(url);
+};
+
 export const selfUpdateUserAPI = (data: IUserTable) => {
     return axios.post<IBackendRes<IUserTable>>("/api/v1/users/me/update", data);
 };

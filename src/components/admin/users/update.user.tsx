@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
-import { updateUserAPI, uploadFileAPI, callFetchRoles } from '@/services/api';
+import { updateUserAPI, uploadFileAPI, callFetchRoles, getUserByIdAPI } from '@/services/api';
 import type { RcFile, UploadFile } from 'antd/es/upload';
 
 interface IProps {
@@ -110,32 +110,42 @@ const UpdateUser = (props: IProps) => {
     }, []);
 
     useEffect(() => {
-        if (dataUpdate) {
-            form.resetFields();
-            form.setFieldsValue({
-                id: dataUpdate.id,
-                firstName: dataUpdate.firstName,
-                name: dataUpdate.name,
-                lastName: dataUpdate.lastName,
-                address: dataUpdate.address,
-                gender: dataUpdate.gender ?? undefined,
-                age: dataUpdate.age,
-                roleId: dataUpdate.role?.id
-            });
-            if (dataUpdate.avatar) {
-                const avatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${dataUpdate.avatar}`;
-                const file: UploadFile = {
-                    uid: '-1',
-                    name: dataUpdate.avatar,
-                    status: 'done',
-                    url: avatarUrl,
-                    thumbUrl: avatarUrl
-                };
-                setAvatarFile(file);
-                setPreviewImage(avatarUrl);
+        const fetchData = async () => {
+            if (dataUpdate?.id) {
+                const res = await getUserByIdAPI(dataUpdate.id);
+                if (res && res.data) {
+                    const user = res.data;
+                    form.setFieldsValue({
+                        id: user.id,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        name: user.name,
+                        address: user.address,
+                        gender: user.gender ?? undefined,
+                        age: user.age,
+                        roleId: user.role?.id ? Number(user.role.id) : undefined,
+                    });
+
+                    if (user.avatar) {
+                        const avatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`;
+                        const file: UploadFile = {
+                            uid: '-1',
+                            name: user.avatar,
+                            status: 'done',
+                            url: avatarUrl,
+                            thumbUrl: avatarUrl
+                        };
+                        setAvatarFile(file);
+                        setPreviewImage(avatarUrl);
+                    }
+                }
             }
+        };
+
+        if (openModalUpdate) {
+            fetchData();
         }
-    }, [dataUpdate]);
+    }, [dataUpdate, openModalUpdate]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         const { id, firstName, lastName, name, address, gender, age, roleId } = values;
@@ -225,13 +235,20 @@ const UpdateUser = (props: IProps) => {
                     <Input />
                 </Form.Item>
                 <Form.Item<FieldType>
+                    label="Tuổi"
+                    name="age"
+                    rules={[{ required: true, message: 'Vui lòng nhập số tuổi!' }]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item<FieldType>
                     label="Role"
                     name="roleId"
                     rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
                 >
                     <Select placeholder="Chọn vai trò" loading={loadingRoles} allowClear>
                         {roleList.map(role => (
-                            <Select.Option key={role.id} value={role.id}>
+                            <Select.Option key={role.id} value={Number(role.id)}>
                                 {role.name}
                             </Select.Option>
                         ))}
