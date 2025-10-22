@@ -1,7 +1,22 @@
-import { useState } from 'react';
-import { App, Divider, Form, Input, Modal, Select, Button, Switch, InputNumber, Image } from 'antd';
-import type { FormProps } from 'antd';
-import { createSlideAPI } from '@/services/api';
+import { useState } from "react";
+import {
+    App,
+    Divider,
+    Form,
+    Input,
+    Modal,
+    Select,
+    Button,
+    Switch,
+    InputNumber,
+    Upload,
+    Image
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import type { FormProps } from "antd";
+import type { UploadFile, RcFile } from "antd/es/upload";
+import type { UploadRequestOption as RcCustomRequestOptions } from "rc-upload/lib/interface";
+import { createSlideAPI } from "@/services/api";
 
 interface IProps {
     openModalCreate: boolean;
@@ -9,12 +24,12 @@ interface IProps {
     refreshTable: () => void;
 }
 
-export type SlideType = 'HOME' | 'ABOUT' | 'CONTACT';
+export type SlideType = "HOME" | "ABOUT" | "CONTACT";
 
 export interface ISlideForm {
     title: string;
     description?: string;
-    imageUrl: string;
+    imageUrl?: string;
     redirectUrl?: string;
     active: boolean;
     orderIndex: number;
@@ -25,42 +40,82 @@ const CreateSlide = ({ openModalCreate, setOpenModalCreate, refreshTable }: IPro
     const [form] = Form.useForm<ISlideForm>();
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
+
+    const [imageFile, setImageFile] = useState<UploadFile | null>(null);
     const [previewImage, setPreviewImage] = useState<string>("");
 
-    const onFinish: FormProps<ISlideForm>['onFinish'] = async (values) => {
-        console.log('Form values:', values); // xem tất cả các field
+    // convert file -> base64
+    const getBase64 = (file: RcFile): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+        });
+
+    // xem trước ảnh
+    const handlePreview = async (file: UploadFile) => {
+        if (!file.url && !file.preview && file.originFileObj) {
+            file.preview = await getBase64(file.originFileObj as RcFile);
+        }
+        setPreviewImage(file.preview as string);
+    };
+
+    // xử lý upload (fake customRequest để AntD hoạt động mà ko upload thật)
+    const handleUploadImage = async (options: RcCustomRequestOptions) => {
+        const { file, onSuccess } = options;
+        const uploadedFile: UploadFile = {
+            uid: (file as RcFile).uid,
+            name: (file as RcFile).name,
+            status: "done",
+            originFileObj: file as RcFile
+        };
+        setImageFile(uploadedFile);
+        await handlePreview(uploadedFile);
+        setTimeout(() => {
+            onSuccess?.("ok", uploadedFile as any);
+        }, 100);
+    };
+
+    const onFinish: FormProps<ISlideForm>["onFinish"] = async (values) => {
         setIsSubmit(true);
         try {
+            // convert ảnh sang base64
+            const imageUrl = imageFile
+                ? await getBase64(imageFile.originFileObj as RcFile)
+                : "";
+
             const payload = {
                 ...values,
-                orderIndex: Number(values.orderIndex), // đảm bảo là số
-                type: values.type, // check xem backend chấp nhận 'HOME' hay 'HOMEPAGE'
+                imageUrl,
+                orderIndex: Number(values.orderIndex),
             };
-            console.log('Payload gửi API:', payload);
+
+            console.log("📤 Payload gửi API:", payload);
             const res = await createSlideAPI(payload);
-            console.log('Response API:', res.data);
-            if (res.data) {
-                message.success('Tạo mới slide thành công');
+
+            if (res?.data) {
+                message.success("Tạo mới slide thành công");
                 form.resetFields();
+                setImageFile(null);
                 setPreviewImage("");
                 setOpenModalCreate(false);
                 refreshTable();
             } else {
                 notification.error({
-                    message: 'Đã có lỗi xảy ra',
-                    description: res?.message || 'Không thể tạo slide'
+                    message: "Đã có lỗi xảy ra",
+                    description: res?.message || "Không thể tạo slide",
                 });
             }
         } catch (err) {
             notification.error({
-                message: 'Lỗi gửi yêu cầu',
-                description: String(err)
+                message: "Lỗi gửi yêu cầu",
+                description: String(err),
             });
         } finally {
             setIsSubmit(false);
         }
     };
-
 
     return (
         <Modal
@@ -70,6 +125,7 @@ const CreateSlide = ({ openModalCreate, setOpenModalCreate, refreshTable }: IPro
             onCancel={() => {
                 setOpenModalCreate(false);
                 form.resetFields();
+                setImageFile(null);
                 setPreviewImage("");
             }}
             okText="Tạo mới"
@@ -87,43 +143,37 @@ const CreateSlide = ({ openModalCreate, setOpenModalCreate, refreshTable }: IPro
                 <Form.Item
                     label="Tiêu đề"
                     name="title"
-                    rules={[{ required: true, message: 'Vui lòng nhập tiêu đề slide!' }]}
+                    rules={[{ required: true, message: "Vui lòng nhập tiêu đề slide!" }]}
                 >
                     <Input />
                 </Form.Item>
 
-                <Form.Item
-                    label="Mô tả"
-                    name="description"
-                >
+                <Form.Item label="Mô tả" name="description">
                     <Input.TextArea rows={3} />
                 </Form.Item>
 
                 <Form.Item
                     label="Loại slide"
                     name="type"
-                    rules={[{ required: true, message: 'Vui lòng chọn loại slide!' }]}
+                    rules={[{ required: true, message: "Vui lòng chọn loại slide!" }]}
                 >
                     <Select placeholder="Chọn loại slide">
                         <Select.Option value="HOME">Homepage</Select.Option>
-                        <Select.Option value="ABOUT">ABOUT</Select.Option>
-                        <Select.Option value="CONTACT">CONTACT</Select.Option>
+                        <Select.Option value="ABOUT">About</Select.Option>
+                        <Select.Option value="CONTACT">Contact</Select.Option>
                     </Select>
                 </Form.Item>
 
-                <Form.Item
-                    label="Link chuyển hướng"
-                    name="redirectUrl"
-                >
+                <Form.Item label="Link chuyển hướng" name="redirectUrl">
                     <Input />
                 </Form.Item>
 
                 <Form.Item
                     label="Thứ tự hiển thị"
                     name="orderIndex"
-                    rules={[{ required: true, message: 'Vui lòng nhập thứ tự hiển thị!' }]}
+                    rules={[{ required: true, message: "Vui lòng nhập thứ tự hiển thị!" }]}
                 >
-                    <InputNumber min={0} style={{ width: '100%' }} />
+                    <InputNumber min={0} style={{ width: "100%" }} />
                 </Form.Item>
 
                 <Form.Item
@@ -136,14 +186,24 @@ const CreateSlide = ({ openModalCreate, setOpenModalCreate, refreshTable }: IPro
                 </Form.Item>
 
                 <Form.Item
-                    label="URL ảnh slide"
+                    label="Ảnh slide"
                     name="imageUrl"
-                    rules={[{ required: true, message: "Vui lòng nhập URL ảnh slide!" }]}
+                    rules={[{ required: true, message: "Vui lòng chọn ảnh slide!" }]}
                 >
-                    <Input
-                        placeholder="https://example.com/your-image.jpg"
-                        onChange={(e) => setPreviewImage(e.target.value)}
-                    />
+                    <Upload
+                        listType="picture"
+                        maxCount={1}
+                        customRequest={handleUploadImage}
+                        fileList={imageFile ? [imageFile] : []}
+                        onRemove={() => {
+                            setImageFile(null);
+                            setPreviewImage("");
+                        }}
+                        onPreview={handlePreview}
+                        accept="image/*"
+                    >
+                        <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
+                    </Upload>
                 </Form.Item>
 
                 {previewImage && (

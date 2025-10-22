@@ -5,7 +5,7 @@ const SlidePage = () => {
     return (
         <>
             <div>
-                <TableSlideMobile />
+                <TableSlide />
             </div>
         </>
     )

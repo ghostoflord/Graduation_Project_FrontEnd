@@ -89,16 +89,24 @@ const TableSlide = () => {
         { title: "Title", dataIndex: "title" },
         { title: "Description", dataIndex: "description", ellipsis: true },
         {
-            title: "Image",
-            dataIndex: "imageUrl",
-            render: (_, record) => (
-                <img
-                    src={record.imageUrl}
-                    alt={record.title}
-                    style={{ width: 80, height: 40, objectFit: "cover" }}
-                />
-            ),
+            title: 'Image',
+            dataIndex: 'imageUrl',
+            render: (_, entity) => {
+                const imageUrl = entity.imageUrl?.startsWith('http')
+                    ? entity.imageUrl
+                    : `${import.meta.env.VITE_BACKEND_URL}/upload/slides/${entity.imageUrl}`;
+                return imageUrl ? (
+                    <img
+                        src={imageUrl}
+                        alt="Slide Avatar"
+                        style={{ width: 50, height: 50, borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                ) : (
+                    <span>No Slide</span>
+                );
+            },
         },
+
         {
             title: "Redirect",
             dataIndex: "redirectUrl",
