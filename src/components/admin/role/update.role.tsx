@@ -1,4 +1,4 @@
-import { callUpdateRole, callFetchPermissions } from '@/services/api';
+import { callUpdateRole, callFetchPermissions, callGetRoleById } from '@/services/api';
 import { App, Divider, Form, Input, Modal, Select, Spin } from 'antd';
 import type { FormProps } from 'antd';
 import { useEffect, useState } from 'react';
@@ -33,17 +33,39 @@ const UpdateRole = (props: IProps) => {
 
     const [permissionOptions, setPermissionOptions] = useState<IPermission[]>([]);
     const [loadingPermissions, setLoadingPermissions] = useState(false);
-
     useEffect(() => {
+        const fetchRoleDetail = async () => {
+            if (!dataUpdate?.id) return;
+            try {
+                const res = await callGetRoleById(dataUpdate.id);
+                if (res?.data) {
+                    const role = res.data;
+                    form.setFieldsValue({
+                        id: role.id,
+                        name: role.name,
+                        description: role.description,
+                        permissions: role.permissions?.map((p: any) => String(p.id))
+                    });
+                }
+            } catch (err) {
+                console.error('Lỗi load role detail:', err);
+                notification.error({
+                    message: 'Lỗi',
+                    description: 'Không thể tải chi tiết vai trò',
+                });
+            }
+        };
+
         if (openModalUpdate) {
             fetchPermissions();
+            fetchRoleDetail();
         }
     }, [openModalUpdate]);
 
     const fetchPermissions = async () => {
         setLoadingPermissions(true);
         try {
-            const res = await callFetchPermissions('page=1&pageSize=100'); // tùy chỉnh query
+            const res = await callFetchPermissions('page=1&pageSize=100');
             if (res?.data?.result) {
                 setPermissionOptions(res.data.result);
             }

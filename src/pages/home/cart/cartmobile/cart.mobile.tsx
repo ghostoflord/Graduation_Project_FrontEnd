@@ -4,6 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { getCart, removeCartItemAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 import './cart.mobile.scss';
+import CartBreadcrumb from '@/pages/productbreadcrumb/cartbreadcrumb/cart.bread.crumb';
 
 const { Title, Text } = Typography;
 
@@ -104,8 +105,8 @@ const CartMobile = () => {
 
     return (
         <div className="cart-mobile-container">
+            <CartBreadcrumb />
             <Title level={4} className="text-center">Giỏ Hàng</Title>
-
             {cartItems.length === 0 ? (
                 <div className="empty-container">
                     <Empty description="Giỏ hàng trống" />
