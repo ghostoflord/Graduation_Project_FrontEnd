@@ -198,7 +198,7 @@ export default function Header() {
                         </div>
 
                         <Button className="store-button">
-                            Hệ thống cửa hàng (10+ chi nhánh)
+                            Hệ thống cửa hàng (4+ chi nhánh)
                         </Button>
 
                         <div className="search-bar">

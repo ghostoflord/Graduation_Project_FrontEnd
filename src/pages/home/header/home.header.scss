@@ -256,8 +256,8 @@
         gap: 8px;
 
         .cart-button {
-          background: transparent;
-          color: #fff;
+          background: #fff;
+          color: #0040f8;
         }
       }
     }
@@ -509,9 +509,9 @@
         }
 
         .cart-button {
-          background: rgba(255, 255, 255, 0.15);
+          background: #fff;
+          color: #0040f8 !important;
           border: none;
-          color: #fff;
           width: 36px;
           height: 36px;
           display: flex;
@@ -519,6 +519,11 @@
           justify-content: center;
           border-radius: 50%;
           transition: 0.25s;
+
+          i,
+          svg {
+            color: #0040f8 !important;
+          }
 
           &:hover {
             background: rgba(255, 255, 255, 0.25);
