@@ -315,7 +315,7 @@ export const getNotificationsAPI = async (
 
     const queryParams = new URLSearchParams({
         userId: userId.toString(),
-        page: current.toString(),
+        current: current.toString(),
         pageSize: pageSize.toString(),
     });
     return await axios.get(`/api/v1/notifications/user?${queryParams.toString()}`);

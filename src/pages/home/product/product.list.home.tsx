@@ -37,25 +37,28 @@ const ProductList = () => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                let queryParams = `current=${current}&pageSize=${pageSize}`;
-                let filters: string[] = [];
+                const urlFilter = query.get('filter'); // lấy filter từ URL
+                let queryParams = '';
 
-                if (search) {
-                    filters.push(`name~'${search}'`);
-                }
+                if (urlFilter) {
+                    // Nếu có filter từ URL → chỉ call filter, bỏ pagination
+                    queryParams = `filter=${encodeURIComponent(urlFilter)}`;
+                } else {
+                    // Nếu không có filter → dùng pagination + search + sort + priceFrom/priceTo bình thường
+                    queryParams = `current=${current}&pageSize=${pageSize}`;
+                    let filters: string[] = [];
 
-                if (priceFrom) filters.push(`price>=${priceFrom}`);
-                if (priceTo) filters.push(`price<=${priceTo}`);
+                    if (search) filters.push(`name~'${search}'`);
+                    if (priceFrom) filters.push(`price>=${priceFrom}`);
+                    if (priceTo) filters.push(`price<=${priceTo}`);
 
-                if (filters.length > 0) {
-                    const filterStr = filters.join(';');
-                    queryParams += `&filter=${encodeURIComponent(filterStr)}`;
-                }
+                    if (filters.length > 0) {
+                        const filterStr = filters.join(';');
+                        queryParams += `&filter=${encodeURIComponent(filterStr)}`;
+                    }
 
-                if (sort === 'price_asc') {
-                    queryParams += `&sort=price`;
-                } else if (sort === 'price_desc') {
-                    queryParams += `&sort=price,desc`;
+                    if (sort === 'price_asc') queryParams += `&sort=price`;
+                    else if (sort === 'price_desc') queryParams += `&sort=price,desc`;
                 }
 
                 const response = await getProductsAPI(queryParams);
@@ -83,7 +86,7 @@ const ProductList = () => {
 
         fetchProducts();
         fetchLikedProducts();
-    }, [current, pageSize, search, sort, priceFrom, priceTo, userId]);
+    }, [current, pageSize, search, sort, priceFrom, priceTo, userId, location.search]); // thêm location.search để filter URL update
 
     const handleToggleLike = async (productId: number,) => {
         if (!userId || isNaN(userId) || userId <= 0) {

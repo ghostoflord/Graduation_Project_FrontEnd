@@ -29,6 +29,13 @@
     }
 }
 
+.ant-popover-inner-content {
+    padding: 0 !important;
+    /* bỏ padding mặc định */
+    overflow: hidden !important;
+    /* ép nội dung nằm gọn */
+}
+
 .notification-button {
     position: relative;
     background: #fff;
