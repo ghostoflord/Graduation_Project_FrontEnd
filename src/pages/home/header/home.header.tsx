@@ -306,10 +306,7 @@ export default function Header() {
                             </NavLink>
                         </li>
                         <li><NavLink to="/" onClick={() => setDrawerVisible(false)}>Trang chủ</NavLink></li>
-
-                        {/* ✅ Thằng này không auto đóng, để component tự xử lý */}
                         <li><IntroduceDropDown onItemClick={() => setDrawerVisible(false)} /></li>
-
                         <li><NavLink to="/chinh-sach-ban-hang" onClick={() => setDrawerVisible(false)}>Chính sách bán hàng</NavLink></li>
                         <li><NavLink to="/tin-tuc" onClick={() => setDrawerVisible(false)}>Tin tức</NavLink></li>
                         <li><NavLink to="/tuyen-dung" onClick={() => setDrawerVisible(false)}>Tuyển dụng</NavLink></li>
