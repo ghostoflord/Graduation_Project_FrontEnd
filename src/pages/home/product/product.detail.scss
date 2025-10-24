@@ -150,8 +150,15 @@
     .product-desc,
     .product-config,
     .product-stock {
-        font-size: 16px;
-        margin-bottom: 12px;
+        font-weight: 500;
+
+        &.in-stock {
+            color: #16a34a; // xanh lá
+        }
+
+        &.out-of-stock {
+            color: #dc2626; // đỏ
+        }
     }
 
     .quantity-control {

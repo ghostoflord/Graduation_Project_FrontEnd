@@ -90,7 +90,7 @@ const ProductDetail = () => {
         if (!product) return;
         setQuantity((prev) => {
             if (prev >= Number(product.quantity)) {
-                message.warning(`Sản phẩm chỉ còn ${product.quantity} trong kho.`);
+                message.warning(`Hiện chỉ còn ${product.quantity} sản phẩm trong kho.`);
                 return prev;
             }
             return prev + 1;
@@ -121,7 +121,7 @@ const ProductDetail = () => {
             const totalQty = currentQtyInCart + quantity;
 
             if (totalQty > availableQuantity) {
-                message.warning(`Tổng số lượng vượt quá tồn kho (${availableQuantity}).`);
+                message.warning(`Hiện chỉ còn ${availableQuantity} sản phẩm trong kho.`);
                 return;
             }
 
@@ -229,7 +229,7 @@ const ProductDetail = () => {
 
                 {/* phần info giữ nguyên của ông */}
                 <div className="product-info">
-                    <h1>{product.name}</h1>
+                    <h1>Tên sản phẩm: {product.name}</h1>
                     <div className="price-box">
                         {product.discountPrice && Number(product.discountPrice) > 0 ? (
                             <>
@@ -248,10 +248,11 @@ const ProductDetail = () => {
                         )}
                     </div>
 
-                    <p className="product-desc">{product.shortDescription || 'Đang cập nhật mô tả.'}</p>
-                    <p className="product-config"><b>Cấu hình:</b> {product.detailDescription || 'Đang cập nhật.'}</p>
-                    <p className="product-stock">Kho còn: {product.quantity ?? 'Đang cập nhật'} sản phẩm</p>
-
+                    <p className="product-desc"><b>Miêu tả: </b>{product.shortDescription || 'Đang cập nhật mô tả.'}</p>
+                    <p className="product-config"><b>Cấu hình: </b> {product.detailDescription || 'Đang cập nhật.'}</p>
+                    <p className={`product-stock ${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                        {product.quantity > 0 ? 'Còn hàng' : 'Hết hàng'}
+                    </p>
                     <div className="quantity-control">
                         <button onClick={decreaseQty}><MinusOutlined /></button>
                         <span>{quantity}</span>
