@@ -11,7 +11,9 @@ const HomePage = () => {
             <ScrollToTop />
             <Banner />
             <Slider />
-            <ProductList />
+            <div className="white-bg-section">
+                <ProductList />
+            </div>
             <FlashSaleList />
             <ChatWidget />
         </>

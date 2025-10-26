@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { List, Form, Input, Button, message } from 'antd';
 import { getCommentsByProductAPI, postCommentAPI } from '@/services/api';
-import './comment.section.scss'
+import './comment.section.scss';
+
 const { TextArea } = Input;
 
 interface CommentProps {
@@ -22,6 +23,7 @@ const CommentSection = ({ productId }: CommentProps) => {
     const [comments, setComments] = useState<CommentItem[]>([]);
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(3); // 👈 hiển thị 3 bình luận mới nhất ban đầu
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user?.id;
@@ -30,7 +32,7 @@ const CommentSection = ({ productId }: CommentProps) => {
         try {
             const res = await getCommentsByProductAPI(productId);
             if (res?.data) {
-                setComments(res.data.reverse());
+                setComments(res.data.reverse()); // bình luận mới nhất ở đầu
             }
         } catch (error) {
             console.error('Lỗi khi tải bình luận:', error);
@@ -38,13 +40,8 @@ const CommentSection = ({ productId }: CommentProps) => {
     };
 
     const handleSubmit = async () => {
-        if (!userId) {
-            return message.warning('Vui lòng đăng nhập để bình luận.');
-        }
-
-        if (!content.trim()) {
-            return message.warning('Vui lòng nhập nội dung bình luận.');
-        }
+        if (!userId) return message.warning('Vui lòng đăng nhập để bình luận.');
+        if (!content.trim()) return message.warning('Vui lòng nhập nội dung bình luận.');
 
         setLoading(true);
         try {
@@ -64,47 +61,65 @@ const CommentSection = ({ productId }: CommentProps) => {
         fetchComments();
     }, [productId]);
 
+    const visibleComments = comments.slice(0, visibleCount);
+
     return (
         <div className="comment-section">
-            <h3 style={{ borderTop: '1px solid #f0f0f0', paddingTop: 16, marginTop: 16 }}>Bình luận sản phẩm</h3>
+            <h3 style={{ borderTop: '1px solid #f0f0f0', paddingTop: 16, marginTop: 16 }}>
+                Bình luận sản phẩm
+            </h3>
+
             <List
-                dataSource={comments}
+                dataSource={visibleComments}
                 itemLayout="horizontal"
-                renderItem={(item, index) => {
-                    return (
-                        <List.Item style={{ borderBottom: index !== comments.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
-                            <List.Item.Meta
-                                avatar={
-                                    <img
-                                        src={
-                                            item.user?.avatar
-                                                ? item.user.avatar.startsWith('http')
-                                                    ? item.user.avatar
-                                                    : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${item.user.avatar}`
-                                                : '/default-avatar.png'
-                                        }
-                                        alt={item.user?.name || 'User'}
-                                        className="comment-avatar"
-                                    />
-                                }
-
-
-                                title={item.user?.name || 'Ẩn danh'}
-                                description={
-                                    <>
-                                        <div>{item.content}</div>
-                                        <div style={{ fontSize: 12, color: '#999' }}>
-                                            {new Date(item.createdAt).toLocaleString('vi-VN')}
-                                        </div>
-                                    </>
-                                }
-                            />
-                        </List.Item>
-                    );
-                }}
+                renderItem={(item, index) => (
+                    <List.Item
+                        style={{
+                            borderBottom: index !== visibleComments.length - 1 ? '1px solid #f0f0f0' : 'none',
+                        }}
+                    >
+                        <List.Item.Meta
+                            avatar={
+                                <img
+                                    src={
+                                        item.user?.avatar
+                                            ? item.user.avatar.startsWith('http')
+                                                ? item.user.avatar
+                                                : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${item.user.avatar}`
+                                            : '/default-avatar.png'
+                                    }
+                                    alt={item.user?.name || 'User'}
+                                    className="comment-avatar"
+                                />
+                            }
+                            title={item.user?.name || 'Ẩn danh'}
+                            description={
+                                <>
+                                    <div>{item.content}</div>
+                                    <div style={{ fontSize: 12, color: '#999' }}>
+                                        {new Date(item.createdAt).toLocaleString('vi-VN')}
+                                    </div>
+                                </>
+                            }
+                        />
+                    </List.Item>
+                )}
             />
 
-
+            {/* Nút “Xem thêm” & “Thu gọn” */}
+            {comments.length > 3 && (
+                <div style={{ textAlign: 'center', marginTop: 8 }}>
+                    {visibleCount < comments.length ? (
+                        <Button type="link" onClick={() => setVisibleCount((prev) => prev + 3)}>
+                            Xem thêm bình luận cũ
+                        </Button>
+                    ) : (
+                        <Button type="link" onClick={() => setVisibleCount(3)}>
+                            Thu gọn bình luận
+                        </Button>
+                    )}
+                </div>
+            )}
 
             <Form.Item style={{ marginTop: 16 }}>
                 <TextArea
@@ -122,7 +137,8 @@ const CommentSection = ({ productId }: CommentProps) => {
                     Gửi bình luận
                 </Button>
             </Form.Item>
-        </div >
+        </div>
     );
 };
+
 export default CommentSection;
