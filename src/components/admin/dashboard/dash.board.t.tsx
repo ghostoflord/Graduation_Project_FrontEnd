@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
                 title="📊 Doanh thu theo tháng"
                 bordered
                 style={{
-                    flex: '1 1 600px', // ưu tiên co giãn
+                    flex: '1 1 1000px', // ưu tiên co giãn
                     minWidth: '300px', // ngưỡng nhỏ nhất
                     flexGrow: 1,
                 }}
