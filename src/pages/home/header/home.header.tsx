@@ -287,23 +287,19 @@ export default function Header() {
                     open={drawerVisible}
                 >
                     <ul className="mobile-menu">
+                        <li><NavLink to="/profile" onClick={() => setDrawerVisible(false)}>Trang cá nhân</NavLink></li>
                         <li><NavLink to="/?sort=price_asc" onClick={() => setDrawerVisible(false)}>Giá tăng dần</NavLink></li>
                         <li><NavLink to="/?sort=price_desc" onClick={() => setDrawerVisible(false)}>Giá giảm dần</NavLink></li>
-                        <li>
-                            <NavLink
-                                to={`/?filter=${encodeURIComponent('price >= 10000000 and price <= 150000000')}`}
-                                onClick={() => setDrawerVisible(false)}
-                            >
-                                Từ 10 triệu - 15 triệu
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                to={`/?filter=${encodeURIComponent('price >= 15000000 and price <= 30000000')}`}
-                                onClick={() => setDrawerVisible(false)}
-                            >
-                                Từ 15 triệu - 30 triệu
-                            </NavLink>
+                        <li className="submenu">
+                            <details>
+                                <summary>Bộ lọc giá</summary>
+                                <ul>
+                                    <li><NavLink to="/?sort=price_asc" onClick={() => setDrawerVisible(false)}>Giá tăng dần</NavLink></li>
+                                    <li><NavLink to="/?sort=price_desc" onClick={() => setDrawerVisible(false)}>Giá giảm dần</NavLink></li>
+                                    <li><NavLink to={`/?filter=${encodeURIComponent('price >= 10000000 and price <= 15000000')}`} onClick={() => setDrawerVisible(false)}>Từ 10 triệu - 15 triệu</NavLink></li>
+                                    <li><NavLink to={`/?filter=${encodeURIComponent('price >= 15000000 and price <= 30000000')}`} onClick={() => setDrawerVisible(false)}>Từ 15 triệu - 30 triệu</NavLink></li>
+                                </ul>
+                            </details>
                         </li>
                         <li><NavLink to="/" onClick={() => setDrawerVisible(false)}>Trang chủ</NavLink></li>
                         <li><IntroduceDropDown onItemClick={() => setDrawerVisible(false)} /></li>
