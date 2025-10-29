@@ -1,62 +1,163 @@
-import React from "react";
-import { Card, Tag, Tooltip } from "antd";
-import type { Product } from "../product.factory.page"; // ✅ import type từ trang chính
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Rate, message } from "antd";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import { addOrUpdateReviewAPI } from "@/services/api";
+import slugify from "slugify";
+import "./ProductCard.scss";
 
-const formatVND = (n: number) =>
-    n.toLocaleString("vi-VN") + "₫";
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    discountPrice?: number;
+    image?: string;
+    quantity?: number;
+    averageRating?: number;
+    totalReviews?: number;
+    bestsell?: boolean;
+    sell?: boolean;
+}
 
-const placeholder =
-    "data:image/svg+xml;utf8," +
-    encodeURIComponent(
-        `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'>
-            <rect width='100%' height='100%' fill='#f5f6fa'/>
-            <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#c8c9ce' font-size='18'>
-                No image
-            </text>
-        </svg>`
-    );
+interface Props {
+    product: Product;
+    userId?: number | null;
+    selectedCompareProducts: number[];
+    handleSelectCompare: (id: number) => void;
+    handleToggleLike: (id: number) => void;
+    isLiked: boolean;
+}
 
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+const ProductCard: React.FC<Props> = ({
+    product,
+    userId,
+    selectedCompareProducts,
+    handleSelectCompare,
+    handleToggleLike,
+    isLiked
+}) => {
+    const formatPrice = (price: number) =>
+        price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+
+    const renderBestsellBadge = (bestsell?: boolean) =>
+        bestsell ? <div className="product-badge best-seller">Best Seller</div> : null;
+
+    const renderSellBadge = (sell?: boolean) =>
+        sell ? <div className="product-discount">Hot</div> : null;
+
     return (
-        <Card
-            className="product-card"
-            hoverable
-            cover={
+        <div className="product-card" key={product.id}>
+            <Link to={`/product/${slugify(product.name)}-${product.id}`}>
+                {renderBestsellBadge(product.bestsell)}
+                {renderSellBadge(product.sell)}
+
                 <div className="product-image">
-                    <img src={product.image || placeholder} alt={product.name} />
-                    {product.discount ? (
-                        <Tag className="discount-tag">Giảm {product.discount}%</Tag>
-                    ) : null}
-                </div>
-            }
-        >
-            <div className="card-body">
-                <h4 className="product-name" title={product.name}>
-                    {product.name}
-                </h4>
-
-                <div className="price-row">
-                    <div className="price">{formatVND(product.price)}</div>
-                    {product.oldPrice && (
-                        <div className="old-price">{formatVND(product.oldPrice)}</div>
-                    )}
+                    <img
+                        src={
+                            product.image
+                                ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
+                                : "/default-product.jpg"
+                        }
+                        alt={product.name}
+                    />
                 </div>
 
-                <div className="meta-row">
-                    <div className="meta-item">{product.features?.join(", ") || ""}</div>
-                    <div className="meta-item">{product.size}</div>
-                </div>
+                <div className="product-info">
+                    <div className="product-name">{product.name}</div>
 
-                <div className="card-footer">
-                    <Tooltip title="So sánh">
-                        <label className="compare">
-                            <input type="radio" name="compare" />
-                            <span> So sánh</span>
-                        </label>
-                    </Tooltip>
+                    <div className="product-price">
+                        {product.discountPrice ? (
+                            <>
+                                <span className="price-current">
+                                    {formatPrice(product.discountPrice)}
+                                </span>
+                                <span className="price-old">
+                                    {formatPrice(product.price)}
+                                </span>
+                            </>
+                        ) : (
+                            <span className="price-current">
+                                {formatPrice(product.price)}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="product-stock">
+                        Kho: {product.quantity || 0} sản phẩm
+                    </div>
+
+                    <div className="product-rating-like">
+                        <div
+                            className="product-rating"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }}
+                        >
+                            <Rate
+                                allowHalf
+                                defaultValue={
+                                    product.averageRating && product.averageRating > 0
+                                        ? product.averageRating
+                                        : 5
+                                }
+                                onChange={async (value) => {
+                                    if (!userId || isNaN(userId)) {
+                                        message.warning("Bạn cần đăng nhập để đánh giá sản phẩm");
+                                        return;
+                                    }
+                                    try {
+                                        await addOrUpdateReviewAPI(product.id, userId, value);
+                                        message.success(`Bạn đã đánh giá ${value} sao.`);
+                                    } catch (err) {
+                                        console.error(err);
+                                        message.error("Đánh giá thất bại");
+                                    }
+                                }}
+                            />
+                            <span>
+                                {product.totalReviews && product.totalReviews > 0
+                                    ? `(${product.totalReviews})`
+                                    : "(0)"}
+                            </span>
+                        </div>
+
+                        <div
+                            className="product-like"
+                            title="Yêu thích"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleToggleLike(product.id);
+                            }}
+                        >
+                            {isLiked ? (
+                                <HeartFilled style={{ fontSize: 14, color: "red" }} />
+                            ) : (
+                                <HeartOutlined style={{ fontSize: 14, color: "gray" }} />
+                            )}
+                            <span className="like-text">Yêu thích</span>
+                        </div>
+                    </div>
+
+                    <div className="product-compare">
+                        <button
+                            className={`compare-btn ${selectedCompareProducts.includes(product.id)
+                                    ? "selected"
+                                    : ""
+                                }`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleSelectCompare(product.id);
+                            }}
+                        >
+                            {selectedCompareProducts.includes(product.id)
+                                ? "Đã chọn"
+                                : "So sánh"}
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </Card>
+            </Link>
+        </div>
     );
 };
 
