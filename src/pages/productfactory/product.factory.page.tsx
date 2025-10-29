@@ -22,11 +22,9 @@ export interface Product {
 }
 
 const ProductFactoryPage: React.FC = () => {
-    // dữ liệu từ API
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    // Filter & sort state
     const [priceRange, setPriceRange] = useState<[number, number]>([0, 30000000]);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -38,17 +36,14 @@ const ProductFactoryPage: React.FC = () => {
     const [pageSize] = useState(10);
     const [total, setTotal] = useState(0);
 
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const userId = user?.id;
-
     const location = useLocation();
     const query = new URLSearchParams(location.search);
-    const search = query.get('search') || '';
-    const sort = query.get('sort');
-    const priceFrom = query.get('priceFrom');
-    const priceTo = query.get('priceTo');
+    const search = query.get("search") || "";
+    const sort = query.get("sort");
+    const priceFrom = query.get("priceFrom");
+    const priceTo = query.get("priceTo");
 
-    // Gọi API khi filter/sort thay đổi
+    // ✅ Gọi API khi filter/sort thay đổi
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
@@ -56,14 +51,29 @@ const ProductFactoryPage: React.FC = () => {
                 let queryParams = `current=${current}&pageSize=${pageSize}`;
                 let filters: string[] = [];
 
-                if (search) filters.push(`name~'${search}'`);
-                if (priceFrom) filters.push(`price>=${priceFrom}`);
-                if (priceTo) filters.push(`price<=${priceTo}`);
+                // Search theo tên
+                if (search) filters.push(`name like '%${search}%'`);
 
-                if (filters.length > 0) queryParams += `&filter=${encodeURIComponent(filters.join(';'))}`;
+                // Giá từ URL
+                const min = Number(priceFrom ?? 0);
+                const max = Number(priceTo ?? 0);
 
-                if (sort === 'price_asc') queryParams += '&sort=price';
-                else if (sort === 'price_desc') queryParams += '&sort=price,desc';
+                if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
+                    filters.push(`price >= ${min} and price <= ${max}`);
+                } else if (!isNaN(min) && min > 0) {
+                    filters.push(`price >= ${min}`);
+                } else if (!isNaN(max) && max > 0) {
+                    filters.push(`price <= ${max}`);
+                }
+
+                // ✅ nối filter bằng " and " thay vì ";"
+                if (filters.length > 0) {
+                    queryParams += `&filter=${encodeURIComponent(filters.join(" and "))}`;
+                }
+
+                // Sort
+                if (sort === "price_asc") queryParams += "&sort=price";
+                else if (sort === "price_desc") queryParams += "&sort=price,desc";
 
                 const res = await getProductsAPI(queryParams);
                 setProducts(res.data?.result || []);
@@ -75,10 +85,11 @@ const ProductFactoryPage: React.FC = () => {
                 setLoading(false);
             }
         };
+
         fetchProducts();
     }, [current, search, sort, priceFrom, priceTo]);
 
-
+    // Debounce tìm kiếm
     const [debouncedKeyword] = useDebounce(keyword, 500);
 
     useEffect(() => {
@@ -89,18 +100,23 @@ const ProductFactoryPage: React.FC = () => {
         window.dispatchEvent(new PopStateEvent("popstate"));
     }, [debouncedKeyword]);
 
-
     // unique lists để hiển thị filter
     const brandList = useMemo(
         () => Array.from(new Set(products.map((p) => p.brand))).sort(),
         [products]
     );
-    const typeList = useMemo(() => Array.from(new Set(products.map((p) => p.type))), [products]);
+    const typeList = useMemo(
+        () => Array.from(new Set(products.map((p) => p.type))),
+        [products]
+    );
     const featureList = useMemo(
         () => Array.from(new Set(products.flatMap((p) => p.features || []))).sort(),
         [products]
     );
-    const sizeList = useMemo(() => Array.from(new Set(products.map((p) => p.size))), [products]);
+    const sizeList = useMemo(
+        () => Array.from(new Set(products.map((p) => p.size))),
+        [products]
+    );
 
     return (
         <div className="product-page container">
@@ -160,7 +176,6 @@ const ProductFactoryPage: React.FC = () => {
                                     window.dispatchEvent(new PopStateEvent("popstate"));
                                 }}
                             />
-
                         </div>
                     </div>
 

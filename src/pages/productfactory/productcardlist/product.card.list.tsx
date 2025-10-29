@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Rate, message } from "antd";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { addOrUpdateReviewAPI } from "@/services/api";
-import slugify from "slugify";
-import "./ProductCard.scss";
+import { slugify } from "@/utils/slugify";
+import "./product.card.list.scss";
+
 
 interface Product {
     id: number;
@@ -22,7 +23,7 @@ interface Product {
 interface Props {
     product: Product;
     userId?: number | null;
-    selectedCompareProducts: number[];
+    selectedCompareProducts?: number[];
     handleSelectCompare: (id: number) => void;
     handleToggleLike: (id: number) => void;
     isLiked: boolean;
@@ -31,14 +32,16 @@ interface Props {
 const ProductCard: React.FC<Props> = ({
     product,
     userId,
-    selectedCompareProducts,
+    selectedCompareProducts = [],
     handleSelectCompare,
     handleToggleLike,
     isLiked
 }) => {
+    // --- format tiền tệ ---
     const formatPrice = (price: number) =>
         price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 
+    // --- badge sản phẩm ---
     const renderBestsellBadge = (bestsell?: boolean) =>
         bestsell ? <div className="product-badge best-seller">Best Seller</div> : null;
 
@@ -46,61 +49,40 @@ const ProductCard: React.FC<Props> = ({
         sell ? <div className="product-discount">Hot</div> : null;
 
     return (
-        <div className="product-card" key={product.id}>
+        <div className="pc-card" key={product.id}>
             <Link to={`/product/${slugify(product.name)}-${product.id}`}>
-                {renderBestsellBadge(product.bestsell)}
-                {renderSellBadge(product.sell)}
+                {product.bestsell && <div className="pc-badge pc-bestseller">Best Seller</div>}
+                {product.sell && <div className="pc-badge pc-hot">Hot</div>}
 
-                <div className="product-image">
+                <div className="pc-image">
                     <img
-                        src={
-                            product.image
-                                ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
-                                : "/default-product.jpg"
-                        }
+                        src={product.image
+                            ? `${import.meta.env.VITE_BACKEND_URL}/upload/products/${product.image}`
+                            : "/default-product.jpg"}
                         alt={product.name}
                     />
                 </div>
 
-                <div className="product-info">
-                    <div className="product-name">{product.name}</div>
-
-                    <div className="product-price">
+                <div className="pc-info">
+                    <div className="pc-name">{product.name}</div>
+                    <div className="pc-price">
                         {product.discountPrice ? (
                             <>
-                                <span className="price-current">
-                                    {formatPrice(product.discountPrice)}
-                                </span>
-                                <span className="price-old">
-                                    {formatPrice(product.price)}
-                                </span>
+                                <span className="pc-price-current">{formatPrice(product.discountPrice)}</span>
+                                <span className="pc-price-old">{formatPrice(product.price)}</span>
                             </>
                         ) : (
-                            <span className="price-current">
-                                {formatPrice(product.price)}
-                            </span>
+                            <span className="pc-price-current">{formatPrice(product.price)}</span>
                         )}
                     </div>
 
-                    <div className="product-stock">
-                        Kho: {product.quantity || 0} sản phẩm
-                    </div>
+                    <div className="pc-stock">Kho: {product.quantity || 0} sản phẩm</div>
 
-                    <div className="product-rating-like">
-                        <div
-                            className="product-rating"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                            }}
-                        >
+                    <div className="pc-rating-like">
+                        <div className="pc-rating" onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
                             <Rate
                                 allowHalf
-                                defaultValue={
-                                    product.averageRating && product.averageRating > 0
-                                        ? product.averageRating
-                                        : 5
-                                }
+                                defaultValue={product.averageRating && product.averageRating > 0 ? product.averageRating : 5}
                                 onChange={async (value) => {
                                     if (!userId || isNaN(userId)) {
                                         message.warning("Bạn cần đăng nhập để đánh giá sản phẩm");
@@ -115,49 +97,27 @@ const ProductCard: React.FC<Props> = ({
                                     }
                                 }}
                             />
-                            <span>
-                                {product.totalReviews && product.totalReviews > 0
-                                    ? `(${product.totalReviews})`
-                                    : "(0)"}
-                            </span>
+                            <span>({product.totalReviews || 0})</span>
                         </div>
 
-                        <div
-                            className="product-like"
-                            title="Yêu thích"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleToggleLike(product.id);
-                            }}
-                        >
-                            {isLiked ? (
-                                <HeartFilled style={{ fontSize: 14, color: "red" }} />
-                            ) : (
-                                <HeartOutlined style={{ fontSize: 14, color: "gray" }} />
-                            )}
-                            <span className="like-text">Yêu thích</span>
+                        <div className="pc-like" title="Yêu thích" onClick={(e) => { e.preventDefault(); handleToggleLike(product.id); }}>
+                            {isLiked ? <HeartFilled style={{ fontSize: 14, color: "red" }} /> : <HeartOutlined style={{ fontSize: 14, color: "gray" }} />}
+                            <span className="pc-like-text">Yêu thích</span>
                         </div>
                     </div>
 
-                    <div className="product-compare">
+                    <div className="pc-compare">
                         <button
-                            className={`compare-btn ${selectedCompareProducts.includes(product.id)
-                                    ? "selected"
-                                    : ""
-                                }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleSelectCompare(product.id);
-                            }}
+                            className={`pc-compare-btn ${selectedCompareProducts?.includes(product.id) ? "selected" : ""}`}
+                            onClick={(e) => { e.preventDefault(); handleSelectCompare(product.id); }}
                         >
-                            {selectedCompareProducts.includes(product.id)
-                                ? "Đã chọn"
-                                : "So sánh"}
+                            {selectedCompareProducts?.includes(product.id) ? "Đã chọn" : "So sánh"}
                         </button>
                     </div>
                 </div>
             </Link>
         </div>
+
     );
 };
 
