@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Rate, message } from "antd";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { addOrUpdateReviewAPI } from "@/services/api";
@@ -23,8 +23,6 @@ interface Product {
 interface Props {
     product: Product;
     userId?: number | null;
-    selectedCompareProducts?: number[];
-    handleSelectCompare: (id: number) => void;
     handleToggleLike: (id: number) => void;
     isLiked: boolean;
 }
@@ -32,28 +30,71 @@ interface Props {
 const ProductCard: React.FC<Props> = ({
     product,
     userId,
-    selectedCompareProducts = [],
-    handleSelectCompare,
     handleToggleLike,
     isLiked
 }) => {
+
+    const [selectedCompareProducts, setSelectedCompareProducts] = useState<number[]>([]);
+
+
+    const navigate = useNavigate();
     // --- format tiền tệ ---
-    const formatPrice = (price: number) =>
-        price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+    const formatPrice = (price: any) => {
+        if (!price) return 'Đang cập nhật';
+        const cleanPrice = String(price).replace(/\./g, '');
+        const num = Number(cleanPrice);
+        if (isNaN(num) || num <= 0) return 'Đang cập nhật';
+        return num.toLocaleString('vi-VN') + '₫';
+    };
 
-    // --- badge sản phẩm ---
-    const renderBestsellBadge = (bestsell?: boolean) =>
-        bestsell ? <div className="product-badge best-seller">Best Seller</div> : null;
+    const renderBestsellBadge = (bestsell: string) => {
+        switch (bestsell) {
+            case 'BESTSELLER':
+                return <div className="pc-badge best-seller">Best Seller</div>;
+            case 'HOT':
+                return <div className="pc-badge hot">Hot</div>;
+            case 'FEATURED':
+                return <div className="pc-badge featured">Featured</div>;
+            default:
+                return null;
+        }
+    };
 
-    const renderSellBadge = (sell?: boolean) =>
-        sell ? <div className="product-discount">Hot</div> : null;
+    const renderSellBadge = (sell: string) => {
+        if (sell && !isNaN(Number(sell))) {
+            const discountPercentage = Number(sell);
+            return <div className="pc-discount">Giảm {discountPercentage}%</div>;
+        }
+        return null;
+    };
+
+    const handleSelectCompare = (id: number) => {
+        setSelectedCompareProducts((prev) => {
+            if (prev.includes(id)) {
+                return prev.filter((pid) => pid !== id); // Bỏ chọn
+            }
+
+            if (prev.length >= 2) {
+                message.warning("Chỉ được so sánh 2 sản phẩm một lúc");
+                return prev;
+            }
+
+            const newSelected = [...prev, id];
+            if (newSelected.length === 2) {
+                const query = newSelected.join(",");
+                navigate(`/compare?ids=${query}`);
+            }
+
+            return newSelected;
+        });
+    };
+
 
     return (
         <div className="pc-card" key={product.id}>
             <Link to={`/product/${slugify(product.name)}-${product.id}`}>
-                {product.bestsell && <div className="pc-badge pc-bestseller">Best Seller</div>}
-                {product.sell && <div className="pc-badge pc-hot">Hot</div>}
-
+                {renderBestsellBadge(product.bestsell)}
+                {renderSellBadge(product.sell)}
                 <div className="pc-image">
                     <img
                         src={product.image
@@ -78,6 +119,7 @@ const ProductCard: React.FC<Props> = ({
 
                     <div className="pc-stock">Kho: {product.quantity || 0} sản phẩm</div>
 
+
                     <div className="pc-rating-like">
                         <div className="pc-rating" onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
                             <Rate
@@ -97,12 +139,26 @@ const ProductCard: React.FC<Props> = ({
                                     }
                                 }}
                             />
-                            <span>({product.totalReviews || 0})</span>
+                            <span>
+                                {product.totalReviews && product.totalReviews > 0
+                                    ? `(${product.totalReviews})`
+                                    : '(0)'}
+                            </span>
                         </div>
 
-                        <div className="pc-like" title="Yêu thích" onClick={(e) => { e.preventDefault(); handleToggleLike(product.id); }}>
-                            {isLiked ? <HeartFilled style={{ fontSize: 14, color: "red" }} /> : <HeartOutlined style={{ fontSize: 14, color: "gray" }} />}
-                            <span className="pc-like-text">Yêu thích</span>
+                        <div className="pc-like"
+                            title="Yêu thích"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleToggleLike(product.id,);
+                            }}
+                        >
+                            {isLiked ? (
+                                <HeartFilled style={{ fontSize: 14, color: 'red' }} />
+                            ) : (
+                                <HeartOutlined style={{ fontSize: 14, color: 'gray' }} />
+                            )}
+                            <span className="like-text">Yêu thích</span>
                         </div>
                     </div>
 
@@ -114,6 +170,7 @@ const ProductCard: React.FC<Props> = ({
                             {selectedCompareProducts?.includes(product.id) ? "Đã chọn" : "So sánh"}
                         </button>
                     </div>
+
                 </div>
             </Link>
         </div>
