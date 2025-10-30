@@ -185,17 +185,9 @@ const ProductFactoryPage: React.FC = () => {
                         </div>
                     ) : (
                         <div className="product-grid">
-                            {products.length === 0 ? (
-                                <Empty description="Không có sản phẩm" />
-                            ) : (
-                                <Row gutter={[16, 16]}>
-                                    {products.map((p) => (
-                                        <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
-                                            <ProductCard product={p} />
-                                        </Col>
-                                    ))}
-                                </Row>
-                            )}
+
+                            <ProductCard />
+
                         </div>
                     )}
                 </main>
