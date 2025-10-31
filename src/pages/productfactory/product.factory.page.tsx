@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Row, Col, Empty, Spin } from "antd";
+import { Empty, Spin } from "antd";
 import "./product.factory.page.scss";
 import ProductCard from "./productcardlist/product.card.list";
 import SortBar from "./sortbar/sort.bar";
@@ -42,8 +42,11 @@ const ProductFactoryPage: React.FC = () => {
     const sort = query.get("sort");
     const priceFrom = query.get("priceFrom");
     const priceTo = query.get("priceTo");
+    const typeParam = query.get("type");
 
-    // ✅ Gọi API khi filter/sort thay đổi
+    const [debouncedKeyword] = useDebounce(keyword, 500);
+
+    // Gọi API sản phẩm
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
@@ -51,13 +54,11 @@ const ProductFactoryPage: React.FC = () => {
                 let queryParams = `current=${current}&pageSize=${pageSize}`;
                 let filters: string[] = [];
 
-                // Search theo tên
                 if (search) filters.push(`name like '%${search}%'`);
+                if (typeParam) filters.push(`type='${typeParam}'`);
 
-                // Giá từ URL
                 const min = Number(priceFrom ?? 0);
                 const max = Number(priceTo ?? 0);
-
                 if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
                     filters.push(`price >= ${min} and price <= ${max}`);
                 } else if (!isNaN(min) && min > 0) {
@@ -66,12 +67,10 @@ const ProductFactoryPage: React.FC = () => {
                     filters.push(`price <= ${max}`);
                 }
 
-                // ✅ nối filter bằng " and " thay vì ";"
                 if (filters.length > 0) {
                     queryParams += `&filter=${encodeURIComponent(filters.join(" and "))}`;
                 }
 
-                // Sort
                 if (sort === "price_asc") queryParams += "&sort=price";
                 else if (sort === "price_desc") queryParams += "&sort=price,desc";
 
@@ -87,11 +86,9 @@ const ProductFactoryPage: React.FC = () => {
         };
 
         fetchProducts();
-    }, [current, search, sort, priceFrom, priceTo]);
+    }, [current, search, sort, priceFrom, priceTo, typeParam]);
 
-    // Debounce tìm kiếm
-    const [debouncedKeyword] = useDebounce(keyword, 500);
-
+    //  Debounce search
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (debouncedKeyword) params.set("search", debouncedKeyword);
@@ -100,19 +97,27 @@ const ProductFactoryPage: React.FC = () => {
         window.dispatchEvent(new PopStateEvent("popstate"));
     }, [debouncedKeyword]);
 
-    // unique lists để hiển thị filter
-    const brandList = useMemo(
-        () => Array.from(new Set(products.map((p) => p.brand))).sort(),
+    //  Lấy danh sách factory (type)
+    const factoryList = useMemo(
+        () => Array.from(new Set(products.map((p) => p.type))).sort(),
         [products]
     );
-    const typeList = useMemo(
-        () => Array.from(new Set(products.map((p) => p.type))),
-        [products]
-    );
+
+    //  Khi click pill → lọc theo factory
+    const handleSelectFactory = (factory: string) => {
+        setSelectedTypes([factory]);
+
+        const params = new URLSearchParams(window.location.search);
+        params.set("type", factory);
+        window.history.pushState({}, "", `?${params.toString()}`);
+        window.dispatchEvent(new PopStateEvent("popstate"));
+    };
+
     const featureList = useMemo(
         () => Array.from(new Set(products.flatMap((p) => p.features || []))).sort(),
         [products]
     );
+
     const sizeList = useMemo(
         () => Array.from(new Set(products.map((p) => p.size))),
         [products]
@@ -120,16 +125,22 @@ const ProductFactoryPage: React.FC = () => {
 
     return (
         <div className="product-page container">
+            {/*  Top factory pill list */}
             <div className="top-categories">
                 <div className="pill-list">
-                    <span>LENOVO LECOO</span>
-                    <span>LENOVO IDEAPAD SLIM</span>
-                    <span>LENOVO IDEAPAD SLIM OLED</span>
-                    <span>LENOVO YOGA</span>
-                    <span>LENOVO THINKBOOK 14, 16</span>
-                    <span>THINKPAD T14, T14s, T16</span>
-                    <span>THINKPAD X1 CARBON</span>
-                    <span>THINKPAD YOGA</span>
+                    {factoryList.length > 0 ? (
+                        factoryList.map((factory) => (
+                            <span
+                                key={factory}
+                                onClick={() => handleSelectFactory(factory)}
+                                className={selectedTypes.includes(factory) ? "active" : ""}
+                            >
+                                {factory}
+                            </span>
+                        ))
+                    ) : (
+                        <span>Đang tải danh mục...</span>
+                    )}
                 </div>
             </div>
 
@@ -138,10 +149,10 @@ const ProductFactoryPage: React.FC = () => {
                     <FilterSidebar
                         priceRange={priceRange}
                         setPriceRange={setPriceRange}
-                        brands={brandList}
+                        brands={[]} // không dùng brand ở đây
                         selectedBrands={selectedBrands}
                         setSelectedBrands={setSelectedBrands}
-                        types={typeList}
+                        types={factoryList}
                         selectedTypes={selectedTypes}
                         setSelectedTypes={setSelectedTypes}
                         features={featureList}
@@ -185,9 +196,11 @@ const ProductFactoryPage: React.FC = () => {
                         </div>
                     ) : (
                         <div className="product-grid">
-
-                            <ProductCard />
-
+                            {products.length > 0 ? (
+                                products.map((p) => <ProductCard key={p.id} product={p} />)
+                            ) : (
+                                <Empty description="Không có sản phẩm" />
+                            )}
                         </div>
                     )}
                 </main>

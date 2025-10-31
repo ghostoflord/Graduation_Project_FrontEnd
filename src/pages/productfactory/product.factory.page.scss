@@ -244,6 +244,35 @@
         }
     }
 
+    .pill-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+
+        span {
+            padding: 6px 14px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+
+            &:hover {
+                background: #f0f0f0;
+                border-color: #1677ff;
+                color: #1677ff;
+            }
+
+            &.active {
+                background: #1677ff;
+                color: #fff;
+                border-color: #1677ff;
+            }
+        }
+    }
+
+
     // --- Responsive ---
     @media (max-width: 1200px) {
         .main .product-list {

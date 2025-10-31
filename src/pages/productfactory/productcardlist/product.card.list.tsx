@@ -197,11 +197,11 @@ const ProductCard = () => {
                                                         <div className="pc-price">
                                                             {product.discountPrice ? (
                                                                 <>
-                                                                    <span className="price-current">{formatPrice(product.discountPrice)}</span>
-                                                                    <span className="price-old">{formatPrice(product.price)}</span>
+                                                                    <span className="pc-price-current">{formatPrice(product.discountPrice)}</span>
+                                                                    <span className="pc-price-old">{formatPrice(product.price)}</span>
                                                                 </>
                                                             ) : (
-                                                                <span className="price-current">{formatPrice(product.price)}</span>
+                                                                <span className="pc-price-current">{formatPrice(product.price)}</span>
                                                             )}
                                                         </div>
                                                         <div className="pc-stock">Kho: {product.quantity || 0} sản phẩm</div>
