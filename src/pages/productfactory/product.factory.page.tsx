@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Empty, Spin } from "antd";
 import "./product.factory.page.scss";
 import ProductCard from "./productcardlist/product.card.list";
 import SortBar from "./sortbar/sort.bar";
 import FilterSidebar from "./filtersidebar/filter.sidebar";
 import { getProductsAPI } from "@/services/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 export interface Product {
@@ -19,6 +19,7 @@ export interface Product {
     oldPrice?: number;
     discount?: number;
     image?: string;
+    // thêm fields backend trả về nếu cần
 }
 
 const ProductFactoryPage: React.FC = () => {
@@ -45,8 +46,16 @@ const ProductFactoryPage: React.FC = () => {
     const typeParam = query.get("type");
 
     const [debouncedKeyword] = useDebounce(keyword, 500);
+    const navigate = useNavigate();
 
-    // Gọi API sản phẩm
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (debouncedKeyword) params.set("search", debouncedKeyword);
+        else params.delete("search");
+        navigate(`?${params.toString()}`, { replace: true });
+    }, [debouncedKeyword, navigate]);
+
+    // Gọi API sản phẩm **chỉ ở đây**
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
@@ -86,27 +95,15 @@ const ProductFactoryPage: React.FC = () => {
         };
 
         fetchProducts();
-    }, [current, search, sort, priceFrom, priceTo, typeParam]);
+    }, [current, search, sort, priceFrom, priceTo, typeParam, pageSize]);
 
-    //  Debounce search
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        if (debouncedKeyword) params.set("search", debouncedKeyword);
-        else params.delete("search");
-        window.history.pushState({}, "", `?${params.toString()}`);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-    }, [debouncedKeyword]);
-
-    //  Lấy danh sách factory (type)
     const factoryList = useMemo(
         () => Array.from(new Set(products.map((p) => p.type))).sort(),
         [products]
     );
 
-    //  Khi click pill → lọc theo factory
     const handleSelectFactory = (factory: string) => {
         setSelectedTypes([factory]);
-
         const params = new URLSearchParams(window.location.search);
         params.set("type", factory);
         window.history.pushState({}, "", `?${params.toString()}`);
@@ -118,14 +115,10 @@ const ProductFactoryPage: React.FC = () => {
         [products]
     );
 
-    const sizeList = useMemo(
-        () => Array.from(new Set(products.map((p) => p.size))),
-        [products]
-    );
+    const sizeList = useMemo(() => Array.from(new Set(products.map((p) => p.size))), [products]);
 
     return (
         <div className="product-page container">
-            {/*  Top factory pill list */}
             <div className="top-categories">
                 <div className="pill-list">
                     {factoryList.length > 0 ? (
@@ -149,7 +142,7 @@ const ProductFactoryPage: React.FC = () => {
                     <FilterSidebar
                         priceRange={priceRange}
                         setPriceRange={setPriceRange}
-                        brands={[]} // không dùng brand ở đây
+                        brands={[]}
                         selectedBrands={selectedBrands}
                         setSelectedBrands={setSelectedBrands}
                         types={factoryList}
@@ -197,7 +190,20 @@ const ProductFactoryPage: React.FC = () => {
                     ) : (
                         <div className="product-grid">
                             {products.length > 0 ? (
-                                products.map((p) => <ProductCard key={p.id} product={p} />)
+                                // CHỈ RENDER 1 LẦN ProductCard VỚI DỮ LIỆU products
+                                <ProductCard
+                                    products={products}
+                                    total={total}
+                                    current={current}
+                                    setCurrent={setCurrent}
+                                    pageSize={pageSize}
+                                    filterParams={{
+                                        search: search,
+                                        sort: sort,
+                                        priceFrom: priceFrom,
+                                        priceTo: priceTo,
+                                    }}
+                                />
                             ) : (
                                 <Empty description="Không có sản phẩm" />
                             )}
