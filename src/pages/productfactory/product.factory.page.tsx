@@ -76,13 +76,23 @@ const ProductFactoryPage: React.FC = () => {
                     filters.push(`price <= ${max}`);
                 }
 
+                // ✅ Gắn filter vào query string
                 if (filters.length > 0) {
                     queryParams += `&filter=${encodeURIComponent(filters.join(" and "))}`;
                 }
 
-                if (sort === "price_asc") queryParams += "&sort=price";
-                else if (sort === "price_desc") queryParams += "&sort=price,desc";
+                // ✅ Gắn sort vào query string (đúng cú pháp backend hiểu)
+                if (sort && sort !== "default") {
+                    let sortParam = "";
+                    if (sort === "price_asc") sortParam = "price,asc";
+                    else if (sort === "price_desc") sortParam = "price,desc";
+                    else if (sort === "newest") sortParam = "createdAt,desc";
+                    else sortParam = sort; // "name,asc" hoặc "name,desc"
 
+                    queryParams += `&sort=${encodeURIComponent(sortParam)}`;
+                }
+
+                // ✅ Gọi API với query string đầy đủ
                 const res = await getProductsAPI(queryParams);
                 setProducts(res.data?.result || []);
                 setTotal(res.data?.meta?.total || 0);

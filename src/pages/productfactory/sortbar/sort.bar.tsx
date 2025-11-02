@@ -14,8 +14,8 @@ const SortBar: React.FC<Props> = ({ value, onChange }) => {
                 onChange={(v) => onChange(String(v))}
                 options={[
                     { label: "Mặc định", value: "default" },
-                    { label: "A → Z", value: "a_z" },
-                    { label: "Z → A", value: "z_a" },
+                    { label: "A → Z", value: "name,asc" },
+                    { label: "Z → A", value: "name,desc" },
                     { label: "Giá tăng dần", value: "price_asc" },
                     { label: "Giá giảm dần", value: "price_desc" },
                     { label: "Mới nhất", value: "newest" },
