@@ -19,7 +19,6 @@ export interface Product {
     oldPrice?: number;
     discount?: number;
     image?: string;
-    // thêm fields backend trả về nếu cần
 }
 
 const ProductFactoryPage: React.FC = () => {
@@ -41,13 +40,22 @@ const ProductFactoryPage: React.FC = () => {
     const query = new URLSearchParams(location.search);
     const search = query.get("search") || "";
     const sort = query.get("sort");
-    const priceFrom = query.get("priceFrom");
-    const priceTo = query.get("priceTo");
+    const priceParam = query.get("price");
     const typeParam = query.get("type");
+
+    // ✅ Parse priceParam: "1000000-5000000" → min, max
+    let min = 0;
+    let max = 0;
+    if (priceParam) {
+        const [minStr, maxStr] = priceParam.split("-");
+        min = Number(minStr) || 0;
+        max = Number(maxStr) || 0;
+    }
 
     const [debouncedKeyword] = useDebounce(keyword, 500);
     const navigate = useNavigate();
 
+    // ✅ Đồng bộ keyword vào URL
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (debouncedKeyword) params.set("search", debouncedKeyword);
@@ -55,7 +63,7 @@ const ProductFactoryPage: React.FC = () => {
         navigate(`?${params.toString()}`, { replace: true });
     }, [debouncedKeyword, navigate]);
 
-    // Gọi API sản phẩm **chỉ ở đây**
+    // ✅ Gọi API sản phẩm
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
@@ -66,8 +74,7 @@ const ProductFactoryPage: React.FC = () => {
                 if (search) filters.push(`name like '%${search}%'`);
                 if (typeParam) filters.push(`type='${typeParam}'`);
 
-                const min = Number(priceFrom ?? 0);
-                const max = Number(priceTo ?? 0);
+                // ✅ Lọc giá bằng 1 param duy nhất
                 if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
                     filters.push(`price >= ${min} and price <= ${max}`);
                 } else if (!isNaN(min) && min > 0) {
@@ -76,23 +83,22 @@ const ProductFactoryPage: React.FC = () => {
                     filters.push(`price <= ${max}`);
                 }
 
-                // ✅ Gắn filter vào query string
+                // ✅ Gắn filter
                 if (filters.length > 0) {
                     queryParams += `&filter=${encodeURIComponent(filters.join(" and "))}`;
                 }
 
-                // ✅ Gắn sort vào query string (đúng cú pháp backend hiểu)
+                // ✅ Gắn sort (backend hiểu đúng)
                 if (sort && sort !== "default") {
                     let sortParam = "";
                     if (sort === "price_asc") sortParam = "price,asc";
                     else if (sort === "price_desc") sortParam = "price,desc";
                     else if (sort === "newest") sortParam = "createdAt,desc";
-                    else sortParam = sort; // "name,asc" hoặc "name,desc"
-
+                    else sortParam = sort; // ví dụ name,asc
                     queryParams += `&sort=${encodeURIComponent(sortParam)}`;
                 }
 
-                // ✅ Gọi API với query string đầy đủ
+                // ✅ Call API
                 const res = await getProductsAPI(queryParams);
                 setProducts(res.data?.result || []);
                 setTotal(res.data?.meta?.total || 0);
@@ -105,8 +111,9 @@ const ProductFactoryPage: React.FC = () => {
         };
 
         fetchProducts();
-    }, [current, search, sort, priceFrom, priceTo, typeParam, pageSize]);
+    }, [current, search, sort, priceParam, typeParam, pageSize]);
 
+    // ✅ Danh sách type, feature, size
     const factoryList = useMemo(
         () => Array.from(new Set(products.map((p) => p.type))).sort(),
         [products]
@@ -125,7 +132,10 @@ const ProductFactoryPage: React.FC = () => {
         [products]
     );
 
-    const sizeList = useMemo(() => Array.from(new Set(products.map((p) => p.size))), [products]);
+    const sizeList = useMemo(
+        () => Array.from(new Set(products.map((p) => p.size))),
+        [products]
+    );
 
     return (
         <div className="product-page container">
@@ -200,7 +210,6 @@ const ProductFactoryPage: React.FC = () => {
                     ) : (
                         <div className="product-grid">
                             {products.length > 0 ? (
-                                // CHỈ RENDER 1 LẦN ProductCard VỚI DỮ LIỆU products
                                 <ProductCard
                                     products={products}
                                     total={total}
@@ -208,10 +217,9 @@ const ProductFactoryPage: React.FC = () => {
                                     setCurrent={setCurrent}
                                     pageSize={pageSize}
                                     filterParams={{
-                                        search: search,
-                                        sort: sort,
-                                        priceFrom: priceFrom,
-                                        priceTo: priceTo,
+                                        search,
+                                        sort,
+                                        price: priceParam || "",
                                     }}
                                 />
                             ) : (

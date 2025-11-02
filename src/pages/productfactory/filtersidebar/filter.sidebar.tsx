@@ -75,8 +75,7 @@ const FilterSidebar: React.FC<Props> = ({
                         block
                         onClick={() => {
                             const params = new URLSearchParams(window.location.search);
-                            params.set("price", String(priceRange[0]));
-                            params.set("price", String(priceRange[1]));
+                            params.set("price", `${priceRange[0]}-${priceRange[1]}`);
                             window.history.pushState({}, "", `?${params.toString()}`);
                             window.dispatchEvent(new PopStateEvent("popstate")); // để useEffect reload
                         }}
