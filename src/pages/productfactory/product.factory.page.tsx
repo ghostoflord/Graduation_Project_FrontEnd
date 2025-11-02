@@ -41,7 +41,7 @@ const ProductFactoryPage: React.FC = () => {
     const search = query.get("search") || "";
     const sort = query.get("sort");
     const priceParam = query.get("price");
-    const typeParam = query.get("type");
+    const typeParam = query.get("factory");
 
     // ✅ Parse priceParam: "1000000-5000000" → min, max
     let min = 0;
@@ -72,7 +72,7 @@ const ProductFactoryPage: React.FC = () => {
                 let filters: string[] = [];
 
                 if (search) filters.push(`name like '%${search}%'`);
-                if (typeParam) filters.push(`type='${typeParam}'`);
+                if (typeParam) filters.push(`factory='${typeParam}'`);
 
                 // ✅ Lọc giá bằng 1 param duy nhất
                 if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
@@ -113,16 +113,16 @@ const ProductFactoryPage: React.FC = () => {
         fetchProducts();
     }, [current, search, sort, priceParam, typeParam, pageSize]);
 
-    // ✅ Danh sách type, feature, size
+    // Danh sách type, feature, size
     const factoryList = useMemo(
-        () => Array.from(new Set(products.map((p) => p.type))).sort(),
+        () => Array.from(new Set(products.map((p) => p.factory))).sort(),
         [products]
     );
 
     const handleSelectFactory = (factory: string) => {
         setSelectedTypes([factory]);
         const params = new URLSearchParams(window.location.search);
-        params.set("type", factory);
+        params.set("factory", factory);
         window.history.pushState({}, "", `?${params.toString()}`);
         window.dispatchEvent(new PopStateEvent("popstate"));
     };
