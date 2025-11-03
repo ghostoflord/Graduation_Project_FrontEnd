@@ -46,6 +46,7 @@ const ProductFactoryPage: React.FC = () => {
     const sort = query.get("sort");
     const priceParam = query.get("price");
     const typeParam = query.get("factory");
+    const categoryParam = query.get("category");
 
     const [debouncedKeyword] = useDebounce(keyword, 500);
     const navigate = useNavigate();
@@ -81,7 +82,7 @@ const ProductFactoryPage: React.FC = () => {
 
                 if (search) filters.push(`name like '%${search}%'`);
                 if (typeParam) filters.push(`factory='${typeParam}'`);
-                if (query.get("category")) filters.push(`category='${query.get("category")}'`);
+                if (categoryParam) filters.push(`category='${categoryParam}'`);
 
                 // Lọc giá bằng 1 param duy nhất
                 if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
@@ -120,7 +121,7 @@ const ProductFactoryPage: React.FC = () => {
         };
 
         fetchProducts();
-    }, [current, search, sort, priceParam, typeParam, pageSize]);
+    }, [current, search, sort, priceParam, typeParam, categoryParam, pageSize]);
 
     useEffect(() => {
         const newFactories = Array.from(new Set(products.map(p => p.factory))).sort();
