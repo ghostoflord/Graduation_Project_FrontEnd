@@ -8,6 +8,7 @@ import { getProductsAPI } from "@/services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import { CPU_LIST, GPU_LIST, RAM_LIST, ROM_LIST, SCREEN_LIST } from "./productenum/product.enum";
+import FactoryBreadcrumb from "../productbreadcrumb/productfactorybreadcrumd/product.factory.breadcrumd";
 
 export interface Product {
     id: string;
@@ -151,95 +152,98 @@ const ProductFactoryPage: React.FC = () => {
     }, [products]);
 
     return (
-        <div className="product-page container">
+        <>
+            <FactoryBreadcrumb />
+            <div className="product-page container">
 
-            <div className="content">
-                <aside className="sidebar">
-                    <FilterSidebar
-                        priceRange={priceRange}
-                        setPriceRange={setPriceRange}
-                        selectedBrands={selectedBrands}
-                        setSelectedBrands={setSelectedBrands}
-                        types={factoryList}
-                        selectedTypes={selectedTypes}
-                        setSelectedTypes={setSelectedTypes}
-                        features={featureList}
-                        selectedFeatures={selectedFeatures}
-                        setSelectedFeatures={setSelectedFeatures}
-                        sizes={sizeList}
-                        brands={brands}
+                <div className="content">
+                    <aside className="sidebar">
+                        <FilterSidebar
+                            priceRange={priceRange}
+                            setPriceRange={setPriceRange}
+                            selectedBrands={selectedBrands}
+                            setSelectedBrands={setSelectedBrands}
+                            types={factoryList}
+                            selectedTypes={selectedTypes}
+                            setSelectedTypes={setSelectedTypes}
+                            features={featureList}
+                            selectedFeatures={selectedFeatures}
+                            setSelectedFeatures={setSelectedFeatures}
+                            sizes={sizeList}
+                            brands={brands}
 
-                        cpus={CPU_LIST}
-                        selectedCpus={selectedCpus}
-                        setSelectedCpus={setSelectedCpus}
-                        gpus={GPU_LIST}
-                        selectedGpus={selectedGpus}
-                        setSelectedGpus={setSelectedGpus}
-                        rams={RAM_LIST}
-                        selectedRams={selectedRams}
-                        setSelectedRams={setSelectedRams}
-                        roms={ROM_LIST}
-                        selectedRoms={selectedRoms}
-                        setSelectedRoms={setSelectedRoms}
-                        screen={SCREEN_LIST}
-                        selectedScreens={selectedScreens}
-                        setSelectedScreens={setSelectedScreens}
-                    />
-                </aside>
+                            cpus={CPU_LIST}
+                            selectedCpus={selectedCpus}
+                            setSelectedCpus={setSelectedCpus}
+                            gpus={GPU_LIST}
+                            selectedGpus={selectedGpus}
+                            setSelectedGpus={setSelectedGpus}
+                            rams={RAM_LIST}
+                            selectedRams={selectedRams}
+                            setSelectedRams={setSelectedRams}
+                            roms={ROM_LIST}
+                            selectedRoms={selectedRoms}
+                            setSelectedRoms={setSelectedRoms}
+                            screen={SCREEN_LIST}
+                            selectedScreens={selectedScreens}
+                            setSelectedScreens={setSelectedScreens}
+                        />
+                    </aside>
 
-                <main className="main">
-                    <div className="sort-row">
-                        <div className="left-search">
-                            <input
-                                type="text"
-                                className="mini-search"
-                                placeholder="Tìm kiếm sản phẩm..."
-                                value={keyword}
-                                onChange={(e) => setKeyword(e.target.value)}
-                            />
-                        </div>
-                        <div className="sort-controls">
-                            <SortBar
-                                value={sortBy}
-                                onChange={(val) => {
-                                    setSortBy(val);
-                                    const params = new URLSearchParams(window.location.search);
-                                    if (val === "default") params.delete("sort");
-                                    else params.set("sort", val);
-                                    window.history.pushState({}, "", `?${params.toString()}`);
-                                    window.dispatchEvent(new PopStateEvent("popstate"));
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    {loading ? (
-                        <div className="loading-wrap">
-                            <Spin size="large" />
-                        </div>
-                    ) : (
-                        <div className="product-grid">
-                            {products.length > 0 ? (
-                                <ProductCard
-                                    products={products}
-                                    total={total}
-                                    current={current}
-                                    setCurrent={setCurrent}
-                                    pageSize={pageSize}
-                                    filterParams={{
-                                        search,
-                                        sort,
-                                        price: priceParam || "",
+                    <main className="main">
+                        <div className="sort-row">
+                            <div className="left-search">
+                                <input
+                                    type="text"
+                                    className="mini-search"
+                                    placeholder="Tìm kiếm sản phẩm..."
+                                    value={keyword}
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                />
+                            </div>
+                            <div className="sort-controls">
+                                <SortBar
+                                    value={sortBy}
+                                    onChange={(val) => {
+                                        setSortBy(val);
+                                        const params = new URLSearchParams(window.location.search);
+                                        if (val === "default") params.delete("sort");
+                                        else params.set("sort", val);
+                                        window.history.pushState({}, "", `?${params.toString()}`);
+                                        window.dispatchEvent(new PopStateEvent("popstate"));
                                     }}
                                 />
-                            ) : (
-                                <Empty description="Không có sản phẩm" />
-                            )}
+                            </div>
                         </div>
-                    )}
-                </main>
+
+                        {loading ? (
+                            <div className="loading-wrap">
+                                <Spin size="large" />
+                            </div>
+                        ) : (
+                            <div className="product-grid">
+                                {products.length > 0 ? (
+                                    <ProductCard
+                                        products={products}
+                                        total={total}
+                                        current={current}
+                                        setCurrent={setCurrent}
+                                        pageSize={pageSize}
+                                        filterParams={{
+                                            search,
+                                            sort,
+                                            price: priceParam || "",
+                                        }}
+                                    />
+                                ) : (
+                                    <Empty description="Không có sản phẩm" />
+                                )}
+                            </div>
+                        )}
+                    </main>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
