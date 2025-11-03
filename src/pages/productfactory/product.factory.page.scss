@@ -305,25 +305,96 @@
         }
     }
 
-    @media (max-width: 576px) {
-        .main .product-list {
-            grid-template-columns: 1fr;
-        }
-
-        .top-categories .pill-list {
+    @media (max-width: 600px) {
+        .sort-row {
+            flex-direction: column;
+            /* Cho search và sort nằm dọc */
+            align-items: center;
             justify-content: center;
-        }
+            gap: 8px;
 
-        .product-info {
-            padding: 12px;
-        }
+            .left-search {
+                width: 100%;
 
-        .product-name {
-            font-size: 14px;
-        }
+                .mini-search {
+                    width: 100%;
+                    font-size: 13px;
+                    padding: 6px 10px;
+                }
+            }
 
-        .price-current {
-            font-size: 16px;
+            .sort-controls {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                /* Căn giữa SortBar */
+            }
+
+            .sort-bar-chips {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+
+                .ant-segmented {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    width: 100%;
+                    padding: 2px 4px;
+
+                    .ant-segmented-item {
+                        font-size: 0.75rem;
+                        padding: 4px 8px;
+                        margin: 3px;
+                    }
+                }
+            }
         }
     }
+
+    @media (max-width: 500px) {
+        .sort-row {
+            flex-direction: column;
+            /* Cho search và sort nằm dọc */
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            .left-search {
+                width: 100%;
+
+                .mini-search {
+                    width: 100%;
+                    font-size: 13px;
+                    padding: 6px 10px;
+                }
+            }
+
+            .sort-controls {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                /* Căn giữa SortBar */
+            }
+
+            .sort-bar-chips {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+
+                .ant-segmented {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    width: 100%;
+                    padding: 2px 4px;
+
+                    .ant-segmented-item {
+                        font-size: 0.75rem;
+                        padding: 4px 8px;
+                        margin: 3px;
+                    }
+                }
+            }
+        }
+    }
+
 }
