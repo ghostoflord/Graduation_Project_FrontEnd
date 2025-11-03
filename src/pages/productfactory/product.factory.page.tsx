@@ -7,6 +7,7 @@ import FilterSidebar from "./filtersidebar/filter.sidebar";
 import { getProductsAPI } from "@/services/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "use-debounce";
+import { CPU_LIST, GPU_LIST, RAM_LIST, ROM_LIST, SCREEN_LIST } from "./productenum/product.enum";
 
 export interface Product {
     id: string;
@@ -31,7 +32,7 @@ const ProductFactoryPage: React.FC = () => {
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
-    const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+
     const [sortBy, setSortBy] = useState<string>("default");
     const [keyword, setKeyword] = useState<string>("");
     const [current, setCurrent] = useState(1);
@@ -55,6 +56,11 @@ const ProductFactoryPage: React.FC = () => {
     const [featureList, setFeatureList] = useState<string[]>([]);
     const [sizeList, setSizeList] = useState<string[]>([]);
 
+    const [selectedCpus, setSelectedCpus] = useState<string[]>([]);
+    const [selectedGpus, setSelectedGpus] = useState<string[]>([]);
+    const [selectedRams, setSelectedRams] = useState<string[]>([]);
+    const [selectedRoms, setSelectedRoms] = useState<string[]>([]);
+    const [selectedScreens, setSelectedScreens] = useState<string[]>([]);
     // Parse priceParam: "1000000-5000000" → min, max
     let min = 0;
     let max = 0;
@@ -93,6 +99,12 @@ const ProductFactoryPage: React.FC = () => {
                     filters.push(`price <= ${max}`);
                 }
 
+                if (selectedCpus.length > 0) filters.push(`productDetail.cpu~'${selectedCpus[0]}'`);
+                if (selectedGpus.length > 0) filters.push(`productDetail.gpu~'${selectedGpus[0]}'`);
+                if (selectedRams.length > 0) filters.push(`productDetail.ram~'${selectedRams[0]}'`);
+                if (selectedRoms.length > 0) filters.push(`productDetail.storage~'${selectedRoms[0]}'`);
+                if (selectedScreens.length > 0) filters.push(`productDetail.screen~'${selectedScreens[0].split(" ")[0]}'`);
+
                 // Gắn filter
                 if (filters.length > 0) {
                     queryParams += `&filter=${encodeURIComponent(filters.join(" and "))}`;
@@ -121,7 +133,7 @@ const ProductFactoryPage: React.FC = () => {
         };
 
         fetchProducts();
-    }, [current, search, sort, priceParam, typeParam, categoryParam, pageSize]);
+    }, [current, search, sort, priceParam, typeParam, categoryParam, selectedCpus, selectedGpus, selectedRams, selectedRoms, selectedScreens, pageSize]);
 
     useEffect(() => {
         const newFactories = Array.from(new Set(products.map(p => p.factory))).sort();
@@ -155,9 +167,23 @@ const ProductFactoryPage: React.FC = () => {
                         selectedFeatures={selectedFeatures}
                         setSelectedFeatures={setSelectedFeatures}
                         sizes={sizeList}
-                        selectedSizes={selectedSizes}
-                        setSelectedSizes={setSelectedSizes}
                         brands={brands}
+
+                        cpus={CPU_LIST}
+                        selectedCpus={selectedCpus}
+                        setSelectedCpus={setSelectedCpus}
+                        gpus={GPU_LIST}
+                        selectedGpus={selectedGpus}
+                        setSelectedGpus={setSelectedGpus}
+                        rams={RAM_LIST}
+                        selectedRams={selectedRams}
+                        setSelectedRams={setSelectedRams}
+                        roms={ROM_LIST}
+                        selectedRoms={selectedRoms}
+                        setSelectedRoms={setSelectedRoms}
+                        screen={SCREEN_LIST}
+                        selectedScreens={selectedScreens}
+                        setSelectedScreens={setSelectedScreens}
                     />
                 </aside>
 
