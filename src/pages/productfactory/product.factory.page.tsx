@@ -20,6 +20,7 @@ export interface Product {
     discount?: number;
     image?: string;
     factory?: string;
+    category?: string;
 }
 
 const ProductFactoryPage: React.FC = () => {
@@ -36,6 +37,8 @@ const ProductFactoryPage: React.FC = () => {
     const [current, setCurrent] = useState(1);
     const [pageSize] = useState(10);
     const [total, setTotal] = useState(0);
+
+    const [brands, setBrands] = useState<string[]>([]);
 
     const location = useLocation();
     const query = new URLSearchParams(location.search);
@@ -60,15 +63,6 @@ const ProductFactoryPage: React.FC = () => {
         max = Number(maxStr) || 0;
     }
 
-    const handleSelectFactory = (factory: string) => {
-        setSelectedTypes([factory]);
-        const params = new URLSearchParams(window.location.search);
-        params.set("factory", factory);
-        window.history.pushState({}, "", `?${params.toString()}`);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-    };
-
-
     // Đồng bộ keyword vào URL
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -87,6 +81,7 @@ const ProductFactoryPage: React.FC = () => {
 
                 if (search) filters.push(`name like '%${search}%'`);
                 if (typeParam) filters.push(`factory='${typeParam}'`);
+                if (query.get("category")) filters.push(`category='${query.get("category")}'`);
 
                 // Lọc giá bằng 1 param duy nhất
                 if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
@@ -136,6 +131,10 @@ const ProductFactoryPage: React.FC = () => {
 
         const newSizes = Array.from(new Set(products.map(p => p.size))).sort();
         if (newSizes.length > 0) setSizeList(prev => Array.from(new Set([...prev, ...newSizes])));
+
+        const newBrands = Array.from(new Set(products.map(p => p.category))).sort();
+        if (newBrands.length > 0) setBrands(prev => Array.from(new Set([...prev, ...newBrands])));
+
     }, [products]);
 
     return (
@@ -145,8 +144,7 @@ const ProductFactoryPage: React.FC = () => {
                 <aside className="sidebar">
                     <FilterSidebar
                         priceRange={priceRange}
-                        setPriceRange={setPriceRange}category
-                        brands={[]}
+                        setPriceRange={setPriceRange}
                         selectedBrands={selectedBrands}
                         setSelectedBrands={setSelectedBrands}
                         types={factoryList}
@@ -158,6 +156,7 @@ const ProductFactoryPage: React.FC = () => {
                         sizes={sizeList}
                         selectedSizes={selectedSizes}
                         setSelectedSizes={setSelectedSizes}
+                        brands={brands}
                     />
                 </aside>
 

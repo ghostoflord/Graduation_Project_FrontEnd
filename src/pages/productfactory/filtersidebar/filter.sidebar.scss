@@ -119,6 +119,54 @@
     }
 }
 
+.filter-block {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 16px;
+
+    .block-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+
+        .arrow {
+            display: inline-block;
+            margin-left: 8px;
+            border: solid #333;
+            border-width: 0 2px 2px 0;
+            padding: 3px;
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .arrow.down {
+            transform: rotate(135deg);
+        }
+    }
+
+    .factory {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px; // tách nhau
+        margin-top: 8px;
+
+        &.closed {
+            display: none;
+        }
+
+        .factory {
+            border-radius: 20px;
+            font-size: 13px;
+            padding: 4px 12px;
+            transition: all 0.2s ease;
+        }
+    }
+}
+
+
 /* Responsive cho mobile */
 @media (max-width: 768px) {
     .filter-container {

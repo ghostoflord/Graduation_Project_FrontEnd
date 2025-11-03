@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Slider, InputNumber, Checkbox } from "antd";
 import "./filter.sidebar.scss";
+import { CATEGORY_LIST, FACTORY_LIST } from "../productenum/product.enum";
 interface Props {
     priceRange: [number, number];
     setPriceRange: (r: [number, number]) => void;
@@ -37,6 +38,8 @@ const FilterSidebar: React.FC<Props> = ({
     const onSliderChange = (value: number | number[]) => {
         if (Array.isArray(value)) setPriceRange([value[0], value[1]]);
     };
+
+
 
     return (
         <div className="filter-container">
@@ -88,18 +91,25 @@ const FilterSidebar: React.FC<Props> = ({
                     <div className="filter-block">
                         <div className="block-title">Loại sản phẩm</div>
                         <div className="chips">
-                            {brands.map((b) => (
+                            {CATEGORY_LIST.map((c) => (
                                 <Button
-                                    key={b}
-                                    type={selectedBrands.includes(b) ? "primary" : "default"}
+                                    key={c}
+                                    type={selectedBrands.includes(c) ? "primary" : "default"}
                                     className="chip"
-                                    onClick={() =>
-                                        setSelectedBrands(
-                                            selectedBrands.includes(b) ? selectedBrands.filter(x => x !== b) : [...selectedBrands, b]
-                                        )
-                                    }
+                                    onClick={() => {
+                                        const newSelected = selectedBrands.includes(c)
+                                            ? selectedBrands.filter(x => x !== c)
+                                            : [c]; // chọn 1 category
+                                        setSelectedBrands(newSelected);
+
+                                        const params = new URLSearchParams(window.location.search);
+                                        if (newSelected.length > 0) params.set("category", newSelected[0]);
+                                        else params.delete("category");
+                                        window.history.pushState({}, "", `?${params.toString()}`);
+                                        window.dispatchEvent(new PopStateEvent("popstate"));
+                                    }}
                                 >
-                                    {b}
+                                    {c}
                                 </Button>
                             ))}
                         </div>
@@ -108,32 +118,30 @@ const FilterSidebar: React.FC<Props> = ({
                     <div className="filter-block">
                         <div className="block-title">Thương hiệu</div>
                         <div className="factory">
-                            {types.map((t) => (
+                            {FACTORY_LIST.map((f) => (
                                 <Button
-                                    key={t}
-                                    type={selectedTypes.includes(t) ? "primary" : "default"}
+                                    key={f}
+                                    type={selectedTypes.includes(f) ? "primary" : "default"}
                                     className="factory"
                                     onClick={() => {
-                                        const newSelected = selectedTypes.includes(t)
-                                            ? selectedTypes.filter(x => x !== t)
-                                            : [t]; // nếu chỉ chọn 1 loại, giống factory
-
+                                        const newSelected = selectedTypes.includes(f)
+                                            ? selectedTypes.filter(x => x !== f)
+                                            : [f]; // chọn 1 brand
                                         setSelectedTypes(newSelected);
 
                                         const params = new URLSearchParams(window.location.search);
                                         if (newSelected.length > 0) params.set("factory", newSelected[0]);
                                         else params.delete("factory");
-
                                         window.history.pushState({}, "", `?${params.toString()}`);
                                         window.dispatchEvent(new PopStateEvent("popstate"));
                                     }}
-
                                 >
-                                    {t}
+                                    {f}
                                 </Button>
                             ))}
                         </div>
                     </div>
+
 
                     <div className="filter-block">
                         <div className="block-title">Tính năng</div>
