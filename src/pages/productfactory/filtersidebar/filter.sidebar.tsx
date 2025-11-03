@@ -86,7 +86,7 @@ const FilterSidebar: React.FC<Props> = ({
                     </div>
 
                     <div className="filter-block">
-                        <div className="block-title">Thương hiệu</div>
+                        <div className="block-title">Loại sản phẩm</div>
                         <div className="chips">
                             {brands.map((b) => (
                                 <Button
@@ -106,18 +106,28 @@ const FilterSidebar: React.FC<Props> = ({
                     </div>
 
                     <div className="filter-block">
-                        <div className="block-title">Loại</div>
-                        <div className="chips">
+                        <div className="block-title">Thương hiệu</div>
+                        <div className="factory">
                             {types.map((t) => (
                                 <Button
                                     key={t}
                                     type={selectedTypes.includes(t) ? "primary" : "default"}
-                                    className="chip"
-                                    onClick={() =>
-                                        setSelectedTypes(
-                                            selectedTypes.includes(t) ? selectedTypes.filter(x => x !== t) : [...selectedTypes, t]
-                                        )
-                                    }
+                                    className="factory"
+                                    onClick={() => {
+                                        const newSelected = selectedTypes.includes(t)
+                                            ? selectedTypes.filter(x => x !== t)
+                                            : [t]; // nếu chỉ chọn 1 loại, giống factory
+
+                                        setSelectedTypes(newSelected);
+
+                                        const params = new URLSearchParams(window.location.search);
+                                        if (newSelected.length > 0) params.set("factory", newSelected[0]);
+                                        else params.delete("factory");
+
+                                        window.history.pushState({}, "", `?${params.toString()}`);
+                                        window.dispatchEvent(new PopStateEvent("popstate"));
+                                    }}
+
                                 >
                                     {t}
                                 </Button>

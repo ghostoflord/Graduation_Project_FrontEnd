@@ -140,29 +140,12 @@ const ProductFactoryPage: React.FC = () => {
 
     return (
         <div className="product-page container">
-            <div className="top-categories">
-                <div className="pill-list">
-                    {factoryList.length > 0 ? (
-                        factoryList.map((factory) => (
-                            <span
-                                key={factory}
-                                onClick={() => handleSelectFactory(factory)}
-                                className={selectedTypes.includes(factory) ? "active" : ""}
-                            >
-                                {factory}
-                            </span>
-                        ))
-                    ) : (
-                        <span>Đang tải danh mục...</span>
-                    )}
-                </div>
-            </div>
 
             <div className="content">
                 <aside className="sidebar">
                     <FilterSidebar
                         priceRange={priceRange}
-                        setPriceRange={setPriceRange}
+                        setPriceRange={setPriceRange}category
                         brands={[]}
                         selectedBrands={selectedBrands}
                         setSelectedBrands={setSelectedBrands}
