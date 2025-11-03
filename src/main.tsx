@@ -147,7 +147,7 @@ const router = createBrowserRouter([
         element: <OrderFail />
       },
       {
-        path: "/test",
+        path: "/product-list",
         element: <ProductFactoryPage />
       },
     ]

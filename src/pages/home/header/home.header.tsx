@@ -44,6 +44,19 @@ export default function Header() {
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
+    const [isTablet, setIsTablet] = useState(false);
+
+    useEffect(() => {
+        const checkTablet = () => {
+            setIsTablet(window.innerWidth >= 500 && window.innerWidth <= 1100);
+        };
+
+        checkTablet();
+        window.addEventListener("resize", checkTablet);
+
+        return () => window.removeEventListener("resize", checkTablet);
+    }, []);
+
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth < 500);
@@ -60,15 +73,6 @@ export default function Header() {
         localStorage.removeItem('user');
         message.success('Đăng xuất thành công!');
         navigate('/login');
-    };
-
-    const handleSearch = (value: string) => {
-        const trimmed = value.trim();
-        if (trimmed) {
-            navigate(`/?search=${encodeURIComponent(trimmed)}`);
-        } else {
-            navigate(`/`);
-        }
     };
 
     const itemsDropdown: MenuProps['items'] = useMemo(() => {
@@ -93,6 +97,13 @@ export default function Header() {
             });
         }
 
+        if (isTablet) {
+            items.push({
+                label: <Link to="/product-list">Danh mục sản phẩm</Link>,
+                key: "product-list",
+            });
+        }
+
         items.push(
             {
                 label: <Link to="/profile">Trang cá nhân</Link>,
@@ -109,7 +120,7 @@ export default function Header() {
         );
 
         return items;
-    }, [user, isAuthenticated]);
+    }, [user, isAuthenticated], isTablet);
 
     useEffect(() => {
         if (!user?.id || cartSummary?.sum) return;
