@@ -1,0 +1,145 @@
+.filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    background: #fafafa;
+}
+
+.filter-sidebar-box {
+    width: 100%;
+    max-width: 320px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 100px;
+
+    &:hover {
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+}
+
+.filter-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.filter-block {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 16px;
+
+    &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .block-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+        text-align: center;
+    }
+
+    .price-inputs {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 10px;
+
+        .dash {
+            font-weight: bold;
+            color: #999;
+        }
+
+        input {
+            width: 100px;
+            text-align: center;
+        }
+    }
+
+    .apply-row {
+        margin-top: 12px;
+
+        button {
+            font-weight: 500;
+            border-radius: 8px;
+        }
+    }
+
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+
+        .chip {
+            border-radius: 20px;
+            font-size: 13px;
+            padding: 4px 12px;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: #f5f5f5;
+                color: #1890ff;
+            }
+
+            &.ant-btn-primary {
+                background: #1890ff;
+                color: #fff;
+                border: none;
+
+                &:hover {
+                    background: #40a9ff;
+                }
+            }
+        }
+    }
+
+    .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
+
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .ant-checkbox-wrapper:hover {
+            color: #1890ff;
+        }
+    }
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    .filter-container {
+        padding: 12px;
+    }
+
+    .filter-sidebar-box {
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    .block-title {
+        font-size: 15px;
+    }
+
+    .chips .chip {
+        font-size: 12px;
+        padding: 3px 10px;
+    }
+
+    .price-inputs input {
+        width: 80px;
+    }
+}

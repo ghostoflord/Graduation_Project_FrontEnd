@@ -7,8 +7,12 @@
 
         .pill-list {
             display: flex;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-auto-rows: minmax(40px, auto);
             flex-wrap: wrap;
             gap: 10px;
+            justify-content: center;
+            align-items: center;
 
             span {
                 background: #fff;

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Empty, Spin } from "antd";
 import "./product.factory.page.scss";
 import ProductCard from "./productcardlist/product.card.list";
@@ -19,6 +19,7 @@ export interface Product {
     oldPrice?: number;
     discount?: number;
     image?: string;
+    factory?: string;
 }
 
 const ProductFactoryPage: React.FC = () => {
@@ -43,7 +44,14 @@ const ProductFactoryPage: React.FC = () => {
     const priceParam = query.get("price");
     const typeParam = query.get("factory");
 
-    // ✅ Parse priceParam: "1000000-5000000" → min, max
+    const [debouncedKeyword] = useDebounce(keyword, 500);
+    const navigate = useNavigate();
+
+    const [factoryList, setFactoryList] = useState<string[]>([]);
+    const [featureList, setFeatureList] = useState<string[]>([]);
+    const [sizeList, setSizeList] = useState<string[]>([]);
+
+    // Parse priceParam: "1000000-5000000" → min, max
     let min = 0;
     let max = 0;
     if (priceParam) {
@@ -52,10 +60,16 @@ const ProductFactoryPage: React.FC = () => {
         max = Number(maxStr) || 0;
     }
 
-    const [debouncedKeyword] = useDebounce(keyword, 500);
-    const navigate = useNavigate();
+    const handleSelectFactory = (factory: string) => {
+        setSelectedTypes([factory]);
+        const params = new URLSearchParams(window.location.search);
+        params.set("factory", factory);
+        window.history.pushState({}, "", `?${params.toString()}`);
+        window.dispatchEvent(new PopStateEvent("popstate"));
+    };
 
-    // ✅ Đồng bộ keyword vào URL
+
+    // Đồng bộ keyword vào URL
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         if (debouncedKeyword) params.set("search", debouncedKeyword);
@@ -63,7 +77,7 @@ const ProductFactoryPage: React.FC = () => {
         navigate(`?${params.toString()}`, { replace: true });
     }, [debouncedKeyword, navigate]);
 
-    // ✅ Gọi API sản phẩm
+    // Gọi API sản phẩm
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
@@ -74,7 +88,7 @@ const ProductFactoryPage: React.FC = () => {
                 if (search) filters.push(`name like '%${search}%'`);
                 if (typeParam) filters.push(`factory='${typeParam}'`);
 
-                // ✅ Lọc giá bằng 1 param duy nhất
+                // Lọc giá bằng 1 param duy nhất
                 if (!isNaN(min) && min > 0 && !isNaN(max) && max > 0) {
                     filters.push(`price >= ${min} and price <= ${max}`);
                 } else if (!isNaN(min) && min > 0) {
@@ -83,12 +97,12 @@ const ProductFactoryPage: React.FC = () => {
                     filters.push(`price <= ${max}`);
                 }
 
-                // ✅ Gắn filter
+                // Gắn filter
                 if (filters.length > 0) {
                     queryParams += `&filter=${encodeURIComponent(filters.join(" and "))}`;
                 }
 
-                // ✅ Gắn sort (backend hiểu đúng)
+                // Gắn sort (backend hiểu đúng)
                 if (sort && sort !== "default") {
                     let sortParam = "";
                     if (sort === "price_asc") sortParam = "price,asc";
@@ -98,7 +112,7 @@ const ProductFactoryPage: React.FC = () => {
                     queryParams += `&sort=${encodeURIComponent(sortParam)}`;
                 }
 
-                // ✅ Call API
+                // Call API
                 const res = await getProductsAPI(queryParams);
                 setProducts(res.data?.result || []);
                 setTotal(res.data?.meta?.total || 0);
@@ -113,29 +127,16 @@ const ProductFactoryPage: React.FC = () => {
         fetchProducts();
     }, [current, search, sort, priceParam, typeParam, pageSize]);
 
-    // Danh sách type, feature, size
-    const factoryList = useMemo(
-        () => Array.from(new Set(products.map((p) => p.factory))).sort(),
-        [products]
-    );
+    useEffect(() => {
+        const newFactories = Array.from(new Set(products.map(p => p.factory))).sort();
+        if (newFactories.length > 0) setFactoryList(prev => Array.from(new Set([...prev, ...newFactories])));
 
-    const handleSelectFactory = (factory: string) => {
-        setSelectedTypes([factory]);
-        const params = new URLSearchParams(window.location.search);
-        params.set("factory", factory);
-        window.history.pushState({}, "", `?${params.toString()}`);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-    };
+        const newFeatures = Array.from(new Set(products.flatMap(p => p.features || []))).sort();
+        if (newFeatures.length > 0) setFeatureList(prev => Array.from(new Set([...prev, ...newFeatures])));
 
-    const featureList = useMemo(
-        () => Array.from(new Set(products.flatMap((p) => p.features || []))).sort(),
-        [products]
-    );
-
-    const sizeList = useMemo(
-        () => Array.from(new Set(products.map((p) => p.size))),
-        [products]
-    );
+        const newSizes = Array.from(new Set(products.map(p => p.size))).sort();
+        if (newSizes.length > 0) setSizeList(prev => Array.from(new Set([...prev, ...newSizes])));
+    }, [products]);
 
     return (
         <div className="product-page container">

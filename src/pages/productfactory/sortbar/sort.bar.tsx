@@ -1,6 +1,6 @@
 import React from "react";
 import { Segmented } from "antd";
-
+import "./sort.bar.scss";
 interface Props {
     value: string;
     onChange: (v: string) => void;
