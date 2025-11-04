@@ -252,7 +252,7 @@ const FlashSaleList = () => {
 
                                 <div className={styles.slideItem} key={enrichedItem.id}>
                                     <div style={{ maxWidth: 220, margin: "0 auto" }}>
-                                        <Badge.Ribbon text={`Giảm ${percent}%`} color="red">
+                                        <Badge.Ribbon text={`Giảm ${percent}%`} color="primary">
                                             <Card
                                                 hoverable
                                                 className={styles.productCard}

@@ -34,10 +34,11 @@
         z-index: 10;
         width: 36px;
         height: 36px;
-        background-color: #065bf8;
-        color: white;
+        background-color: #ffffff;
+        color: #c4c2c2;
         font-size: 18px;
         border-radius: 50%;
+        border: 1px solid #a5a5a5;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -45,7 +46,7 @@
         transition: background-color 0.3s;
 
         &:hover {
-            background-color: #065bf8;
+            background-color: #f4f5f7;
         }
     }
 
@@ -182,7 +183,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 550px) {
     .slideItem {
         width: 100%;
     }
@@ -198,5 +199,25 @@
 
     .originalPrice {
         font-size: 12px;
+    }
+
+    .saleHeader {
+        flex-direction: column;
+        /* đổi layout theo cột */
+        align-items: flex-start;
+        /* canh trái */
+        gap: 8px;
+        /* tạo khoảng cách giữa 2 dòng */
+    }
+
+    .countdown {
+        margin-top: 8px;
+        background-color: #054bfb !important;
+        color: white !important;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        width: fit-content;
     }
 }
