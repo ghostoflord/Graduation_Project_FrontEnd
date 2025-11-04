@@ -188,7 +188,11 @@ export default function Header() {
                                         <Space style={{ cursor: 'pointer' }}>
                                             <Avatar
                                                 size={36}
-                                                src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`}
+                                                src={
+                                                    user?.avatar?.startsWith("http")
+                                                        ? `${user.avatar}?t=${Date.now()}`
+                                                        : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`
+                                                }
                                             />
                                         </Space>
                                     </Dropdown>
@@ -243,7 +247,12 @@ export default function Header() {
                                     <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                                         <Space style={{ cursor: 'pointer' }}>
                                             <Avatar
-                                                src={`${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`}
+                                                size={36}
+                                                src={
+                                                    user?.avatar?.startsWith("http")
+                                                        ? user.avatar
+                                                        : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user?.avatar}`
+                                                }
                                             />
                                             <span>{user?.name}</span>
                                         </Space>

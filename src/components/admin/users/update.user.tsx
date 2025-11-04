@@ -127,7 +127,9 @@ const UpdateUser = (props: IProps) => {
                     });
 
                     if (user.avatar) {
-                        const avatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`;
+                        const avatarUrl = user.avatar.startsWith("http")
+                            ? `${user.avatar}?t=${Date.now()}`
+                            : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`;
                         const file: UploadFile = {
                             uid: '-1',
                             name: user.avatar,

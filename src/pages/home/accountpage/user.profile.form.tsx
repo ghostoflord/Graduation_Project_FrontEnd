@@ -55,7 +55,10 @@ const UserProfileForm = ({ userId, onUpdateSuccess }: Props) => {
                 const user = res.data;
 
                 if (user.avatar) {
-                    const fullAvatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`;
+                    let fullAvatarUrl = user.avatar;
+                    if (!user.avatar.startsWith("http")) {
+                        fullAvatarUrl = `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${user.avatar}`;
+                    }
                     setAvatarUrl(fullAvatarUrl);
 
                     const file: UploadFile = {

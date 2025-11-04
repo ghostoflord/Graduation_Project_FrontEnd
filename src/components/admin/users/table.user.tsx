@@ -109,12 +109,19 @@ const TableUser = () => {
             dataIndex: 'avatar',
             render: (_, entity) => {
                 const avatar = entity.avatar;
-                const avatarUrl = avatar ? `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${avatar}` : null;
+                let avatarUrl: string | null = null;
+
+                if (avatar) {
+                    avatarUrl = avatar.startsWith("http")
+                        ? `${avatar}?t=${Date.now()}`
+                        : `${import.meta.env.VITE_BACKEND_URL}/upload/avatars/${avatar}`;
+                }
+
                 return avatarUrl ? (
                     <img
                         src={avatarUrl}
                         alt="User Avatar"
-                        style={{ width: 50, height: 50, borderRadius: '50%' }}
+                        style={{ width: 50, height: 50, borderRadius: "50%", objectFit: "cover" }}
                     />
                 ) : (
                     <span>No avatar</span>
