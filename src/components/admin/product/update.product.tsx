@@ -227,14 +227,14 @@ const UpdateProduct = ({
                     rules={[{ required: true, message: "Vui lòng chọn phân loại!" }]}
                 >
                     <Select placeholder="Chọn phân loại nổi bật">
-                        <Select.Option value="NONE">Không nổi bật</Select.Option>
+                        <Select.Option value="NONE">Bình thường</Select.Option>
                         <Select.Option value="BESTSELLER">Bán chạy</Select.Option>
                         <Select.Option value="HOT">Hot</Select.Option>
                         <Select.Option value="FEATURED">Đặc sắc</Select.Option>
                     </Select>
                 </Form.Item>
 
-                <Form.Item<FieldType> label="Phần trăm giảm giá" name="sell" rules={[{ required: true }]}>
+                <Form.Item<FieldType> label="Phần trăm giảm giá" name="sell" >
                     <InputNumber style={{ width: "100%" }} min={0} />
                 </Form.Item>
 

@@ -92,7 +92,8 @@ const TableProduct = () => {
         {
             title: 'Tên Sản Phẩm',
             dataIndex: 'name',
-            sorter: true
+            sorter: true,
+            copyable: true
         },
         {
             title: 'Miêu Tả',
