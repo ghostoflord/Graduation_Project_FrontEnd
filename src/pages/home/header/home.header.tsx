@@ -273,23 +273,7 @@ export default function Header() {
 
                 <div className="header-menu">
                     <ul>
-                        <li
-                            className={`category-dropdown ${showCategory ? "open" : ""}`}
-                            onMouseEnter={() => setShowCategory(true)}
-                            onMouseLeave={() => setShowCategory(false)}
-                        >
-                            <span className="dropdown-link">Lọc sản phẩm</span>
-                            {showCategory && (
-                                <div className="dropdown-menu">
-                                    <ul>
-                                        <li><NavLink to="/?sort=price_asc">Giá tăng dần</NavLink></li>
-                                        <li><NavLink to="/?sort=price_desc">Giá giảm dần</NavLink></li>
-                                        <li><NavLink to={`/?filter=${encodeURIComponent('price >= 10000000 and price <= 15000000')}`}>Từ 10 triệu - 15 triệu</NavLink></li>
-                                        <li><NavLink to={`/?filter=${encodeURIComponent('price >= 15000000 and price <= 30000000')}`}>Từ 15 triệu - 30 triệu</NavLink></li>
-                                    </ul>
-                                </div>
-                            )}
-                        </li>
+                        <li><NavLink to="/product-list">Danh mục sản phẩm</NavLink></li>
                         <li><NavLink to="/">Trang chủ</NavLink></li>
                         <li><IntroduceDropDown /></li>
                         <li><NavLink to="/chinh-sach-ban-hang">Chính sách bán hàng</NavLink></li>
@@ -308,19 +292,7 @@ export default function Header() {
                 >
                     <ul className="mobile-menu">
                         <li><NavLink to="/profile" onClick={() => setDrawerVisible(false)}>Trang cá nhân</NavLink></li>
-                        <li><NavLink to="/?sort=price_asc" onClick={() => setDrawerVisible(false)}>Giá tăng dần</NavLink></li>
-                        <li><NavLink to="/?sort=price_desc" onClick={() => setDrawerVisible(false)}>Giá giảm dần</NavLink></li>
-                        <li className="submenu">
-                            <details>
-                                <summary>Bộ lọc giá</summary>
-                                <ul>
-                                    <li><NavLink to="/?sort=price_asc" onClick={() => setDrawerVisible(false)}>Giá tăng dần</NavLink></li>
-                                    <li><NavLink to="/?sort=price_desc" onClick={() => setDrawerVisible(false)}>Giá giảm dần</NavLink></li>
-                                    <li><NavLink to={`/?filter=${encodeURIComponent('price >= 10000000 and price <= 15000000')}`} onClick={() => setDrawerVisible(false)}>Từ 10 triệu - 15 triệu</NavLink></li>
-                                    <li><NavLink to={`/?filter=${encodeURIComponent('price >= 15000000 and price <= 30000000')}`} onClick={() => setDrawerVisible(false)}>Từ 15 triệu - 30 triệu</NavLink></li>
-                                </ul>
-                            </details>
-                        </li>
+                        <li><NavLink to="/product-list" onClick={() => setDrawerVisible(false)}>Danh mục sản phẩm</NavLink></li>
                         <li><NavLink to="/" onClick={() => setDrawerVisible(false)}>Trang chủ</NavLink></li>
                         <li><IntroduceDropDown onItemClick={() => setDrawerVisible(false)} /></li>
                         <li><NavLink to="/chinh-sach-ban-hang" onClick={() => setDrawerVisible(false)}>Chính sách bán hàng</NavLink></li>
