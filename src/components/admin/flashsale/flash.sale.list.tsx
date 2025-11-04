@@ -38,8 +38,8 @@ const FlashSaleList = () => {
         });
     }, []);
 
-    const PrevArrow = (props: any) => {
-        const { onClick } = props;
+    const PrevArrow = ({ onClick, currentSlide }: any) => {
+        if (currentSlide === 0) return null; // ẩn khi đang đầu
         return (
             <div className={`${styles.customArrow} ${styles.prevArrow}`} onClick={onClick}>
                 {"<"}
@@ -47,8 +47,8 @@ const FlashSaleList = () => {
         );
     };
 
-    const NextArrow = (props: any) => {
-        const { onClick } = props;
+    const NextArrow = ({ onClick, currentSlide, slideCount, slidesToShow }: any) => {
+        if (currentSlide >= slideCount - slidesToShow) return null; // ẩn khi đến cuối
         return (
             <div className={`${styles.customArrow} ${styles.nextArrow}`} onClick={onClick}>
                 {">"}
@@ -297,7 +297,6 @@ const FlashSaleList = () => {
                                                             onClick={() => handleAddToCart(enrichedItem)}
                                                         />
                                                         <Button
-                                                            type="primary"
                                                             onClick={() => handleBuyNow(enrichedItem)}
                                                         >
                                                             Mua ngay
