@@ -28,6 +28,7 @@ type FieldType = {
     bestsell: string;
     sell: string;
     image?: UploadFile[];
+    discountPrice?: number;
 };
 
 const UpdateProduct = ({
@@ -131,6 +132,7 @@ const UpdateProduct = ({
             shortDescription,
             bestsell,
             sell,
+            discountPrice,
         } = values;
 
         setIsSubmit(true);
@@ -149,7 +151,8 @@ const UpdateProduct = ({
             shortDescription,
             bestsell,
             sell,
-            imageToSend
+            imageToSend,
+            discountPrice,
         );
 
         if (res && res.data) {
@@ -205,10 +208,6 @@ const UpdateProduct = ({
                     <Input />
                 </Form.Item>
 
-                <Form.Item<FieldType> label="Giá" name="price" rules={[{ required: true }]}>
-                    <InputNumber style={{ width: "100%" }} min={0} />
-                </Form.Item>
-
                 <Form.Item<FieldType> label="Đã bán" name="sold" rules={[{ required: true }]}>
                     <InputNumber style={{ width: "100%" }} min={0} />
                 </Form.Item>
@@ -234,9 +233,67 @@ const UpdateProduct = ({
                     </Select>
                 </Form.Item>
 
-                <Form.Item<FieldType> label="Phần trăm giảm giá" name="sell" >
-                    <InputNumber style={{ width: "100%" }} min={0} />
+
+                <Form.Item<FieldType>
+                    label="Giá tiền"
+                    name="price"
+                    rules={[{ required: true, message: 'Vui lòng nhập giá tiền!' }]}
+                >
+                    <InputNumber
+                        stringMode
+                        min={1}
+                        style={{ width: '100%' }}
+                        formatter={(value) =>
+                            value ? new Intl.NumberFormat('vi-VN').format(Number(value)) : ''
+                        }
+                        parser={(value) => (value ? value.replace(/\D/g, '') : '')}
+                        addonAfter="đ"
+                        onChange={(value) => {
+                            const discountPrice = form.getFieldValue('discountPrice');
+                            if (discountPrice && value) {
+                                const percent = Math.round(((Number(value) - discountPrice) / Number(value)) * 100);
+                                form.setFieldsValue({ sell: percent });
+                            }
+                        }}
+                    />
                 </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Giá ưu đãi"
+                    name="discountPrice"
+                    rules={[{ required: true, message: 'Vui lòng nhập giá ưu đãi!' }]}
+                >
+                    <InputNumber
+                        stringMode
+                        min={1}
+                        style={{ width: '100%' }}
+                        formatter={(value) =>
+                            value ? new Intl.NumberFormat('vi-VN').format(Number(value)) : ''
+                        }
+                        parser={(value) => (value ? value.replace(/\D/g, '') : '')}
+                        onChange={(value) => {
+                            const price = form.getFieldValue('price');
+                            if (price) {
+                                const percent = Math.round(((price - value) / price) * 100);
+                                form.setFieldsValue({ sell: percent });
+                            }
+                        }}
+                    />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    label="Phần trăm giảm"
+                    name="sell"
+                >
+                    <InputNumber
+                        min={0}
+                        max={100}
+                        style={{ width: '100%' }}
+                        formatter={(value) => `${value}%`}
+                        disabled
+                    />
+                </Form.Item>
+
 
                 <Form.Item
                     label="Ảnh sản phẩm"
@@ -261,6 +318,7 @@ const UpdateProduct = ({
                         <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
                     </Upload>
                 </Form.Item>
+
                 {previewImage && (
                     <Image
                         width={100}

@@ -176,9 +176,9 @@ export const uploadSubImagesAPI = (productId: number | string, formData: FormDat
     );
 };
 
-export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, image?: string) => {
+export const updateProductAPI = (id: string, name: string, productCode: string, detailDescription: string, guarantee: string, factory: string, price: string, sold: string, quantity: string, shortDescription: string, bestsell: string, sell: string, image?: string, discountPrice?: number,) => {
     const urlBackend = "/api/v1/products/update";
-    return axios.put<IBackendRes<IRegister>>(urlBackend, { id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription, bestsell, sell, image });
+    return axios.put<IBackendRes<IRegister>>(urlBackend, { id, name, productCode, detailDescription, guarantee, factory, price, sold, quantity, shortDescription, bestsell, sell, image, discountPrice });
 };
 
 export const deleteProductAPI = (id: string) => {

@@ -282,7 +282,6 @@ const CreateProduct = (props: IProps) => {
                     />
                 </Form.Item>
 
-
                 <Form.Item
                     label="Giá ưu đãi"
                     name="discountPrice"
