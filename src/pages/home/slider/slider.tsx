@@ -19,8 +19,6 @@ const Slider: React.FC = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
     const [loading, setLoading] = useState(false);
 
-    // 🧩 Fetch slides từ API
-    // 🧩 Fetch slides từ API
     useEffect(() => {
         const fetchSlides = async () => {
             setLoading(true);
@@ -30,7 +28,7 @@ const Slider: React.FC = () => {
                     // lọc chỉ slide active và có ảnh
                     const activeSlides = res.data
                         .filter((s: ISlide) => s.active && s.imageUrl)
-                        // 👉 sắp xếp theo orderIndex tăng dần
+                        //  sắp xếp theo orderIndex tăng dần
                         .sort((a: ISlide, b: ISlide) => a.orderIndex - b.orderIndex);
 
                     setSlidesData(activeSlides);
@@ -74,7 +72,7 @@ const Slider: React.FC = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    // 🧾 Loading UI
+    // Loading UI
     if (loading) {
         return <div className="slider-loading">Đang tải slide...</div>;
     }

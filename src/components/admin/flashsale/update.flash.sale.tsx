@@ -80,8 +80,8 @@ const UpdateFlashSale = (props: IProps) => {
 
                     const payload: FlashSaleUpdateDTO = {
                         name: values.name || '',
-                        startTime: values.startTime?.toISOString?.() || '',
-                        endTime: values.endTime?.toISOString?.() || '',
+                        startTime: values.startTime ? values.startTime.format('YYYY-MM-DDTHH:mm:ss') : '',
+                        endTime: values.endTime ? values.endTime.format('YYYY-MM-DDTHH:mm:ss') : '',
                         status: values.status || 'INACTIVE',
                         items: values.items || []
                     };
