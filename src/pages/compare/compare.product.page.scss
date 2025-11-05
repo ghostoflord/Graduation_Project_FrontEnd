@@ -5,63 +5,123 @@
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
 
-.compare-title {
-    text-align: center;
-    margin-bottom: 24px;
-    font-weight: 600;
-    color: #222;
-}
+    // Cho phép scroll ngang nếu bảng bị tràn
+    overflow-x: auto;
 
-.compare-table {
-    border-radius: 12px;
-    overflow: hidden;
+    // Ẩn thanh scroll trên iOS
+    -webkit-overflow-scrolling: touch;
 
-    .ant-table-thead>tr>th {
-        background: #f0f2f5;
+    .compare-title {
+        text-align: center;
+        margin-bottom: 24px;
         font-weight: 600;
+        color: #222;
+        font-size: 20px;
+    }
+
+    .compare-table {
+        min-width: 600px; // giúp tránh co bảng lại quá nhỏ
+        border-radius: 12px;
+        overflow: hidden;
+
+        .ant-table {
+            width: 100%;
+        }
+
+        .ant-table-thead>tr>th {
+            background: #f0f2f5;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .ant-table-tbody>tr:nth-child(odd) {
+            background: #fafafa;
+        }
+
+        .ant-table-tbody>tr:nth-child(even) {
+            background: #ffffff;
+        }
+
+        .ant-table-tbody>tr>td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px;
+            word-break: break-word;
+        }
+
+        .compare-attr {
+            font-weight: 600;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .diff-value {
+            color: #e53935;
+            font-weight: 600;
+        }
+    }
+
+    .compare-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #555;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
         text-align: center;
     }
 
-    .ant-table-tbody>tr:nth-child(odd) {
-        background: #fafafa;
-    }
-
-    .ant-table-tbody>tr:nth-child(even) {
-        background: #ffffff;
-    }
-
-    .ant-table-tbody>tr:hover>td {
-        background: inherit !important;
-    }
-
-    .ant-table-tbody>tr>td {
-        text-align: center;
-        vertical-align: middle;
+    // Responsive cho mobile
+    @media (max-width: 768px) {
         padding: 12px;
+        margin: 20px auto;
+
+        .compare-title {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .compare-table {
+            min-width: 500px;
+            font-size: 13px;
+
+            .ant-table-tbody>tr>td {
+                padding: 8px 4px;
+            }
+
+            img {
+                width: 70px !important;
+                height: 70px !important;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 0 8px;
+                height: 28px;
+                border-radius: 6px;
+            }
+        }
     }
 
-    .compare-attr {
-        font-weight: 600;
-    }
+    @media (max-width: 480px) {
+        .compare-table {
+            min-width: 450px;
+            font-size: 12px;
 
-    .diff-value {
-        color: #e53935;
-        font-weight: 600;
-    }
-}
+            .compare-attr {
+                font-size: 12px;
+            }
 
-.compare-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #555;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    text-align: center;
+            img {
+                width: 60px !important;
+                height: 60px !important;
+            }
+        }
+    }
 }
