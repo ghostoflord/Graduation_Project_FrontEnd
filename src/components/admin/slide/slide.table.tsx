@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import type { ActionType } from "@ant-design/pro-components";
 import { Tag, App, Button, Popconfirm } from "antd";
 import { PlusOutlined, DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
-import { getSlidesByTypeAPI, deleteSlideAPI } from "@/services/api";
+import { getSlidesByTypeAPI, deleteSlideAPI, getSlidesByAPI } from "@/services/api";
 import CreateSlide from "./slide.create";
 import UpdateSlide from "./slide.update";
 
@@ -22,7 +22,14 @@ export interface ISlide {
 
 const TableSlide = () => {
     const actionRef = useRef<ActionType>();
-    const [data, setData] = useState<ISlide[]>([]);
+
+    const [meta, setMeta] = useState({
+        current: 1,
+        pageSize: 5,
+        pages: 0,
+        total: 0
+    });
+    const [currentDataTable, setCurrentDataTable] = useState<ISlide[]>([]);
     const [loading, setLoading] = useState(false);
     const { message, notification } = App.useApp();
 
@@ -32,27 +39,6 @@ const TableSlide = () => {
     const [dataUpdate, setDataUpdate] = useState<ISlide | null>(null);
 
     const [isDeleting, setIsDeleting] = useState(false);
-
-    const fetchSlides = async () => {
-        setLoading(true);
-        try {
-            const res = await getSlidesByTypeAPI("HOME");
-            setData(res.data);
-        } catch (e) {
-            console.error("Error fetching slides", e);
-            message.error("Lỗi tải slide");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchSlides();
-    }, []);
-
-    const refreshTable = () => {
-        fetchSlides();
-    };
 
     const handleDeleteSlide = async (id: number) => {
         setIsDeleting(true);
@@ -180,16 +166,68 @@ const TableSlide = () => {
         },
     ];
 
+
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
+
     return (
         <>
             <ProTable<ISlide>
                 columns={columns}
-                dataSource={data}
                 loading={loading}
                 actionRef={actionRef}
                 rowKey="id"
-                search={false}
-                pagination={false}
+                request={async (params) => {
+                    let query = `current=${params.current}&pageSize=${params.pageSize}`;
+
+                    const filters: string[] = [];
+
+                    if (params.name) {
+                        filters.push(`name~'${params.name}'`);
+                    }
+
+                    if (params.email) {
+                        filters.push(`email~'${params.email}'`);
+                    }
+
+                    if (params.address) {
+                        filters.push(`address~'${params.address}'`);
+                    }
+
+                    if (params.gender) {
+                        filters.push(`gender~'${params.gender}'`);
+                    }
+
+                    if (filters.length > 0) {
+                        query += `&filter=${filters.join(" and ")}`;
+                    }
+
+                    const res = await getSlidesByAPI(query);
+                    console.log("check data slide ", res.data.result)
+                    if (res.data) {
+
+                        setMeta(res.data.meta);
+                        setCurrentDataTable(res.data?.result ?? []);
+                    }
+
+
+                    return {
+                        data: res.data?.result,
+                        page: params.current,
+                        success: true,
+                        total: res.data?.meta.total,
+                    };
+                }}
+                pagination={
+                    {
+                        current: meta.current,
+                        pageSize: meta.pageSize,
+                        showSizeChanger: true,
+                        total: meta.total,
+                        showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} rows</div>) }
+                    }
+                }
                 headerTitle="Table Slide"
                 toolBarRender={() => [
                     <Button

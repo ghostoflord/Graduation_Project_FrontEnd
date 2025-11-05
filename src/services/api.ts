@@ -663,26 +663,26 @@ export const getSlidesByTypeAPI = (type: SlideType) => {
 };
 
 // lấy tất cả slide
-export const getSlidesByAPI = (type: SlideType) => {
-    const url = `/api/v1/slides`;
-    return axios.get<ISlide[]>(url);
+export const getSlidesByAPI = (query: string) => {
+    const urlBackend = `/api/v1/slides?${query}`;
+    return axios.get<IBackendRes<IModelPaginate<ISlide>>>(urlBackend)
 };
 
 
 // Tạo slide
 export const createSlideAPI = (data: Partial<ISlide>) => {
-    const url = `/api/v1/slides`;
+    const url = `/ api / v1 / slides`;
     return axios.post<ISlide>(url, data);
 };
 
 // Cập nhật slide
 export const updateSlideAPI = (id: number, data: Partial<ISlide>) => {
-    const url = `/api/v1/slides/${id}`;
+    const url = `/ api / v1 / slides / ${id}`;
     return axios.put<ISlide>(url, data);
 };
 
 // Xóa slide
 export const deleteSlideAPI = (id: number) => {
-    const url = `/api/v1/slides/${id}`;
+    const url = `/ api / v1 / slides / ${id} `;
     return axios.delete(url);
 };
