@@ -1,55 +1,87 @@
-import React, { useState, useEffect } from "react";
-import slide1 from "@/assets/slide1.png";
-import slide2 from "@/assets/slide2.png";
-import slide3 from "@/assets/slide3.png";
-import slide4 from "@/assets/slide4.png";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { getSlidesByTypeAPI } from "@/services/api";
 import "./slider.scss";
 
-interface Slide {
+interface ISlide {
     id: number;
-    image: string;
-    alt: string;
+    title: string;
+    description?: string;
+    imageUrl: string;
+    redirectUrl?: string;
+    active: boolean;
+    orderIndex: number;
+    type: string;
 }
 
 const Slider: React.FC = () => {
+    const [slidesData, setSlidesData] = useState<ISlide[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 500);
+    const [loading, setLoading] = useState(false);
 
-    const allSlides: Slide[] = [
-        { id: 1, image: slide1, alt: "Slider 1" },
-        { id: 2, image: slide2, alt: "Slider 2" },
-        { id: 3, image: slide3, alt: "Slider 3" },
-        { id: 4, image: slide4, alt: "Slider 4" },
-    ];
-
-    // nhóm slide: 2 ảnh/slide nếu không phải mobile
-    const slides: Slide[][] = isMobile
-        ? allSlides.map((s) => [s])
-        : [
-            [allSlides[0], allSlides[1]],
-            [allSlides[2], allSlides[3]],
-        ];
-
-    const goToNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % slides.length);
-    };
-
-    const goToPrev = () => {
-        setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
-    };
-
+    // 🧩 Fetch slides từ API
+    // 🧩 Fetch slides từ API
     useEffect(() => {
-        const timer = setInterval(goToNext, 5000);
-        return () => clearInterval(timer);
-    }, [slides.length]);
+        const fetchSlides = async () => {
+            setLoading(true);
+            try {
+                const res = await getSlidesByTypeAPI("ABOUT");
+                if (res.data) {
+                    // lọc chỉ slide active và có ảnh
+                    const activeSlides = res.data
+                        .filter((s: ISlide) => s.active && s.imageUrl)
+                        // 👉 sắp xếp theo orderIndex tăng dần
+                        .sort((a: ISlide, b: ISlide) => a.orderIndex - b.orderIndex);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 500);
+                    setSlidesData(activeSlides);
+                }
+            } catch (error) {
+                console.error("Error loading slides:", error);
+            } finally {
+                setLoading(false);
+            }
         };
+        fetchSlides();
+    }, []);
+
+
+    const groupedSlides = useMemo(() => {
+        if (isMobile) return slidesData.map((s) => [s]);
+        return slidesData.reduce((acc: ISlide[][], _, i) => {
+            if (i % 2 === 0) acc.push(slidesData.slice(i, i + 2));
+            return acc;
+        }, []);
+    }, [slidesData, isMobile]);
+
+    const goToNext = useCallback(() => {
+        setCurrentIndex((prev) => (prev + 1) % groupedSlides.length);
+    }, [groupedSlides.length]);
+
+    const goToPrev = useCallback(() => {
+        setCurrentIndex((prev) => (prev - 1 + groupedSlides.length) % groupedSlides.length);
+    }, [groupedSlides.length]);
+
+    useEffect(() => {
+        const timer = setInterval(goToNext, 2000);
+        return () => clearInterval(timer);
+    }, [goToNext]);
+
+
+    // 📱 Lắng nghe resize
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 500);
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    // 🧾 Loading UI
+    if (loading) {
+        return <div className="slider-loading">Đang tải slide...</div>;
+    }
+
+    if (!slidesData.length) {
+        return <div className="slider-empty">Không có slide nào</div>;
+    }
 
     return (
         <div className="slider">
@@ -57,13 +89,20 @@ const Slider: React.FC = () => {
                 className="slider-inner"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-                {slides.map((group, idx) => (
+                {groupedSlides.map((group, idx) => (
                     <div key={idx} className="slide">
-                        {group.map((slide) => (
-                            <div key={slide.id} className="slide-item">
-                                <img src={slide.image} alt={slide.alt} />
-                            </div>
-                        ))}
+                        {group.map((slide) => {
+                            const fullUrl = slide.imageUrl.startsWith("http")
+                                ? slide.imageUrl
+                                : `${import.meta.env.VITE_BACKEND_URL}/upload/slides/${slide.imageUrl}`;
+                            return (
+                                <div key={slide.id} className="slide-item">
+                                    <a href={slide.redirectUrl || "#"} target="_blank" rel="noreferrer">
+                                        <img src={fullUrl} alt={slide.title} />
+                                    </a>
+                                </div>
+                            );
+                        })}
                     </div>
                 ))}
             </div>
@@ -74,7 +113,7 @@ const Slider: React.FC = () => {
             </div>
 
             <div className="dots">
-                {slides.map((_, index) => (
+                {groupedSlides.map((_, index) => (
                     <span
                         key={index}
                         className={index === currentIndex ? "dot active" : "dot"}

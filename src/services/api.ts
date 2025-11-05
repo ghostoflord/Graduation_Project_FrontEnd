@@ -671,18 +671,18 @@ export const getSlidesByAPI = (query: string) => {
 
 // Tạo slide
 export const createSlideAPI = (data: Partial<ISlide>) => {
-    const url = `/ api / v1 / slides`;
+    const url = `/api/v1/slides`;
     return axios.post<ISlide>(url, data);
 };
 
 // Cập nhật slide
 export const updateSlideAPI = (id: number, data: Partial<ISlide>) => {
-    const url = `/ api / v1 / slides / ${id}`;
+    const url = `/api/v1/slides/${id}`;
     return axios.put<ISlide>(url, data);
 };
 
 // Xóa slide
 export const deleteSlideAPI = (id: number) => {
-    const url = `/ api / v1 / slides / ${id} `;
+    const url = `/api/v1/slides/${id} `;
     return axios.delete(url);
 };

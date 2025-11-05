@@ -265,6 +265,7 @@ const UpdateSlide = ({
                     <Select placeholder="Chọn type">
                         <Select.Option value="HOME">HOME</Select.Option>
                         <Select.Option value="BANNER">BANNER</Select.Option>
+                        <Select.Option value="ABOUT">ABOUT</Select.Option>
                     </Select>
                 </Form.Item>
             </Form>
