@@ -146,7 +146,6 @@ const UpdateFlashSale = (props: IProps) => {
                                     <Form.Item {...restField} name={[name, 'id']} hidden>
                                         <Input />
                                     </Form.Item>
-
                                     <Form.Item
                                         {...restField}
                                         name={[name, 'productId']}
@@ -158,6 +157,8 @@ const UpdateFlashSale = (props: IProps) => {
                                             optionFilterProp="label"
                                             loading={loadingProducts}
                                             allowClear
+                                            style={{ width: 220 }} // fix width cố định, ko bị giãn
+                                            dropdownMatchSelectWidth={false} // dropdown dài tự nhiên, không bị cắt
                                         >
                                             {productList.map((product) => (
                                                 <Select.Option
@@ -165,11 +166,21 @@ const UpdateFlashSale = (props: IProps) => {
                                                     value={product.id}
                                                     label={product.name}
                                                 >
-                                                    {`#${product.id} - ${product.name}`}
+                                                    <div
+                                                        style={{
+                                                            maxWidth: 200,
+                                                            overflow: 'hidden',
+                                                            whiteSpace: 'nowrap',
+                                                            textOverflow: 'ellipsis',
+                                                        }}
+                                                    >
+                                                        {`#${product.id} - ${product.name}`}
+                                                    </div>
                                                 </Select.Option>
                                             ))}
                                         </Select>
                                     </Form.Item>
+
 
                                     <Form.Item
                                         {...restField}
@@ -193,7 +204,9 @@ const UpdateFlashSale = (props: IProps) => {
                                         <InputNumber placeholder="Số lượng" min={1} />
                                     </Form.Item>
 
-                                    <Button danger icon={<MinusCircleOutlined />} onClick={() => remove(name)} />
+                                    <Button danger icon={<MinusCircleOutlined />} onClick={() => remove(name)}
+
+                                    />
                                 </Space>
                             ))}
                             <Form.Item>
