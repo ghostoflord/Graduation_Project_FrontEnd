@@ -337,7 +337,7 @@ const FlashSaleList = () => {
                 />
                 <p>Giá gốc: {selectedItem?.originalPrice?.toLocaleString()}₫</p>
                 <p>Giá sale: <b style={{ color: "red" }}>{selectedItem?.salePrice?.toLocaleString()}₫</b></p>
-                <p>Còn lại: {selectedItem?.quantity}</p>
+                <p>Còn lại nhé: {selectedItem?.quantity}</p>
             </Modal>
         </div>
     );
