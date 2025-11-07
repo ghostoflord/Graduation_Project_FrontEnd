@@ -58,6 +58,7 @@ const CheckoutPage: React.FC = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<string>('cod');
+    const [shippingMethod, setShippingMethod] = useState<string>('standard');
     const [voucherCode, setVoucherCode] = useState<string | null>(null);
     const [voucherDiscount, setVoucherDiscount] = useState<number>(0);
     const [voucherModalVisible, setVoucherModalVisible] = useState(false);
@@ -115,6 +116,8 @@ const CheckoutPage: React.FC = () => {
             name: values.name,
             address: values.address,
             phone: values.phone,
+            paymentMethod: paymentMethod.toUpperCase(),
+            shippingMethod: shippingMethod.toUpperCase(),
             items: cartItems.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
@@ -196,6 +199,18 @@ const CheckoutPage: React.FC = () => {
                         <Input placeholder="Địa chỉ nhận hàng" />
                     </Form.Item>
 
+                    <Form.Item
+                        name="shippingMethod"
+                        label="Ghi chú phương thức giao hàng"
+                        rules={[{ required: true, message: 'Vui lòng nhập Ghi chú phương thức giao hàng' }]}
+                    >
+                        <Input
+                            placeholder="Ví dụ: Giao qua GHTK, J&T, Test Shipping..."
+                            value={shippingMethod}
+                            onChange={(e) => setShippingMethod(e.target.value)}
+                        />
+                    </Form.Item>
+
                     <h2>Phương thức thanh toán</h2>
                     <Form.Item name="paymentMethod">
                         <Radio.Group
@@ -207,7 +222,6 @@ const CheckoutPage: React.FC = () => {
                             <Radio.Button value="cod">COD (Thanh toán khi nhận)</Radio.Button>
                         </Radio.Group>
                     </Form.Item>
-
                     <Button
                         type="primary"
                         htmlType="submit"

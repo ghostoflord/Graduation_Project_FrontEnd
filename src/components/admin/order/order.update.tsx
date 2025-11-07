@@ -120,9 +120,9 @@ const UpdateOrder = (props: IProps) => {
                 <Form.Item<FieldType> label="Trạng thái đơn hàng" name="status">
                     <Select placeholder="Chọn trạng thái đơn">
                         <Select.Option value="PENDING">Chờ xác nhận</Select.Option>
-                        <Select.Option value="CONFIRMED">Đã xác nhận</Select.Option>
+                        <Select.Option value="CONFIRMED">Đã nhận hàng</Select.Option>
                         <Select.Option value="SHIPPING">Đang giao</Select.Option>
-                        <Select.Option value="DELIVERED">Hoàn tất</Select.Option>
+                        <Select.Option value="DELIVERED">Đã giao</Select.Option>
                         <Select.Option value="CANCELED">Đã hủy</Select.Option>
                     </Select>
                 </Form.Item>
