@@ -3,13 +3,15 @@ import { deleteUserAPI, getUsersAPI } from '@/services/api';
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { App, Button, Popconfirm, Tag } from 'antd';
+import { App, Button, Popconfirm, Result, Tag } from 'antd';
 import { useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { CSVLink } from "react-csv";
 import CreateUser from './create.user';
 import DetailUser from './detail.user';
 import UpdateUser from './update.user';
 import ImportUser from './import.user';
+import { useAuthorization } from '@/hooks/useAuthorization';
 type TSearch = {
     name: string;
     email: string;
@@ -27,6 +29,17 @@ const TableUser = () => {
     });
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
     const { message, notification } = App.useApp();
+    const { hasPermission } = useAuthorization();
+
+    const canViewUsers = hasPermission('GET', '/api/v1/users');
+    const canCreateUser = hasPermission('POST', '/api/v1/users');
+    const canImportUser = hasPermission('POST', '/api/v1/users/import');
+    const canUpdateUser = hasPermission('POST', '/api/v1/users/update') || hasPermission('PUT', '/api/v1/users/update');
+    const canDeleteUser =
+        hasPermission('DELETE', '/api/v1/users/:id') ||
+        hasPermission('DELETE', '/api/v1/users/{id}') ||
+        hasPermission('DELETE', '/api/v1/users');
+    const canExportUser = canViewUsers;
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
@@ -39,7 +52,26 @@ const TableUser = () => {
     const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
 
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+
+    if (!canViewUsers) {
+        return (
+            <Result
+                status="403"
+                title="403"
+                subTitle="Bạn không có quyền xem danh sách người dùng."
+            />
+        );
+    }
     const handleDeleteUser = async (id: string) => {
+        const canDeleteTarget =
+            canDeleteUser ||
+            hasPermission('DELETE', `/api/v1/users/${id}`);
+
+        if (!canDeleteTarget) {
+            message.error('Bạn không có quyền xóa người dùng.');
+            return;
+        }
+
         setIsDeleteUser(true);
         try {
             const res = await deleteUserAPI(id);
@@ -156,16 +188,12 @@ const TableUser = () => {
             hideInSearch: true,
             width: 100,
             render(dom, entity, index, action, schema) {
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 12,
-                    }}
-                ></div>
-                return (
-                    <>
+                const actionNodes: ReactNode[] = [];
+
+                if (canUpdateUser) {
+                    actionNodes.push(
                         <EditTwoTone
+                            key={`edit-${entity.id}`}
                             twoToneColor="#f57800"
                             style={{ cursor: "pointer", marginRight: 15 }}
                             onClick={() => {
@@ -173,7 +201,13 @@ const TableUser = () => {
                                 setOpenModalUpdate(true);
                             }}
                         />
+                    );
+                }
+
+                if (canDeleteUser) {
+                    actionNodes.push(
                         <Popconfirm
+                            key={`delete-${entity.id}`}
                             placement="leftTop"
                             title={"Xác nhận xóa user"}
                             description={"Bạn có chắc chắn muốn xóa user này ?"}
@@ -189,8 +223,24 @@ const TableUser = () => {
                                 />
                             </span>
                         </Popconfirm>
-                    </>
-                )
+                    );
+                }
+
+                if (actionNodes.length === 0) {
+                    return null;
+                }
+
+                return (
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 12,
+                        }}
+                    >
+                        {actionNodes}
+                    </div>
+                );
             }
         }
 
@@ -257,40 +307,54 @@ const TableUser = () => {
                 }
 
                 headerTitle="Table user"
-                toolBarRender={() => [
-                    <CSVLink
-                        data={currentDataTable}
-                        filename='export-user.csv'
-                    >
-                        <Button
-                            icon={<ExportOutlined />}
-                            type="primary"
-                        >
-                            Export
-                        </Button>
-                    </CSVLink>
-                    ,
+                toolBarRender={() => {
+                    const actions: ReactNode[] = [];
 
-                    <Button
-                        icon={<CloudUploadOutlined />}
-                        type="primary"
-                        onClick={() => setOpenModalImport(true)}
-                    >
-                        Import
-                    </Button>,
+                    if (canExportUser) {
+                        actions.push(
+                            <CSVLink
+                                key="export"
+                                data={currentDataTable}
+                                filename='export-user.csv'
+                            >
+                                <Button
+                                    icon={<ExportOutlined />}
+                                    type="primary"
+                                >
+                                    Export
+                                </Button>
+                            </CSVLink>
+                        );
+                    }
 
-                    <Button
-                        key="button"
-                        icon={<PlusOutlined />}
-                        onClick={() => {
-                            setOpenModalCreate(true);
-                        }}
-                        type="primary"
-                    >
-                        Add new
-                    </Button>
+                    if (canImportUser) {
+                        actions.push(
+                            <Button
+                                key="import"
+                                icon={<CloudUploadOutlined />}
+                                type="primary"
+                                onClick={() => setOpenModalImport(true)}
+                            >
+                                Import
+                            </Button>
+                        );
+                    }
 
-                ]}
+                    if (canCreateUser) {
+                        actions.push(
+                            <Button
+                                key="create"
+                                icon={<PlusOutlined />}
+                                onClick={() => setOpenModalCreate(true)}
+                                type="primary"
+                            >
+                                Add new
+                            </Button>
+                        );
+                    }
+
+                    return actions;
+                }}
             />
 
             <CreateUser

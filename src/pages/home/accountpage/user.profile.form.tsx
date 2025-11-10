@@ -74,7 +74,10 @@ const UserProfileForm = ({ userId, onUpdateSuccess }: Props) => {
 
                 const formattedUser = {
                     ...user,
-                    role: user.role?.id ?? null,
+                    role:
+                        user.role && typeof user.role !== "string" && "id" in user.role
+                            ? (user.role as IRole).id ?? null
+                            : null,
                 };
 
                 form.setFieldsValue(formattedUser);

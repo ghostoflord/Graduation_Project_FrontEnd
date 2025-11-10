@@ -115,6 +115,11 @@ const UpdateUser = (props: IProps) => {
                 const res = await getUserByIdAPI(dataUpdate.id);
                 if (res && res.data) {
                     const user = res.data;
+                    const resolvedRoleId =
+                        user.role && typeof user.role !== "string" && "id" in user.role
+                            ? Number((user.role as IRole).id)
+                            : undefined;
+
                     form.setFieldsValue({
                         id: user.id,
                         firstName: user.firstName,
@@ -123,7 +128,7 @@ const UpdateUser = (props: IProps) => {
                         address: user.address,
                         gender: user.gender ?? undefined,
                         age: user.age,
-                        roleId: user.role?.id ? Number(user.role.id) : undefined,
+                        roleId: resolvedRoleId,
                     });
 
                     if (user.avatar) {

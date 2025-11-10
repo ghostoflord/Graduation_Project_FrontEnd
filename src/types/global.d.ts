@@ -36,16 +36,22 @@ declare global {
         result: T[]
     }
 
+    type RoleLike = IRole | string | null | undefined;
+
+    interface ILoginUser {
+        email: string;
+        phone: string;
+        fullName: string;
+        role: RoleLike;
+        avatar: string;
+        id: string;
+        permissions?: IPermission[];
+        active?: boolean;
+    }
+
     interface ILogin {
         access_token: string;
-        user: {
-            email: string;
-            phone: string;
-            fullName: string;
-            role: string;
-            avatar: string;
-            id: string;
-        }
+        user: ILoginUser;
     }
 
     interface IRegister {
@@ -66,9 +72,11 @@ declare global {
         email: string;
         phone: string;
         name: string;
-        role: string;
+        role: RoleLike;
         avatar: string;
         id: string;
+        permissions?: IPermission[];
+        active?: boolean;
     }
 
     interface IUserTable {
@@ -78,7 +86,7 @@ declare global {
         address: string;
         age: string;
         phone: string;
-        role: string;
+        role: RoleLike;
         avatar: string;
         active: number;
         createdAt: Date;
