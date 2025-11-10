@@ -90,8 +90,6 @@ const CreateSlide = ({ openModalCreate, setOpenModalCreate, refreshTable }: IPro
                 imageUrl,
                 orderIndex: Number(values.orderIndex),
             };
-
-            console.log("📤 Payload gửi API:", payload);
             const res = await createSlideAPI(payload);
 
             if (res?.data) {

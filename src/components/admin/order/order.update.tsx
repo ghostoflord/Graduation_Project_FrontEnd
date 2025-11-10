@@ -30,7 +30,6 @@ const UpdateOrder = (props: IProps) => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
     const [form] = Form.useForm();
-    console.log("check dataupdate ", dataUpdate)
     useEffect(() => {
         if (dataUpdate) {
             form.resetFields();
@@ -52,7 +51,6 @@ const UpdateOrder = (props: IProps) => {
     }, [dataUpdate]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        console.log('Giá trị form nhập vào:', values);
         const { orderId, estimatedDeliveryTime, ...rest } = values;
         setIsSubmit(true);
         const payload: UpdateOrderRequest = {

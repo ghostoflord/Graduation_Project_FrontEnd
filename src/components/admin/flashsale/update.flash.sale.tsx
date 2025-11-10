@@ -86,8 +86,6 @@ const UpdateFlashSale = (props: IProps) => {
                         items: values.items || []
                     };
 
-                    console.log("📦 Payload gửi lên server:", payload);
-
                     setIsSubmit(true);
                     const res = await updateFlashSaleAPI(dataUpdate.id, payload);
                     if (res.statusCode === 200 || res?.data?.statusCode === 200) {

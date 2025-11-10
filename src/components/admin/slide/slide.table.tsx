@@ -204,7 +204,6 @@ const TableSlide = () => {
                     }
 
                     const res = await getSlidesByAPI(query);
-                    console.log("check data slide ", res.data.result)
                     if (res.data) {
 
                         setMeta(res.data.meta);

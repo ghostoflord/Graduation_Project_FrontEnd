@@ -45,7 +45,6 @@ const LoginPage = () => {
                                     type="link"
                                     onClick={async () => {
                                         try {
-                                            console.log('Email cần gửi lại mã xác thực:', user.email);
                                             await resendVerificationAPI(user.email);
                                             notification.success({
                                                 message: 'Gửi lại thành công',

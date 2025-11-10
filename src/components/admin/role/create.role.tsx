@@ -36,7 +36,6 @@ const CreateRole = (props: IProps) => {
             try {
                 const res = await callFetchPermissions('page=1&pageSize=100');
                 if (res?.data?.result) {
-                    console.log("Fetched permissions:", res.data.result);
                     setPermissions(res.data.result);
                 }
             } catch (err) {
