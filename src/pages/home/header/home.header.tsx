@@ -18,6 +18,7 @@ import {
 import './home.header.scss';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
+import { resolveRoleName } from '@/hooks/useAuthorization';
 import type { MenuProps } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { getCart } from '@/services/api';
@@ -78,8 +79,9 @@ export default function Header() {
     const itemsDropdown: MenuProps['items'] = useMemo(() => {
         if (!isAuthenticated || !user) return [];
 
-        const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
-        const isShipper = user?.role === 'SHIPPER';
+        const roleName = resolveRoleName(user?.role);
+        const isAdmin = roleName === 'ADMIN' || roleName === 'SUPER_ADMIN';
+        const isShipper = roleName === 'SHIPPER';
 
         const items: MenuProps['items'] = [];
 

@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '../context/app.context';
+import { resolveRoleName } from '@/hooks/useAuthorization';
 import ShipperOrderPage from './shipper.order';
 import ShipperOrderList from './shipper.orde.list';
 import ShipperDeliveredOrders from './shipper.delivered.orders';
@@ -28,8 +29,8 @@ const ShipperDashboard = () => {
     const [selectedKey, setSelectedKey] = useState('pending');
     const navigate = useNavigate();
     const { user } = useCurrentApp();
-
-    const isShipper = user?.role === 'SHIPPER';
+    const roleName = resolveRoleName(user?.role);
+    const isShipper = roleName === 'SHIPPER';
 
     if (!isShipper) {
         return (

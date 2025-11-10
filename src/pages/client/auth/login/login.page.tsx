@@ -4,6 +4,7 @@ import './login.page.scss';
 import { useState } from 'react';
 import type { FormProps } from 'antd';
 import { useCurrentApp } from '@/components/context/app.context';
+import { resolveRoleName } from '@/hooks/useAuthorization';
 import { loginAPI, resendVerificationAPI } from '@/services/api';
 import ModalChangePassword from '../../../../components/client/account/modal.change.password';
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons';
@@ -74,9 +75,11 @@ const LoginPage = () => {
 
                 message.success('Đăng nhập tài khoản thành công!');
 
-                if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
+                const roleName = resolveRoleName(user.role);
+
+                if (roleName === 'SUPER_ADMIN' || roleName === 'ADMIN') {
                     navigate('/admin/dashboard');
-                } else if (user.role === 'SHIPPER') {
+                } else if (roleName === 'SHIPPER') {
                     navigate('/shipper');
                 }
                 else {
