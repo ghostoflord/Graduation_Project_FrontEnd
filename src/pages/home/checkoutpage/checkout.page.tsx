@@ -159,7 +159,7 @@ const CheckoutPage: React.FC = () => {
                 setVoucherDiscount(discount);
                 message.success(`Đã áp dụng mã: -${discount.toLocaleString('vi-VN')}₫`);
                 setVoucherModalVisible(false);
-            } else message.error(res?.data?.message || 'Mã giảm giá không hợp lệ');
+            } else message.error(res?.message || 'Mã giảm giá không hợp lệ');
         } catch {
             message.error('Không thể áp dụng mã giảm giá');
         }
