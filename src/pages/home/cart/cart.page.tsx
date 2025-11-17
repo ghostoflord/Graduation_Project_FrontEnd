@@ -1,7 +1,7 @@
 import { Card, Button, InputNumber, List, Typography, Row, Col, message, Empty, } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import React, { useState, useEffect } from 'react';
-import { clearCartAPI, getCart, removeCartItemAPI } from '@/services/api';
+import { useState, useEffect } from 'react';
+import { clearCartAPI, getCart, removeCartItemAPI, updateCartQuantityAPI } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentApp } from '@/components/context/app.context';
 import CartBreadcrumb from '@/pages/productbreadcrumb/cartbreadcrumb/cart.bread.crumb';
@@ -39,7 +39,7 @@ const CartPage = () => {
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const navigate = useNavigate();
-    const { setCartSummary } = useCurrentApp();  // Lấy hàm setCartSummary từ context
+    const { setCartSummary } = useCurrentApp();
 
     const handleCheckout = () => {
         navigate('/thanh-toan');
@@ -81,11 +81,49 @@ const CartPage = () => {
         }));
     };
 
-    const updateQuantity = (productId: number, quantity: number) => {
-        const updated = cartItems.map(item =>
+    const updateQuantityWithFetch = async (productId: number, quantity: number) => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const userId = user.id;
+        if (!userId) return;
+
+        // Lưu state cũ để rollback
+        const oldCart = [...cartItems];
+
+        // Optimistic update
+        const updatedCart = cartItems.map(item =>
             item.productId === productId ? { ...item, quantity } : item
         );
-        updateCartState(updated);
+        setCartItems(updatedCart);
+        updateCartState(updatedCart);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/carts/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    productId,
+                    quantity
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                // Nếu status 4xx, 5xx -> throw error với message từ BE
+                throw new Error(result.message || "Có lỗi xảy ra");
+            }
+
+            message.success("Cập nhật số lượng thành công");
+
+        } catch (error: any) {
+            // Rollback khi có lỗi
+            setCartItems(oldCart);
+            updateCartState(oldCart);
+            message.error(error.message || "Không thể cập nhật số lượng");
+        }
     };
 
     const removeItem = async (productId: number) => {
@@ -204,16 +242,15 @@ const CartPage = () => {
                                         <InputNumber
                                             min={1}
                                             value={item.quantity}
-                                            onChange={value =>
-                                                updateQuantity(item.productId, value || 1)
-                                            }
+                                            onChange={(value) => {
+                                                updateQuantityWithFetch(item.productId, value || 1);
+                                            }}
                                         />
                                         <Button
                                             danger
                                             icon={<DeleteOutlined />}
                                             onClick={() => removeItem(item.productId)}
                                             style={{
-
                                                 height: "31px",
                                                 transform: "translateY(1px)",
                                             }}
@@ -228,18 +265,16 @@ const CartPage = () => {
 
                     <Card className="text-right cart-summary">
                         <Row justify="space-between" align="middle" className="cart-actions">
-                            {/* Bên trái */}
                             <Col>
                                 <Title
                                     level={4}
                                     className="total-price"
-                                    style={{ margin: 0 }} // bỏ margin mặc định của Title cho nó thẳng hàng
+                                    style={{ margin: 0 }}
                                 >
                                     Tổng tiền: {totalPrice.toLocaleString("vi-VN")} ₫
                                 </Title>
                             </Col>
 
-                            {/* Bên phải */}
                             <Col>
                                 <Row justify="end" gutter={16}>
                                     <Col>
@@ -259,7 +294,6 @@ const CartPage = () => {
                                 </Row>
                             </Col>
                         </Row>
-
                     </Card>
                 </>
             )}

@@ -287,6 +287,18 @@ export const clearCartAPI = (userId: number) => {
     return axios.delete<IBackendRes<any>>(urlBackend);
 };
 
+export const updateCartQuantityAPI = (userId: number, productId: number, quantity: number) => {
+    return axios.put('/api/v1/carts/update', {
+        userId,
+        productId,
+        quantity,
+    }, {
+        validateStatus: function (status) {
+            return status >= 200 && status < 500; // Chấp nhận cả 4xx errors
+        }
+    });
+};
+
 /**
  * 
 Module Notifications
