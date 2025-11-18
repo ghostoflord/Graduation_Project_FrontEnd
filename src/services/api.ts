@@ -78,10 +78,10 @@ export const resendVerificationAPI = (email: string) => {
  * 
 Module User
  */
-export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string, roleId: string, avatar?: string
+export const updateUserAPI = (id: string, firstName: string, lastName: string, name: string, address: string, gender: string, age: string, roleId: string, avatar?: string, activate?: boolean
 ) => {
     const urlBackend = "/api/v1/users/update";
-    return axios.post<IBackendRes<IRegister>>(urlBackend, { id, firstName, lastName, name, address, gender, age, avatar, roleId });
+    return axios.post<IBackendRes<IRegister>>(urlBackend, { id, firstName, lastName, name, address, gender, age, avatar, roleId, activate });
 };
 
 export const getUsersAPI = (query: string) => {

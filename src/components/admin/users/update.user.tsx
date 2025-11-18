@@ -9,11 +9,12 @@ import {
     Upload,
     Button,
     Image,
-    Spin
+    Spin,
+    Switch
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
-import { updateUserAPI, uploadFileAPI, callFetchRoles, getUserByIdAPI } from '@/services/api';
+import { updateUserAPI, uploadFileAPI, callFetchRoles, getUserByIdAPI, getUserById } from '@/services/api';
 import type { RcFile, UploadFile } from 'antd/es/upload';
 
 interface IProps {
@@ -34,6 +35,7 @@ type FieldType = {
     age: string;
     roleId: string;
     avatar?: UploadFile[];
+    activate: boolean;
 };
 
 const UpdateUser = (props: IProps) => {
@@ -112,7 +114,7 @@ const UpdateUser = (props: IProps) => {
     useEffect(() => {
         const fetchData = async () => {
             if (dataUpdate?.id) {
-                const res = await getUserByIdAPI(dataUpdate.id);
+                const res = await getUserById(dataUpdate.id);
                 if (res && res.data) {
                     const user = res.data;
                     form.setFieldsValue({
@@ -123,6 +125,7 @@ const UpdateUser = (props: IProps) => {
                         address: user.address,
                         gender: user.gender ?? undefined,
                         age: user.age,
+                        activate: user.activate,
                         roleId: user.role?.id ? Number(user.role.id) : undefined,
                     });
 
@@ -150,7 +153,7 @@ const UpdateUser = (props: IProps) => {
     }, [dataUpdate, openModalUpdate]);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        const { id, firstName, lastName, name, address, gender, age, roleId } = values;
+        const { id, firstName, lastName, name, address, gender, age, roleId, activate } = values;
         setIsSubmit(true);
         const avatarBase64 = avatarFile?.originFileObj
             ? await getBase64(avatarFile.originFileObj as RcFile)
@@ -164,7 +167,8 @@ const UpdateUser = (props: IProps) => {
             gender,
             age,
             roleId,
-            avatarBase64
+            avatarBase64,
+            activate
         );
         if (res && res.data) {
             message.success('Cập nhật user thành công');
@@ -242,6 +246,13 @@ const UpdateUser = (props: IProps) => {
                     rules={[{ required: true, message: 'Vui lòng nhập số tuổi!' }]}
                 >
                     <Input />
+                </Form.Item>
+                <Form.Item<FieldType>
+                    label="Kích hoạt"
+                    name="activate"
+                    valuePropName="checked"
+                >
+                    <Switch checkedChildren="Kích hoạt" unCheckedChildren="Chưa kích hoạt" />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="Role"
