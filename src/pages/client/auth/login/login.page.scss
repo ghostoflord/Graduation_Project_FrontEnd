@@ -55,12 +55,12 @@
 
 /* Nút chính */
 .ant-btn-primary {
-    background: linear-gradient(135deg, #1890ff, #40a9ff);
+    background: linear-gradient(135deg, #0040f8, #0040f8);
     border: none;
     font-weight: 600;
 
     &:hover {
-        background: linear-gradient(135deg, #40a9ff, #69c0ff);
+        background: linear-gradient(135deg, #0040f8, #0040f8);
     }
 }
 
@@ -121,7 +121,7 @@
     font-size: 0.95rem;
 
     a {
-        color: #40a9ff;
+        color: #0040f8;
         font-weight: 600;
 
         &:hover {

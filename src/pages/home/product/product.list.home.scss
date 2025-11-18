@@ -103,6 +103,10 @@
                 font-size: 14px;
                 color: #999;
                 text-decoration: line-through;
+
+                @media (max-width: 568px) {
+                    display: none;
+                }
             }
         }
 

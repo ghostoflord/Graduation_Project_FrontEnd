@@ -58,7 +58,7 @@
             transition: border-color 0.3s ease;
 
             &:focus {
-                border-color: #40a9ff;
+                border-color: #0040f8;
                 box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
             }
         }
@@ -74,8 +74,8 @@
 
             &:hover,
             &:focus {
-                background-color: #40a9ff;
-                border-color: #40a9ff;
+                background-color: #0040f8;
+                border-color: #0040f8;
             }
         }
     }
