@@ -10,9 +10,11 @@ import {
     Button,
     Space,
     Select,
-    notification
+    notification,
+    Tooltip,
+    Typography
 } from 'antd';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined, MinusCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { getProductsAPI, updateFlashSaleAPI } from '@/services/api';
 
@@ -22,6 +24,14 @@ interface IProps {
     refreshTable: () => void;
     setDataUpdate: (v: any | null) => void;
     dataUpdate: any | null;
+}
+
+interface ProductInfo {
+    id: number;
+    name: string;
+    price: number; // Giá gốc
+    quantity: number; // Tồn kho
+    // ... các trường khác
 }
 
 const UpdateFlashSale = (props: IProps) => {
@@ -37,8 +47,9 @@ const UpdateFlashSale = (props: IProps) => {
     const [isSubmit, setIsSubmit] = useState(false);
     const { message } = App.useApp();
 
-    const [productList, setProductList] = useState<IProductTable[]>([]);
+    const [productList, setProductList] = useState<ProductInfo[]>([]);
     const [loadingProducts, setLoadingProducts] = useState(false);
+    const [selectedProducts, setSelectedProducts] = useState<{ [key: string]: ProductInfo }>({});
 
     const fetchProducts = async () => {
         setLoadingProducts(true);
@@ -55,20 +66,81 @@ const UpdateFlashSale = (props: IProps) => {
 
     useEffect(() => {
         if (dataUpdate) {
+            const items = dataUpdate.items?.map((item: any) => ({
+                id: item.id,
+                productId: item.product?.id || item.productId,
+                salePrice: item.salePrice,
+                quantity: item.quantity
+            })) || [];
+
+            // Cập nhật selectedProducts từ dataUpdate
+            const initialSelected: { [key: string]: ProductInfo } = {};
+            items.forEach((item: any) => {
+                const product = productList.find(p => p.id === item.productId);
+                if (product) {
+                    initialSelected[item.productId] = product;
+                }
+            });
+            setSelectedProducts(initialSelected);
+
             form.setFieldsValue({
                 name: dataUpdate.name || '',
                 startTime: dataUpdate.startTime ? dayjs(dataUpdate.startTime) : null,
                 endTime: dataUpdate.endTime ? dayjs(dataUpdate.endTime) : null,
                 status: dataUpdate.status || 'INACTIVE',
-                items: dataUpdate.items?.map((item: any) => ({
-                    id: item.id,
-                    productId: item.product?.id || item.productId,
-                    salePrice: item.salePrice,
-                    quantity: item.quantity
-                })) || []
+                items: items
             });
         }
-    }, [dataUpdate]);
+    }, [dataUpdate, productList]);
+
+    // Hàm xử lý khi chọn sản phẩm
+    const handleProductSelect = (value: number, fieldIndex: number) => {
+        const selectedProduct = productList.find(p => p.id === value);
+        if (selectedProduct) {
+            setSelectedProducts(prev => ({
+                ...prev,
+                [fieldIndex]: selectedProduct
+            }));
+
+            // Gợi ý giá sale (ví dụ: 80% giá gốc)
+            const suggestedSalePrice = Math.round(selectedProduct.price * 0.8);
+            const currentItems = form.getFieldValue('items') || [];
+
+            if (currentItems[fieldIndex]) {
+                form.setFieldValue(['items', fieldIndex, 'salePrice'], suggestedSalePrice);
+
+                // Gợi ý số lượng tối đa bằng quantity
+                const suggestedQuantity = Math.min(selectedProduct.quantity, 100); // Giới hạn tối đa 100
+                form.setFieldValue(['items', fieldIndex, 'quantity'], suggestedQuantity);
+            }
+        }
+    };
+
+    // Custom option renderer để hiển thị thông tin giá
+    const renderProductOption = (product: ProductInfo) => {
+        return (
+            <Select.Option key={product.id} value={product.id} label={product.name}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 500, marginBottom: 4 }}>
+                            {product.name}
+                        </div>
+                        <div style={{ fontSize: 12, color: '#666' }}>
+                            ID: {product.id} | Tồn kho: {product.quantity}
+                        </div>
+                    </div>
+                    <div style={{ marginLeft: 8, textAlign: 'right' }}>
+                        <div style={{ fontWeight: 600, color: '#ff4d4f' }}>
+                            {product.price.toLocaleString()}₫
+                        </div>
+                        <div style={{ fontSize: 12, color: '#52c41a' }}>
+                            Sale: {Math.round(product.price * 0.8).toLocaleString()}₫
+                        </div>
+                    </div>
+                </div>
+            </Select.Option>
+        );
+    };
 
     return (
         <Modal
@@ -94,6 +166,7 @@ const UpdateFlashSale = (props: IProps) => {
                         form.resetFields();
                         setOpenModalUpdate(false);
                         setDataUpdate(null);
+                        setSelectedProducts({});
                     }
                 } catch (error: any) {
                     notification.error({
@@ -108,10 +181,12 @@ const UpdateFlashSale = (props: IProps) => {
                 setOpenModalUpdate(false);
                 setDataUpdate(null);
                 form.resetFields();
+                setSelectedProducts({});
             }}
             okText="Cập nhật"
             cancelText="Hủy"
             confirmLoading={isSubmit}
+            width={800}
         >
             <Divider />
             <Form form={form} layout="vertical">
@@ -138,77 +213,145 @@ const UpdateFlashSale = (props: IProps) => {
                 <Form.List name="items">
                     {(fields, { add, remove }) => (
                         <>
-                            {fields.map(({ key, name, ...restField }) => (
-                                <Space key={key} align="baseline" style={{ display: 'flex', marginBottom: 8 }}>
-                                    {/* Hidden ID field */}
-                                    <Form.Item {...restField} name={[name, 'id']} hidden>
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'productId']}
-                                        rules={[{ required: true, message: 'Vui lòng chọn sản phẩm!' }]}
-                                    >
-                                        <Select
-                                            showSearch
-                                            placeholder="Chọn sản phẩm"
-                                            optionFilterProp="label"
-                                            loading={loadingProducts}
-                                            allowClear
-                                            style={{ width: 220 }} // fix width cố định, ko bị giãn
-                                            dropdownMatchSelectWidth={false} // dropdown dài tự nhiên, không bị cắt
-                                        >
-                                            {productList.map((product) => (
-                                                <Select.Option
-                                                    key={product.id}
-                                                    value={product.id}
-                                                    label={product.name}
+                            <div style={{ marginBottom: 16 }}>
+                                <Typography.Text strong>Danh sách sản phẩm Flash Sale</Typography.Text>
+                                <Typography.Text type="secondary" style={{ fontSize: 12, marginLeft: 8 }}>
+                                    (Giá sale đề xuất = 80% giá gốc)
+                                </Typography.Text>
+                            </div>
+
+                            {fields.map(({ key, name, ...restField }) => {
+                                const selectedProduct = selectedProducts[name];
+
+                                return (
+                                    <div key={key} style={{
+                                        border: '1px solid #d9d9d9',
+                                        borderRadius: 6,
+                                        padding: 12,
+                                        marginBottom: 12,
+                                        backgroundColor: '#fafafa'
+                                    }}>
+                                        <Space align="start" style={{ display: 'flex', width: '100%' }}>
+                                            {/* Hidden ID field */}
+                                            <Form.Item {...restField} name={[name, 'id']} hidden>
+                                                <Input />
+                                            </Form.Item>
+
+                                            {/* Select sản phẩm */}
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'productId']}
+                                                rules={[{ required: true, message: 'Vui lòng chọn sản phẩm!' }]}
+                                                style={{ marginBottom: 8 }}
+                                            >
+                                                <Select
+                                                    showSearch
+                                                    placeholder="Chọn sản phẩm"
+                                                    optionFilterProp="label"
+                                                    loading={loadingProducts}
+                                                    allowClear
+                                                    style={{ width: 300 }}
+                                                    dropdownMatchSelectWidth={false}
+                                                    onSelect={(value) => handleProductSelect(value, name)}
+                                                    filterOption={(input, option) =>
+                                                        option?.label.toLowerCase().includes(input.toLowerCase()) || false
+                                                    }
                                                 >
-                                                    <div
-                                                        style={{
-                                                            maxWidth: 200,
-                                                            overflow: 'hidden',
-                                                            whiteSpace: 'nowrap',
-                                                            textOverflow: 'ellipsis',
-                                                        }}
-                                                    >
-                                                        {`#${product.id} - ${product.name}`}
+                                                    {productList.map((product) => renderProductOption(product))}
+                                                </Select>
+                                            </Form.Item>
+
+                                            {/* Thông tin sản phẩm đã chọn */}
+                                            {selectedProduct && (
+                                                <div style={{ flex: 1, padding: '8px 12px', backgroundColor: 'white', borderRadius: 4 }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <div>
+                                                            <div style={{ fontWeight: 500 }}>{selectedProduct.name}</div>
+                                                            <div style={{ fontSize: 12, color: '#666' }}>
+                                                                Giá gốc: <span style={{ textDecoration: 'line-through' }}>
+                                                                    {selectedProduct.price.toLocaleString()}₫
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <Tooltip title={`Tồn kho: ${selectedProduct.quantity}`}>
+                                                            <InfoCircleOutlined style={{ color: '#1890ff' }} />
+                                                        </Tooltip>
                                                     </div>
-                                                </Select.Option>
-                                            ))}
-                                        </Select>
-                                    </Form.Item>
+                                                </div>
+                                            )}
 
+                                            <Button
+                                                danger
+                                                icon={<MinusCircleOutlined />}
+                                                onClick={() => {
+                                                    // Xóa khỏi selectedProducts
+                                                    setSelectedProducts(prev => {
+                                                        const newSelected = { ...prev };
+                                                        delete newSelected[name];
+                                                        return newSelected;
+                                                    });
+                                                    remove(name);
+                                                }}
+                                            />
+                                        </Space>
 
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'salePrice']}
-                                        rules={[
-                                            { required: true, message: 'Giá sale không được để trống!' },
-                                            { type: 'number', min: 1, message: 'Giá sale phải lớn hơn 0!' },
-                                        ]}
-                                    >
-                                        <InputNumber placeholder="Giá sale" min={1} />
-                                    </Form.Item>
+                                        {/* Input giá và số lượng */}
+                                        <Space style={{ marginTop: 8, width: '100%' }} align="baseline">
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'salePrice']}
+                                                label="Giá sale"
+                                                rules={[
+                                                    { required: true, message: 'Giá sale không được để trống!' },
+                                                    { type: 'number', min: 1, message: 'Giá sale phải lớn hơn 0!' },
+                                                ]}
+                                            >
+                                                <InputNumber
+                                                    placeholder="Giá sale"
+                                                    min={1}
+                                                    style={{ width: 150 }}
+                                                    formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                    parser={value => value?.replace(/\$\s?|(,*)/g, '') as any}
+                                                    addonAfter="₫"
+                                                />
+                                            </Form.Item>
 
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'quantity']}
-                                        rules={[
-                                            { required: true, message: 'Số lượng không được để trống!' },
-                                            { type: 'number', min: 1, message: 'Số lượng phải lớn hơn 0!' },
-                                        ]}
-                                    >
-                                        <InputNumber placeholder="Số lượng" min={1} />
-                                    </Form.Item>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'quantity']}
+                                                label="Số lượng"
+                                                rules={[
+                                                    { required: true, message: 'Số lượng không được để trống!' },
+                                                    { type: 'number', min: 1, message: 'Số lượng phải lớn hơn 0!' },
+                                                ]}
+                                            >
+                                                <InputNumber
+                                                    placeholder="Số lượng"
+                                                    min={1}
+                                                    style={{ width: 120 }}
+                                                    max={selectedProduct?.quantity || 1000}
+                                                />
+                                            </Form.Item>
 
-                                    <Button danger icon={<MinusCircleOutlined />} onClick={() => remove(name)}
+                                            {selectedProduct && (
+                                                <Form.Item label="Khuyến nghị">
+                                                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                                                        Nên nhập: {Math.round(selectedProduct.price * 0.8).toLocaleString()}₫
+                                                    </Typography.Text>
+                                                </Form.Item>
+                                            )}
+                                        </Space>
+                                    </div>
+                                );
+                            })}
 
-                                    />
-                                </Space>
-                            ))}
                             <Form.Item>
-                                <Button icon={<PlusOutlined />} onClick={() => add()}>
+                                <Button
+                                    type="dashed"
+                                    icon={<PlusOutlined />}
+                                    onClick={() => add()}
+                                    block
+                                >
                                     Thêm sản phẩm
                                 </Button>
                             </Form.Item>
