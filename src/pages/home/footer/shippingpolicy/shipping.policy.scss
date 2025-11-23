@@ -36,19 +36,25 @@
         }
 
         ul {
-            list-style: disc inside;
+            list-style: none;
+            /* Sửa thành none để ẩn dấu chấm */
             margin-bottom: 1.5rem;
-            padding-left: 10px;
+            padding-left: 0;
+            /* Xóa padding left */
 
             ul {
-                list-style: circle inside;
+                list-style: none;
+                /* Đảm bảo nested ul cũng không có dấu chấm */
                 margin-left: 20px;
+                padding-left: 0;
             }
 
             li {
                 font-size: 16px;
                 color: #374151;
                 margin-bottom: 0.5rem;
+                padding-left: 0;
+                /* Đảm bảo không có padding */
             }
         }
 

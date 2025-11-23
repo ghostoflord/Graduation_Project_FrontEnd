@@ -34,7 +34,10 @@ const Footer = () => {
                         <div className="footer-column">
                             <h4>Kết nối với chúng tôi</h4>
                             <div className="social-icons">
-                                <FacebookOutlined className="social-icon fb" />
+                                <FacebookOutlined
+                                    onClick={() => window.open('https://www.facebook.com/vothien.246679?locale=vi_VN', '_blank')}
+                                    className="social-icon fb"
+                                />
                                 <InstagramOutlined className="social-icon ig" />
                                 <YoutubeOutlined className="social-icon yt" />
                                 <TikTokOutlined className="social-icon tiktok" />
