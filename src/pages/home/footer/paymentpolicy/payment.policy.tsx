@@ -33,16 +33,16 @@ const PaymentPolicy = () => {
 
                 <h4>DANH SÁCH TÀI KHOẢN CÔNG TY:</h4>
                 <ul>
-                    <li><strong>NGÂN HÀNG TMCP Á CHÂU (ACB)</strong></li>
-                    <li>TÊN TÀI KHOẢN: CÔNG TY TNHH CÔNG NGHỆ VÀ TIN HỌC HỒNG PHÁT</li>
-                    <li>SỐ TÀI KHOẢN: 2288811888</li>
+                    <li><strong>NGÂN HÀNG QUÂN ĐỘI (MB)</strong></li>
+                    <li>TÊN TÀI KHOẢN: NGUYEN QUANG HIEP</li>
+                    <li>SỐ TÀI KHOẢN: 0123456789</li>
                 </ul>
 
                 <h4>DANH SÁCH TÀI KHOẢN CÁ NHÂN:</h4>
                 <ul>
-                    <li><strong>NGÂN HÀNG TMCP Á CHÂU (ACB)</strong></li>
-                    <li>TÊN TÀI KHOẢN: HUỲNH XUÂN ÂN</li>
-                    <li>SỐ TÀI KHOẢN: 7986.7888</li>
+                    <li><strong>NGÂN HÀNG THƯƠNG MẠI (VIETINBANK)</strong></li>
+                    <li>TÊN TÀI KHOẢN: NGUYEN QUANG HIEP</li>
+                    <li>SỐ TÀI KHOẢN: 0123456789</li>
                 </ul>
 
                 <h3>LƯU Ý:</h3>

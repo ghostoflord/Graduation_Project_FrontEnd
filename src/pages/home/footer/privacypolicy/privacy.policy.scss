@@ -29,8 +29,8 @@
     }
 
     ul {
-        list-style-type: disc;
-        padding-left: 20px;
+        list-style: none; // bỏ dấu chấm
+        padding-left: 0; // bỏ thụt vào trái mặc định
         margin-bottom: 1rem;
     }
 

@@ -64,7 +64,7 @@ const RecruitmentInfo = () => {
                     <li>TOP 5 đại lý máy tính chính hãng tại Việt Nam.</li>
                     <li>Thương hiệu máy tính được yêu thích số 1 Việt Nam.</li>
                     <li>Phong cách phục vụ chuyên nghiệp, thân thiện nhất.</li>
-                    <li>Hệ thống chi nhánh phủ khắp HCM, HN, Đà Nẵng, Cần Thơ...</li>
+                    <li>Hệ thống chi nhánh phủ khắp HN...</li>
                     <li>Nhân sự dự kiến 300 người trong 5 năm tới.</li>
                 </ul>
             </div>
@@ -72,9 +72,9 @@ const RecruitmentInfo = () => {
             <div className="working-info">
                 <h3>Thời gian và địa điểm làm việc:</h3>
                 <ul>
-                    <li>Chi nhánh 1: 29 Tân Thành, P12, Q5, Tp.HCM</li>
-                    <li>Chi nhánh 2: 399 Xô Viết Nghệ Tĩnh, P24, Bình Thạnh, Tp.HCM</li>
-                    <li>Văn phòng: 284/57 Lý Thường Kiệt, P14, Q10, Tp.HCM</li>
+                    <li>Chi nhánh 1:  Cầu Giấy,Thành Phố Hà Nội</li>
+                    <li>Chi nhánh 2: Khuất Duy Tiến,Quận Thanh Xuân,Thành Phố Hà Nội</li>
+                    <li>Văn phòng: Quốc Oai sắp khai trương</li>
                     <li>Thời gian làm việc: Thỏa thuận.</li>
                 </ul>
             </div>
@@ -83,7 +83,7 @@ const RecruitmentInfo = () => {
                 <p>Các ứng viên quan tâm vui lòng liên hệ:</p>
                 <ul>
                     <li>Chuyên viên tuyển dụng</li>
-                    <li>Phụ trách nhân sự: <strong>Mr.An</strong> - SĐT/Zalo: <strong>0948377986</strong></li>
+                    <li>Phụ trách nhân sự: <strong>Mr.Hiep</strong> - SĐT/Zalo: <strong>0123456789</strong></li>
                     <li>Email: <strong>tuyendung@laptopshop.vn</strong></li>
                 </ul>
                 <p className="slogan">HỘI TỤ NHÂN TÀI - VỮNG BƯỚC TƯƠNG LAI</p>

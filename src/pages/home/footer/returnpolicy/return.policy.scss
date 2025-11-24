@@ -44,7 +44,8 @@
         }
 
         ul {
-            list-style: disc inside;
+            list-style: none; // bỏ dấu chấm
+            padding-left: 0; // bỏ thụt vào trái mặc định
             margin-bottom: 1.5rem;
         }
 

@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
             <p><strong>Đăng bởi: LAPTOPSHOP - 09/08/2020</strong></p>
 
             <p>
-                Cảm ơn bạn đã truy cập vào trang website được vận hành bởi CÔNG TY TNHH TM DV TIN HỌC XUÂN ÂN.
+                Cảm ơn bạn đã truy cập vào trang website được vận hành bởi CÔNG TY TNHH TM DV QUANG HIỆP.
                 Chúng tôi tôn trọng và cam kết sẽ bảo mật những thông tin mang tính riêng tư của bạn...
             </p>
 
@@ -40,10 +40,10 @@ const PrivacyPolicy = () => {
 
             <h2>5. ĐỊA CHỈ ĐƠN VỊ THU THẬP & QUẢN LÝ</h2>
             <p>
-                CÔNG TY TNHH TM DV Tin Học Xuân Ân<br />
-                29 Tân Thành, Phường 12, Quận 5, TP. Hồ Chí Minh<br />
-                Hotline: (028)39556670 - Góp ý: 0943497968<br />
-                Email: cskh@laptopnew.vn
+                CÔNG TY TNHH TM DV QUANG HIỆP<br />
+                Cầu Giấy, TP. Hà Nội<br />
+                Hotline:0123456789 - Góp ý: 0123456789<br />
+                Email: cskh@laptopshop.vn
             </p>
 
             <h2>6. PHƯƠNG TIỆN CHỈNH SỬA THÔNG TIN</h2>
