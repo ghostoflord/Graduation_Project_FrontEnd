@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Typography, Badge, Image, Modal, Button, message } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { getAllFlashSalesAPI, addToCartAPI, getCart, useCartStore, reduceFlashSaleQuantityAPI } from "@/services/api";
+import { getAllFlashSalesAPI, addToCartAPI, getCart, useCartStore } from "@/services/api";
 import dayjs from "dayjs";
 import Countdown, { CountdownRenderProps } from "react-countdown";
 import { useNavigate } from "react-router-dom";
@@ -32,8 +32,8 @@ const FlashSaleList = () => {
 
     useEffect(() => {
         getAllFlashSalesAPI().then((res) => {
-            const result = res?.data?.result || [];
-            const activeSales = result.filter((fs) => fs.status === "ACTIVE");
+            const result = res?.data?.result ?? [];
+            const activeSales = result.filter((fs: IFlashSale) => fs.status === "ACTIVE");
             setFlashSales(activeSales);
         });
     }, []);

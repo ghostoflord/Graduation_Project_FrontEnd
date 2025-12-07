@@ -22,17 +22,11 @@ interface IProps {
     openModalUpdate: boolean;
     setOpenModalUpdate: (v: boolean) => void;
     refreshTable: () => void;
-    setDataUpdate: (v: any | null) => void;
-    dataUpdate: any | null;
+    setDataUpdate: (v: IFlashSale | null) => void;
+    dataUpdate: IFlashSale | null;
 }
 
-interface ProductInfo {
-    id: number;
-    name: string;
-    price: number; // Giá gốc
-    quantity: number; // Tồn kho
-    // ... các trường khác
-}
+type ProductInfo = Pick<IProductTable, "id" | "name" | "price" | "quantity">;
 
 const UpdateFlashSale = (props: IProps) => {
     const {
@@ -147,6 +141,12 @@ const UpdateFlashSale = (props: IProps) => {
             title="Cập nhật Flash Sale"
             open={openModalUpdate}
             onOk={async () => {
+                if (!dataUpdate) {
+                    notification.warning({
+                        message: "Không tìm thấy flash sale cần cập nhật",
+                    });
+                    return;
+                }
                 try {
                     const values = await form.validateFields();
 
@@ -160,7 +160,7 @@ const UpdateFlashSale = (props: IProps) => {
 
                     setIsSubmit(true);
                     const res = await updateFlashSaleAPI(dataUpdate.id, payload);
-                    if (res.statusCode === 200 || res?.data?.statusCode === 200) {
+                    if (res.statusCode === 200) {
                         message.success('Cập nhật Flash Sale thành công');
                         refreshTable();
                         form.resetFields();
@@ -253,9 +253,10 @@ const UpdateFlashSale = (props: IProps) => {
                                                     style={{ width: 300 }}
                                                     dropdownMatchSelectWidth={false}
                                                     onSelect={(value) => handleProductSelect(value, name)}
-                                                    filterOption={(input, option) =>
-                                                        option?.label.toLowerCase().includes(input.toLowerCase()) || false
-                                                    }
+                                                    filterOption={(input, option) => {
+                                                        const label = typeof option?.label === "string" ? option.label : "";
+                                                        return label.toLowerCase().includes(input.toLowerCase());
+                                                    }}
                                                 >
                                                     {productList.map((product) => renderProductOption(product))}
                                                 </Select>

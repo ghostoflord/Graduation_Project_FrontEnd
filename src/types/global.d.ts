@@ -106,27 +106,33 @@ declare global {
     * 
     Module Product
     */
+    interface IProductImage {
+        id: number;
+        imageUrl: string;
+    }
+
     interface IProductTable {
-        id: string;
+        id: number;
         image: string;
+        images?: IProductImage[];
         name: string;
-        price: string;
+        price: number;
         sold: number;
-        quantity: string;
+        quantity: number;
         detailDescription: string;
         productCode: string;
         guarantee: string;
         factory: string;
         shortDescription: string;
         slug: string;
-        createdAt: Date;
-        updatedAt: Date;
-        bestsell: string;
-        sell: string;
-        averageRating: number;
-        totalReviews: number;
-        sku: string;
-        discountPrice: number;
+        createdAt: string;
+        updatedAt: string;
+        bestsell?: string;
+        sell?: string;
+        averageRating?: number;
+        totalReviews?: number;
+        sku?: string;
+        discountPrice?: number;
     }
 
     export interface IProductSuggestion {
@@ -429,16 +435,21 @@ declare global {
         name: string;
         startTime: string;
         endTime: string;
+        status?: string;
         items: IFlashSaleItem[];
     }
 
     export interface IFlashSaleItem {
         id: number;
         productId: number;
+        productName?: string;
         salePrice: number;
+        originalPrice?: number;
         quantity: number;
-        imageUrl: string;
+        imageUrl?: string;
         flashSaleId: number;
+        shortDescription?: string;
+        detailDescription?: string;
     }
 
     export interface FlashSaleItemUpdateDTO {

@@ -4,39 +4,9 @@ import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { Tag, Tooltip, List, Typography, Popconfirm, Button, App } from "antd";
 import { deleteFlashSaleAPI, getAllFlashSalesAPI } from "@/services/api";
 import CreateFlashSaleModal from "./create.flash.sale";
-import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import UpdateFlashSale from "./update.flash.sale";
 import DetailFlashSale from "./flash.sale.detail";
-interface IFlashSaleItem {
-    id: number;
-    productId: number;
-    productName: string;
-    originalPrice: number;
-    salePrice: number;
-    quantity: number;
-}
-
-interface IFlashSale {
-    id: number;
-    name: string;
-    startTime: string;
-    endTime: string;
-    status: 'ACTIVE' | 'UPCOMING';
-    createdAt?: string;
-    items: IFlashSaleItem[];
-}
-
-interface IFlashSaleResponse {
-    data: {
-        result: IFlashSale[];
-        meta: {
-            total: number;
-            current: number;
-            pageSize: number;
-        };
-    };
-    statusCode: number;
-}
 
 const FlashSaleTable = () => {
     const actionRef = useRef<ActionType>();
@@ -55,11 +25,11 @@ const FlashSaleTable = () => {
 
 
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
-    const [dataViewDetail, setDataViewDetail] = useState<IUserTable | null>(null);
+    const [dataViewDetail, setDataViewDetail] = useState<IFlashSale | null>(null);
 
     const [isDeleteFlashSale, setIsDeleteFlashSale] = useState<boolean>(false);
 
-    const handleDeleteFlashSale = async (id: string) => {
+    const handleDeleteFlashSale = async (id: number | string) => {
         setIsDeleteFlashSale(true);
         try {
             const res = await deleteFlashSaleAPI(id);
@@ -92,16 +62,17 @@ const FlashSaleTable = () => {
             title: 'Id',
             dataIndex: 'id',
             hideInSearch: true,
-            render(dom, entity, index, action, schema) {
-                return (
-                    <a
-                        onClick={() => {
-                            setDataViewDetail(entity);
-                            setOpenViewDetail(true);
-                        }}
-                        href='#'>{entity.id}</a>
-                )
-            },
+            render: (_, entity) => (
+                <a
+                    onClick={() => {
+                        setDataViewDetail(entity);
+                        setOpenViewDetail(true);
+                    }}
+                    href='#'
+                >
+                    {entity.id}
+                </a>
+            ),
         },
         {
             title: "Tên Flash Sale",
@@ -191,43 +162,34 @@ const FlashSaleTable = () => {
             title: 'Action',
             hideInSearch: true,
             width: 100,
-            render(dom, entity, index, action, schema) {
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 12,
-                    }}
-                ></div>
-                return (
-                    <>
-                        <EditTwoTone
-                            twoToneColor="#f57800"
-                            style={{ cursor: "pointer", marginRight: 15 }}
-                            onClick={() => {
-                                setDataUpdate(entity);
-                                setOpenModalUpdate(true);
-                            }}
-                        />
-                        <Popconfirm
-                            placement="leftTop"
-                            title={"Xác nhận xóa flash sale"}
-                            description={"Bạn có chắc chắn muốn xóa flash sale này?"}
-                            onConfirm={() => handleDeleteFlashSale(entity.id)}
-                            okText="Xác nhận"
-                            cancelText="Hủy"
-                            okButtonProps={{ loading: isDeleteFlashSale }}
-                        >
-                            <span style={{ cursor: "pointer", marginLeft: 20 }}>
-                                <DeleteTwoTone
-                                    twoToneColor="#ff4d4f"
-                                    style={{ cursor: "pointer" }}
-                                />
-                            </span>
-                        </Popconfirm>
-                    </>
-                )
-            }
+            render: (_, entity) => (
+                <>
+                    <EditTwoTone
+                        twoToneColor="#f57800"
+                        style={{ cursor: "pointer", marginRight: 15 }}
+                        onClick={() => {
+                            setDataUpdate(entity);
+                            setOpenModalUpdate(true);
+                        }}
+                    />
+                    <Popconfirm
+                        placement="leftTop"
+                        title={"Xác nhận xóa flash sale"}
+                        description={"Bạn có chắc chắn muốn xóa flash sale này?"}
+                        onConfirm={() => handleDeleteFlashSale(entity.id)}
+                        okText="Xác nhận"
+                        cancelText="Hủy"
+                        okButtonProps={{ loading: isDeleteFlashSale }}
+                    >
+                        <span style={{ cursor: "pointer", marginLeft: 20 }}>
+                            <DeleteTwoTone
+                                twoToneColor="#ff4d4f"
+                                style={{ cursor: "pointer" }}
+                            />
+                        </span>
+                    </Popconfirm>
+                </>
+            )
         },
     ];
 
@@ -253,6 +215,13 @@ const FlashSaleTable = () => {
                     const query = `current=${params.current}&pageSize=${params.pageSize}`;
                     const res = await getAllFlashSalesAPI(query);
                     const responseData = res.data;
+                    if (!responseData) {
+                        return {
+                            data: [],
+                            success: false,
+                            total: 0,
+                        };
+                    }
 
                     setMeta(responseData.meta);
                     return {

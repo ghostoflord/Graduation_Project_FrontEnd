@@ -24,7 +24,7 @@ const NotificationTable = () => {
     // delete state
     const [isDeleteNotification, setIsDeleteNotification] = useState<boolean>(false);
 
-    const handleDeleteNotification = async (id: string) => {
+    const handleDeleteNotification = async (id: number | string) => {
         setIsDeleteNotification(true);
         try {
             const res = await deleteNotifications(id);

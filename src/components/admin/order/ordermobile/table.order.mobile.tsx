@@ -28,7 +28,7 @@ const TableOrderMobile = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const res = await getOrdersAPI();
+            const res = await getOrdersAPI("current=1&pageSize=100");
             // nếu backend trả về res.data.result
             const orderList = res?.data?.result ?? res?.result ?? [];
             setOrders(orderList);
@@ -42,13 +42,13 @@ const TableOrderMobile = () => {
         actionRef.current?.reload();
     };
 
-    const handleDeleteOrder = async (orderId: string) => {
+    const handleDeleteOrder = async (orderId: number | string) => {
         setIsDeleteOrder(true);
         try {
             // Thực hiện xóa đơn hàng tại API
             // Giả sử API của bạn là deleteOrder(orderId)
             await deleteOrderAPI(orderId);
-            setOrders(orders.filter(order => order.id !== orderId));
+            setOrders((prev) => prev.filter(order => order.id !== Number(orderId)));
             setIsDeleteOrder(false);
         } catch (error) {
             setIsDeleteOrder(false);

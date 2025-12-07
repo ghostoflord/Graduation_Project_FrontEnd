@@ -41,10 +41,7 @@ const PermissionTable = () => {
                     current: newPage,
                 }));
 
-                tableRef?.current?.reload?.({
-                    current: newPage,
-                    pageSize: meta.pageSize,
-                });
+                tableRef.current?.reload?.(true);
             } else {
                 notification.error({
                     message: 'Có lỗi xảy ra',
@@ -173,7 +170,7 @@ const PermissionTable = () => {
                     try {
                         setLoading(true);
                         const res = await callFetchPermissions(query);
-                        if (res?.statusCode === 200) {
+                        if (res?.statusCode === 200 && res.data) {
                             setCurrentDataTable(res.data.result);
                             setMeta(res.data.meta);
                             return {
