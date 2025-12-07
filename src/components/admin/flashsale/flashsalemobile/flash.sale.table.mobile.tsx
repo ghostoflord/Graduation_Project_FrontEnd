@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Card,
     Tag,
@@ -6,7 +6,6 @@ import {
     Row,
     Col,
     Typography,
-    Tooltip,
     List,
     Pagination,
     App,
@@ -25,34 +24,12 @@ import { getAllFlashSalesAPI, deleteFlashSaleAPI } from '@/services/api';
 import CreateFlashSaleModal from '../create.flash.sale';
 import UpdateFlashSale from '../update.flash.sale';
 import DetailFlashSale from '../flash.sale.detail';
-import { ActionType } from '@ant-design/pro-components';
-
-interface IFlashSaleItem {
-    id: number;
-    productId: number;
-    productName: string;
-    originalPrice: number;
-    salePrice: number;
-    quantity: number;
-}
-
-interface IFlashSale {
-    id: number;
-    name: string;
-    startTime: string;
-    endTime: string;
-    status: 'ACTIVE' | 'UPCOMING' | 'ENDED';
-    items: IFlashSaleItem[];
-}
-
 const TableFlashSaleMobile = () => {
     const [loading, setLoading] = useState(true);
     const [flashSales, setFlashSales] = useState<IFlashSale[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5;
     const { message } = App.useApp();
-
-    const actionRef = useRef<ActionType>();
 
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
@@ -75,7 +52,7 @@ const TableFlashSaleMobile = () => {
         }
     };
 
-    const handleDeleteFlashSale = async (id: string) => {
+    const handleDeleteFlashSale = async (id: number | string) => {
         setIsDeleteFlashSale(true);
         try {
             const res = await deleteFlashSaleAPI(id);
@@ -108,7 +85,7 @@ const TableFlashSaleMobile = () => {
 
     const paginatedData = flashSales.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-    const renderStatus = (status: string) => {
+    const renderStatus = (status?: string) => {
         switch (status) {
             case 'ACTIVE':
                 return <Tag color="green">Đang hoạt động</Tag>;
@@ -158,7 +135,7 @@ const TableFlashSaleMobile = () => {
                                                     placement="leftTop"
                                                     title="Xác nhận xóa flash sale"
                                                     description="Bạn có chắc chắn muốn xóa flash sale này?"
-                                                    onConfirm={() => handleDeleteFlashSale(fs.id.toString())}
+                                                    onConfirm={() => handleDeleteFlashSale(fs.id)}
                                                     okText="Xác nhận"
                                                     cancelText="Hủy"
                                                     okButtonProps={{ loading: isDeleteFlashSale }}

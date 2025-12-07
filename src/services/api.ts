@@ -342,7 +342,7 @@ export const markNotificationAsReadAPI = (notificationId: number) => {
     return axios.post<IBackendRes<any>>(urlBackend);
 };
 
-export const deleteNotifications = (id: string) => {
+export const deleteNotifications = (id: string | number) => {
     return axios.delete<IBackendRes<any>>(`/api/v1/notifications/${id}`);
 };
 
@@ -481,8 +481,8 @@ export const toggleLikeAPI = (productId: number, userId: number) => {
     return axios.post('/api/v1/likes/toggle', null, { params: { productId, userId } });
 };
 
-export const getLikedProductsAPI = (userId: number): Promise<ILike[]> => {
-    return axios.get(`/api/v1/likes/user/${userId}`);
+export const getLikedProductsAPI = (userId: number) => {
+    return axios.get<IBackendRes<ILike[]>>(`/api/v1/likes/user/${userId}`);
 };
 
 /**
@@ -634,8 +634,9 @@ export const createFlashSaleAPI = (
 };
 
 /// Lấy tất cả Flash Sales
-export const getAllFlashSalesAPI = (): Promise<IBackendRes<IFlashSale[]>> => {
-    return axios.get("/api/v1/flash-sales");
+export const getAllFlashSalesAPI = (query?: string): Promise<IBackendRes<IModelPaginate<IFlashSale>>> => {
+    const url = query ? `/api/v1/flash-sales?${query}` : "/api/v1/flash-sales";
+    return axios.get(url);
 };
 
 /// Lấy Flash Sale đang diễn ra
@@ -671,7 +672,7 @@ Module Slide
 // Lấy slides theo type (HOME / ABOUT / CONTACT)
 export const getSlidesByTypeAPI = (type: SlideType) => {
     const url = `/api/v1/slides/type/${type}`;
-    return axios.get<ISlide[]>(url);
+    return axios.get<IBackendRes<ISlide[]>>(url);
 };
 
 // lấy tất cả slide

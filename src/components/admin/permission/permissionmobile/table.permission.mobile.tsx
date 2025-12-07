@@ -54,7 +54,11 @@ const TablePermissionMobile = () => {
         }
     };
 
-    const handleDeletePermission = async (id: number) => {
+    const handleDeletePermission = async (id?: number | string) => {
+        if (id === undefined || id === null) {
+            message.error('Không xác định được permission cần xóa');
+            return;
+        }
         try {
             const res = await callDeletePermission(id);
             if (res && res.statusCode === 200) {

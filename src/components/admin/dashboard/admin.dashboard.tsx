@@ -5,13 +5,14 @@ import CountUp from "react-countup";
 import Dashboard from "./dash.board.t";
 
 const AdminDashboard = () => {
-    const [dataDashboard, setDataDashboard] = useState({
+    const defaultDashboard = {
         countOrder: 0,
         countUser: 0,
         countProduct: 0,
         totalRevenue: 0,
         totalCanceledQuantity: 0,
-    });
+    };
+    const [dataDashboard, setDataDashboard] = useState(defaultDashboard);
 
     const formatter = (value?: number | string) => {
         const n = Number(value ?? 0);
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
         const initDashboard = async () => {
             const res = await getDashboardAPI();
             if (res && res.data) {
-                setDataDashboard(res.data);
+                setDataDashboard(res.data ?? defaultDashboard);
             }
         };
         initDashboard();

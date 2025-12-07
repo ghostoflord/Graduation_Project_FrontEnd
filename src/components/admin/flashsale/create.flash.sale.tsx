@@ -16,6 +16,7 @@ import {
 } from "antd";
 import type { FormProps } from "antd";
 import { createFlashSaleAPI, getProductsAPI } from "@/services/api";
+import type { Dayjs } from "dayjs";
 
 interface IProps {
     openModalCreate: boolean;
@@ -23,10 +24,7 @@ interface IProps {
     refreshTable: () => void;
 }
 
-interface IProductTable {
-    id: number;
-    name: string;
-}
+type ProductOption = Pick<IProductTable, "id" | "name">;
 
 interface IFlashSaleItemRequest {
     productId: number;
@@ -43,7 +41,7 @@ interface IFlashSaleRequest {
 
 type FieldType = {
     name: string;
-    time: [string, string];
+    time?: [Dayjs, Dayjs];
 };
 
 const CreateFlashSaleModal = ({
@@ -54,7 +52,7 @@ const CreateFlashSaleModal = ({
     const [form] = Form.useForm();
     const { message, notification } = App.useApp();
     const [isSubmit, setIsSubmit] = useState(false);
-    const [products, setProducts] = useState<IProductTable[]>([]);
+    const [products, setProducts] = useState<ProductOption[]>([]);
     const [items, setItems] = useState<IFlashSaleItemRequest[]>([]);
 
     // State quản lý input thêm sản phẩm
@@ -67,7 +65,11 @@ const CreateFlashSaleModal = ({
             try {
                 const res = await getProductsAPI("page=1&limit=100");
                 if (res.data?.result) {
-                    setProducts(res.data.result);
+                    const mappedProducts = res.data.result.map((product) => ({
+                        id: product.id,
+                        name: product.name,
+                    }));
+                    setProducts(mappedProducts);
                 }
             } catch (err) {
                 notification.error({
@@ -108,10 +110,16 @@ const CreateFlashSaleModal = ({
             return;
         }
 
+        const [start, end] = values.time || [];
+        if (!start || !end) {
+            message.error("Vui lòng chọn khoảng thời gian!");
+            return;
+        }
+
         const payload: IFlashSaleRequest = {
             name: values.name,
-            startTime: values.time[0].toISOString(),
-            endTime: values.time[1].toISOString(),
+            startTime: start.toISOString(),
+            endTime: end.toISOString(),
             items,
         };
 
@@ -187,24 +195,24 @@ const CreateFlashSaleModal = ({
 
             <Divider>Thêm sản phẩm Flash Sale</Divider>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 16 }}>
-                <Select
+                <Select<number>
                     style={{ width: 200 }}
                     placeholder="Chọn sản phẩm"
                     value={selectedProductId}
-                    onChange={setSelectedProductId}
+                    onChange={(value) => setSelectedProductId(value)}
                     options={products.map((p) => ({ label: p.name, value: p.id }))}
                 />
                 <InputNumber
                     min={0}
                     placeholder="Giá khuyến mãi"
                     value={salePrice}
-                    onChange={setSalePrice}
+                    onChange={(value) => setSalePrice(value ?? undefined)}
                 />
                 <InputNumber
                     min={1}
                     placeholder="Số lượng"
                     value={quantity}
-                    onChange={setQuantity}
+                    onChange={(value) => setQuantity(value ?? undefined)}
                 />
                 <Button type="primary" onClick={handleAddItem}>
                     Thêm

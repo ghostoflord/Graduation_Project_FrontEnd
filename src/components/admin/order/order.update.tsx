@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { App, Divider, Form, Input, Modal, Select, DatePicker } from 'antd';
 import type { FormProps } from 'antd';
 import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import { updateOrderAPI } from '@/services/api';
 
 interface IProps {

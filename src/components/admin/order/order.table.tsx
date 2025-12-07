@@ -26,7 +26,7 @@ const TableOrder = () => {
     });
     const [isDeleteOrder, setIsDeleteOrder] = useState<boolean>(false);
 
-    const handleDeleteOrder = async (id: string) => {
+    const handleDeleteOrder = async (id: number | string) => {
         setIsDeleteOrder(true);
         try {
             const res = await deleteOrderAPI(id);

@@ -1,29 +1,20 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
     App,
     Divider,
     Form,
     Input,
     Modal,
-    Select,
     Switch,
 } from "antd";
 import type { FormProps } from "antd";
 import { updateNotificationAPI } from "@/services/api";
 
-interface INotification {
-    id: number;
-    title: string;
-    content: string;
-    isRead: boolean;
-    forAll: boolean;
-}
-
 interface IProps {
     openModalUpdate: boolean;
     setOpenModalUpdate: (v: boolean) => void;
     refreshTable: () => void;
-    setDataUpdate: (v: INotification | null) => void;
+    setDataUpdate: Dispatch<SetStateAction<INotification | null>>;
     dataUpdate: INotification | null;
 }
 
