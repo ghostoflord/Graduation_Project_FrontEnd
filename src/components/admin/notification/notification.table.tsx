@@ -71,9 +71,9 @@ const NotificationTable = () => {
         },
         {
             title: 'Đã đọc',
-            dataIndex: 'isRead',
+            dataIndex: 'read',
             hideInSearch: true,
-            render: (_, record) => record.isRead ? '✔️' : '❌'
+            render: (_, record) => record.read ? '✔️' : '❌'
         },
         {
             title: 'Thời gian tạo',

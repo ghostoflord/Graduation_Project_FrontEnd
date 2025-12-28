@@ -13,7 +13,7 @@ type FieldType = {
     title: string;
     content: string;
     userId?: number;
-    isBroadcast?: boolean;
+    forAll?: boolean;
 };
 
 const CreateNotification = (props: IProps) => {
@@ -21,16 +21,22 @@ const CreateNotification = (props: IProps) => {
     const [form] = Form.useForm();
     const [isSubmit, setIsSubmit] = useState(false);
     const { message, notification } = App.useApp();
+    const forAll = Form.useWatch('forAll', form);
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
         try {
-            const { title, content, userId, isBroadcast } = values;
+            const { title, content, userId, forAll } = values;
+
+            console.log('📤 Dữ liệu gửi lên:');
+            console.log('forAll:', forAll);
+            console.log('userId:', userId);
 
             const res = await createNotificationAPI(
                 title,
                 content,
-                isBroadcast ? undefined : userId // nếu isBroadcast thì không truyền userId
+                forAll ? undefined : userId, // nếu isBroadcast thì không truyền userId
+                forAll
             );
 
             if (res?.statusCode === 200) {
@@ -94,7 +100,7 @@ const CreateNotification = (props: IProps) => {
 
                 <Form.Item<FieldType>
                     label="Gửi cho tất cả người dùng"
-                    name="isBroadcast"
+                    name="forAll"
                     valuePropName="checked"
                 >
                     <Switch />
@@ -103,10 +109,11 @@ const CreateNotification = (props: IProps) => {
                 <Form.Item<FieldType>
                     label="User ID (nếu không gửi toàn bộ)"
                     name="userId"
+                    dependencies={['forAll']} // Thêm dòng này
                     rules={[
                         ({ getFieldValue }) => ({
                             validator(_, value) {
-                                if (getFieldValue('isBroadcast') || value) {
+                                if (getFieldValue('forAll') || value) {
                                     return Promise.resolve();
                                 }
                                 return Promise.reject(
@@ -116,7 +123,11 @@ const CreateNotification = (props: IProps) => {
                         }),
                     ]}
                 >
-                    <Input type="number" placeholder="Nhập ID người dùng cụ thể" disabled={form.getFieldValue('isBroadcast')} />
+                    <Input
+                        type="number"
+                        placeholder="Nhập ID người dùng cụ thể"
+                        disabled={forAll}
+                    />
                 </Form.Item>
             </Form>
         </Modal>
